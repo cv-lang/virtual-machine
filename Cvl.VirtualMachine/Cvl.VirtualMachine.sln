@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cvl.VirtualMachine", "Cvl.VirtualMachine\Cvl.VirtualMachine.csproj", "{5E4B5022-03EB-4555-A772-3E3780D72AF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cvl.VirtualMachine.TestApp", "Cvl.VirtualMachine.TestApp\Cvl.VirtualMachine.TestApp.csproj", "{39671A59-F248-4580-93B2-9D91E791D413}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E4B5022-03EB-4555-A772-3E3780D72AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E4B5022-03EB-4555-A772-3E3780D72AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E4B5022-03EB-4555-A772-3E3780D72AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E4B5022-03EB-4555-A772-3E3780D72AF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39671A59-F248-4580-93B2-9D91E791D413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39671A59-F248-4580-93B2-9D91E791D413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39671A59-F248-4580-93B2-9D91E791D413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39671A59-F248-4580-93B2-9D91E791D413}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {36C0C39E-688D-4206-8A77-60FC31D26FEA}
+	EndGlobalSection
+EndGlobal
