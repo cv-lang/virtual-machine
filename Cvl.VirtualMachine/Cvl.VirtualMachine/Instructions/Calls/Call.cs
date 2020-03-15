@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Cvl.VirtualMachine.Instructions.Calls
 {
+    /// <summary>
+    /// Calls the method indicated by the passed method descriptor.
+    /// </summary>
     public class Call : InstructionBase
     {
         public override void Wykonaj()

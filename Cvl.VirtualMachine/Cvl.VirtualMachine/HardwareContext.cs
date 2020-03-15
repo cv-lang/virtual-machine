@@ -7,6 +7,6 @@ namespace Cvl.VirtualMachine
 {
     public class HardwareContext
     {
-        public Stack<ElementBase> Stos { get; set; } = new Stack<ElementBase>();
+        public Stack Stos { get; set; } = new Stack();
     }
 }

@@ -7,7 +7,8 @@ namespace Cvl.VirtualMachine.Instructions
 {
     public class InstructionBase
     {
-        protected Instruction Instruction { get; set; }
+        internal Instruction Instruction { get; set; }
+        public WirtualnaMaszyna WirtualnaMaszyna { get; internal set; }
 
         public virtual void Wykonaj()
         {
@@ -52,12 +53,27 @@ namespace Cvl.VirtualMachine.Instructions
             throw new NotImplementedException();
         }
 
+        protected void ZapiszLokalnyArgument(object o, int index)
+        {
+            throw new NotImplementedException();
+        }
+
         protected object PopObject()
         {
             throw new NotImplementedException();
         }
 
         protected object PobierzAdresZmiennejLokalnej(int localIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected object PobierzLokalnaZmienna(int localIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected void WczytajLokalneArgumenty(int v)
         {
             throw new NotImplementedException();
         }

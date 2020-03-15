@@ -6,31 +6,29 @@ using System.Text;
 
 namespace Cvl.VirtualMachine.Instructions.Storage
 {
-    public class LdlocaFactory : InstructionFactory
+    public class StargFactory : InstructionFactory
     {
         public override InstructionBase CreateInstruction(Instruction instrukcja)
         {
             switch (instrukcja.OpCode.Name)
             {
-                case "ldloca.s":
-                    return CreateIndexedInstruction<Ldloca>(instrukcja);
+                case "starg.s":
+                    return CreateIndexedInstruction<Starg>(instrukcja);
             }
             return null;
         }
     }
 
     /// <summary>
-    /// Loads the address of the local variable at a specific index onto the evaluation stack.
+    /// Stores the value on top of the evaluation stack in the argument slot at a specified index.
     /// </summary>
-    public class Ldloca : IndexedInstruction
-    {
+    public class Starg : IndexedInstruction
+    {              
         public override void Wykonaj()
-        {            
-            var o = PobierzAdresZmiennejLokalnej(Index);
-            Push(o);
+        {
+            var o = PopObject();
+            ZapiszLokalnyArgument(o, Index);
             WykonajNastepnaInstrukcje();
-        }
-
-        
+        }        
     }
 }
