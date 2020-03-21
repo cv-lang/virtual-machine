@@ -32,11 +32,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {
         public override void Wykonaj()
         {
-            var o = PobierzLokalnyArgument(Index);
-            PushObject(o);
-            WykonajNastepnaInstrukcje();
-        }
-
-        
+            var o = HardwareContext.PobierzLokalnyArgument(Index);
+            HardwareContext.PushObject(o);
+            HardwareContext.WykonajNastepnaInstrukcje();
+        }        
     }
 }

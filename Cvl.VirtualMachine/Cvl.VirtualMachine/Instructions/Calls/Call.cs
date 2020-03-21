@@ -21,11 +21,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
             foreach (var paramDef in method.GetParameters())
             {
-                parameters.Add(PopObject());
+                parameters.Add(HardwareContext.PopObject());
             }
             if (method.IsStatic == false)
             {
-                instance = PopObject();
+                instance = HardwareContext.PopObject();
             }
 
             parameters.Reverse();
@@ -89,9 +89,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     }
                     else
                     {
-                        PushObject(ret);
+                        HardwareContext.PushObject(ret);
                     }
-                    WykonajNastepnaInstrukcje();
+                    HardwareContext.WykonajNastepnaInstrukcje();
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             //}
 
 
-            WykonajNastepnaInstrukcje();
+            HardwareContext.WykonajNastepnaInstrukcje();
         }
 
         //private void getter(MethodReference methodReference, object instance, List<object> parameters)

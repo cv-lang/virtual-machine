@@ -13,10 +13,13 @@ namespace Cvl.VirtualMachine.Instructions
     public interface IInstructionFactory
     {
         InstructionBase CreateInstruction(Instruction instrukcja);
+        WirtualnaMaszyna WirtualnaMaszyna { get; set; }
     }
 
     public class InstructionFactory : IInstructionFactory
     {
+        public WirtualnaMaszyna WirtualnaMaszyna { get; set; }
+
         public virtual InstructionBase CreateInstruction(Instruction instrukcja)
         {
             return null;
@@ -26,6 +29,7 @@ namespace Cvl.VirtualMachine.Instructions
             where T : InstructionBase, new()
         {
             var intst = new T();
+            intst.HardwareContext = WirtualnaMaszyna.HardwareContext;
             intst.Inicialize(instruction);
             return intst;
         }
@@ -41,7 +45,7 @@ namespace Cvl.VirtualMachine.Instructions
 
     public  class InstructionsFactory
     {
-        public InstructionBase UtworzInstrukcje(Instruction instrukcja)
+        public InstructionBase UtworzInstrukcje(Instruction instrukcja, WirtualnaMaszyna wirtualnaMaszyna)
         {
             if(instructionFactories == null)
             {
@@ -50,6 +54,7 @@ namespace Cvl.VirtualMachine.Instructions
 
             foreach (var facotry in instructionFactories)
             {
+                facotry.WirtualnaMaszyna = wirtualnaMaszyna;
                 var inst = facotry.CreateInstruction(instrukcja);
                 if(inst != null)
                 {

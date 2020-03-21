@@ -38,9 +38,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
 
         public override void Wykonaj()
         {
-            var o = PobierzAdresArgumentu(Index);
-            Push(o);
-            WykonajNastepnaInstrukcje();
+            var o = HardwareContext.PobierzAdresArgumentu(Index);
+            HardwareContext.Push(o);
+            HardwareContext.WykonajNastepnaInstrukcje();
         }
 
 

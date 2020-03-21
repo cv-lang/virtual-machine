@@ -18,9 +18,26 @@ namespace Cvl.VirtualMachine.Instructions.Base
                 Index = index.Value;
             } else
             {
+                if(instruction.Operand is System.Reflection.LocalVariableInfo vr)
+                {
+                    Index = vr.LocalIndex;
+                }
+                else if (instruction.Operand is System.Reflection.ParameterInfo parameterInfo)
+                {
+                    Index = parameterInfo.Position;
+                }
+                else if (instruction.Operand is Int32 i)
+                {
+                    Index = i;
+                } 
+                else
+                {
+                    throw new Exception($"brak obsugi instrukcji {instruction.Next} dla operanda {instruction.Operand}");
+                }
 
-                var vr = instruction.Operand as System.Reflection.LocalVariableInfo;
-                Index = vr.LocalIndex;
+
+
+
             }
             
             

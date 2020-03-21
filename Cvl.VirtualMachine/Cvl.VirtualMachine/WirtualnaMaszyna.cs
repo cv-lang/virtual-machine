@@ -9,14 +9,16 @@ namespace Cvl.VirtualMachine
 {
     public class WirtualnaMaszyna
     {
-        public HardwareContext HardwareContext { get; set; } = new HardwareContext();
+        public WirtualnaMaszyna()
+        {
+            HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
+        }
+
+        public HardwareContext HardwareContext { get; set; } 
         public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
-        private InstructionsFactory instructionsFactory = new InstructionsFactory();
-        public long NumerIteracji { get; set; }
-        private InstructionBase aktualnaInstrukcja;
-
-        public Metoda AktualnaMetoda { get; set; }
+        public InstructionsFactory instructionsFactory = new InstructionsFactory();
+        
 
         internal static void HibernateVirtualMachine()
         {
@@ -37,50 +39,15 @@ namespace Cvl.VirtualMachine
         {
             var typ = process.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
-            var m = new Metoda(startMethod);
+            var m = new Metoda(startMethod, this);
+            HardwareContext.AktualnaMetoda = m;
             HardwareContext.Stos.PushObject(process);
 
-            m.Instrukcje = new List<InstructionBase>() { new CallStart(m) };
+            m.Instrukcje = new List<InstructionBase>() { new CallStart(m) { HardwareContext = this.HardwareContext } };
+            HardwareContext.Execute();
         }
 
-        public void Execute()
-        {
-            //NS.Debug.VM = this; // do debugowania 
-
-            while (CzyWykonywacInstrukcje)
-            {
-                try
-                {
-                    //if (NS.Debug.StopIterationNumber == NumerIteracji)
-                    //{
-                    //    System.Diagnostics.Debugger.Break();
-                    //}
-                    aktualnaInstrukcja = PobierzAktualnaInstrukcje();
-                    aktualnaInstrukcja.Wykonaj();
-                    NumerIteracji++;
-                }
-                catch (Exception ex)
-                {
-                    CzyWykonywacInstrukcje = false;
-                    //Status = VirtualMachineState.Exception;
-                    //RzuconyWyjatekCalosc = ex.ToString();
-                    //RzuconyWyjatekWiadomosc = ex.Message; ;
-                    //if (Debugger.IsAttached)
-                    //{
-                    //    Debugger.Break();
-                    //}
-                    return;
-                }
-            }
-        }
-
-
-        public InstructionBase PobierzAktualnaInstrukcje()
-        {
-            var ai = AktualnaMetoda.Instrukcje[AktualnaMetoda.NumerWykonywanejInstrukcji];
-            ai.WirtualnaMaszyna = this;
-            return ai;
-        }
+        
 
         public void WalidujMetodyObiektu(object instancjaObiektu)
         {
@@ -93,7 +60,7 @@ namespace Cvl.VirtualMachine
             //var metody = typDef.Methods;
             foreach (var metoda in typ.GetMethods())
             {
-                var m = new Metoda(metoda);
+                var m = new Metoda(metoda, this);
                 var i = m.PobierzInstrukcjeMetody(); //pobierma instrukcje metody - jeśli brakuje jakiejś instrukcji rzuca wyjątek
             }
         }

@@ -11,7 +11,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
         public override void Wykonaj()
         {
             //sprawdzam czy jest coś jeszcze na stosie
-            if (WirtualnaMaszyna.HardwareContext.Stos.IsEmpty())
+            if (HardwareContext.Stos.IsEmpty())
             {
                 //mamy koniec wykonywania procedury (bez wyniku) 
                 //WirtualnaMaszyna.CzyWykonywacInstrukcje = false;
@@ -20,22 +20,21 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             }
 
             //mamy wynik
-            var dane = PopObject();
+            var dane = HardwareContext.PopObject();
             if (dane is Metoda)
             {
 
                 //mamy metodę która nie zwraca 
                 var metodaDoWznowienia = dane as Metoda;
-                WirtualnaMaszyna.AktualnaMetoda = metodaDoWznowienia;
-                WirtualnaMaszyna.AktualnaMetoda.NumerWykonywanejInstrukcji++;
-
+                HardwareContext.AktualnaMetoda = metodaDoWznowienia;
+                HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
             }
             else
             {
                 //najpierw mamy wynik potem dane metody
                 var wynik = dane;
                 //sprawdzam czy jest coś jeszcze na stosie
-                if (WirtualnaMaszyna.HardwareContext.Stos.IsEmpty())
+                if (HardwareContext.Stos.IsEmpty())
                 {
                     //mamy koniec wykonywania funkcji (zwracającej wynik)
                     //WirtualnaMaszyna.CzyWykonywacInstrukcje = false;
@@ -45,10 +44,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 }
 
 
-                var metodaDoWznowienia = PopObject() as Metoda;
-                PushObject(wynik); //zwracam wynik na stosie
-                WirtualnaMaszyna.AktualnaMetoda = metodaDoWznowienia;
-                WirtualnaMaszyna.AktualnaMetoda.NumerWykonywanejInstrukcji++;
+                var metodaDoWznowienia = HardwareContext.PopObject() as Metoda;
+                HardwareContext.PushObject(wynik); //zwracam wynik na stosie
+                HardwareContext.AktualnaMetoda = metodaDoWznowienia;
+                HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
             }
         }
     }

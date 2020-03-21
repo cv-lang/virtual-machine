@@ -26,9 +26,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {              
         public override void Wykonaj()
         {
-            var o = PopObject();
-            ZapiszLokalnyArgument(o, Index);
-            WykonajNastepnaInstrukcje();
+            var o = HardwareContext.PopObject();
+            HardwareContext.ZapiszLokalnyArgument(o, Index);
+            HardwareContext.WykonajNastepnaInstrukcje();
         }        
     }
 }

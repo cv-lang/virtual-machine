@@ -16,13 +16,13 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
         public override void Wykonaj()
         {
-            WczytajLokalneArgumenty(1);
-            var instancja = PobierzLokalnyArgument(0);
+            HardwareContext.WczytajLokalneArgumenty(1);
+            var instancja = HardwareContext.PobierzLokalnyArgument(0);
 
             Metoda.WyczyscInstrukcje();
 
-            //WirtualnaMaszyna.AktualnaMetoda = Metoda;
-            //WirtualnaMaszyna.AktualnaMetoda.NumerWykonywanejInstrukcji = 0;
+            HardwareContext.AktualnaMetoda = Metoda;
+            HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji = 0;
         }
 
         

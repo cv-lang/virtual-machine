@@ -21,7 +21,7 @@ namespace Cvl.VirtualMachine.Core
             instrukcje = null;
         }
 
-        public Metoda(MethodInfo metoda) : this()
+        public Metoda(MethodInfo metoda, WirtualnaMaszyna wirtualnaMaszyna) : this()
         {
             methodInfo = metoda;
             var m = this;
@@ -30,7 +30,7 @@ namespace Cvl.VirtualMachine.Core
             m.NazwaMetody = metoda.Name;
             m.NumerWykonywanejInstrukcji = 0;
             Xml = Serializer.SerializeObject(metoda.DeclaringType);
-
+            WirtualnaMaszyna = wirtualnaMaszyna;
         }
 
         #region Propercje
@@ -42,6 +42,8 @@ namespace Cvl.VirtualMachine.Core
         public string AssemblyName { get; internal set; }
         public int OffsetWykonywanejInstrukcji { get; internal set; }
         public string Xml { get; set; }
+
+        public WirtualnaMaszyna WirtualnaMaszyna { get; set; }
 
 
         public int NumerWykonywanejInstrukcji { get; set; }
@@ -78,8 +80,23 @@ namespace Cvl.VirtualMachine.Core
             var metoda = PobierzOpisMetody();
             //metoda
             var il = metoda.GetInstructions();
-            var instrukcje = il.Select(i => new InstructionsFactory().UtworzInstrukcje(i));
-            return instrukcje.ToList();
+            var list = new List<InstructionBase>();
+            var factory = WirtualnaMaszyna.instructionsFactory;
+
+            foreach (var item in il)
+            {
+                var i = factory.UtworzInstrukcje(item, WirtualnaMaszyna);
+                if (i != null)
+                {
+                    list.Add(i);
+                }
+                else
+                {
+
+                }
+            }
+
+            return list;
         }
 
         #endregion
@@ -109,10 +126,10 @@ namespace Cvl.VirtualMachine.Core
                 var obiektTyp = Serializer.DeserializeObject(Xml);
                 var typ = (Type)obiektTyp;
                 return typ.GetMethod(NazwaMetody);
-                var module = Assembly.LoadFile(this.AssemblyName);
-                var typDef = module.GetTypes().First(t => t.FullName == NazwaTypu);
-                var metoda = typDef.GetMethods().FirstOrDefault(mm => mm.Name == NazwaMetody);
-                return metoda;
+                //var module = Assembly.LoadFile(this.AssemblyName);
+                //var typDef = module.GetTypes().First(t => t.FullName == NazwaTypu);
+                //var metoda = typDef.GetMethods().FirstOrDefault(mm => mm.Name == NazwaMetody);
+                //return metoda;
             }
         }
 

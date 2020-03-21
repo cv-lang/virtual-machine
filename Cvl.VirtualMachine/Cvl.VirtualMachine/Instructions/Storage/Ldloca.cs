@@ -26,11 +26,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {
         public override void Wykonaj()
         {            
-            var o = PobierzAdresZmiennejLokalnej(Index);
-            Push(o);
-            WykonajNastepnaInstrukcje();
-        }
-
-        
+            var o = HardwareContext.PobierzAdresZmiennejLokalnej(Index);
+            HardwareContext.Push(o);
+            HardwareContext.WykonajNastepnaInstrukcje();
+        }        
     }
 }
