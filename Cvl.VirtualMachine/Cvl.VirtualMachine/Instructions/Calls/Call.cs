@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cvl.VirtualMachine.Core;
+using Cvl.VirtualMachine.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +14,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     /// </summary>
     public class Call : InstructionBase
     {
+        public WirtualnaMaszyna WirtualnaMaszyna { get; set; }
+
         public override void Wykonaj()
         {
             var method = Instruction.Operand as System.Reflection.MethodInfo;
@@ -58,12 +62,12 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 if (CzyWykonacCzyInterpretowac(method) == true)
                 {
                     //wykonywanie
-                    //Type type = instance?.GetType();
-                    //if (type == null)
-                    //{
-                    //    //mamy statyczną metodę
-                    //    type = methodDef.DeclaringType.GetSystemType();
-                    //}
+                    Type type = instance?.GetType();
+                    if (type == null)
+                    {
+                        //mamy statyczną metodę
+                        // = methodDef.DeclaringType.GetSystemType();
+                    }
 
                     //var methodInfo = type.GetMethod(methodRef);
                     var dopasowaneParametry = new List<object>();
@@ -97,35 +101,36 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 {
                     //interpretowanie
 
-                    //var nazwaMetodyBazowej = method.Name;
-                    //var typDef = instance.GetType().GetTypeDefinition();
-                    //var staraMetoda = WirtualnaMaszyna.AktualnaMetoda;
+                    var nazwaMetodyBazowej = method.Name;
+                    var typDef = instance.GetType();
+                    var staraMetoda = HardwareContext.AktualnaMetoda;
 
-                    //var m = new Metoda(method);
-                    //m.NazwaTypu = method.DeclaringType.FullName;
-                    //m.NazwaMetody = nazwaMetodyBazowej; //to będzie już uruchomienie na właściwym obiekcie
-                    //m.AssemblyName = method.Module.FullyQualifiedName;
-                    //m.NumerWykonywanejInstrukcji = 0;
+                    var m = new Metoda(method, WirtualnaMaszyna);
+                    m.NazwaTypu = method.DeclaringType.FullName;
+                    m.NazwaMetody = nazwaMetodyBazowej; //to będzie już uruchomienie na właściwym obiekcie
+                    m.AssemblyName = method.Module.FullyQualifiedName;
+                    m.NumerWykonywanejInstrukcji = 0;
+                    m.WczytajInstrukcje();
 
-                    //WirtualnaMaszyna.AktualnaMetoda = m;
-                    //var iloscArgumentow = method.GetParameters().Count();
+                    HardwareContext.AktualnaMetoda = m;
+                    var iloscArgumentow = method.GetParameters().Count();
 
-                    //if (method.IsStatic == false)
-                    //{
-                    //    PushObject(instance);
-                    //    iloscArgumentow += 1;
-                    //}
+                    if (method.IsStatic == false)
+                    {
+                        HardwareContext.PushObject(instance);
+                        iloscArgumentow += 1;
+                    }
 
-                    //foreach (var parameter in parameters)
-                    //{
-                    //    PushObject(parameter);
-                    //}
+                    foreach (var parameter in parameters)
+                    {
+                        HardwareContext.PushObject(parameter);
+                    }
 
-                    //WczytajLokalneArgumenty(iloscArgumentow);
+                    HardwareContext.WczytajLokalneArgumenty(iloscArgumentow);
 
 
-                    ////zapisuję aktualną metodę na stosie
-                    //PushObject(staraMetoda);
+                    //zapisuję aktualną metodę na stosie
+                    HardwareContext.PushObject(staraMetoda);
                 }
             }
 
@@ -622,17 +627,16 @@ namespace Cvl.VirtualMachine.Instructions.Calls
         ///         false - znaczy interpretować</returns>
         public bool CzyWykonacCzyInterpretowac(MethodInfo mr)
         {
-            return false;
-            //var czyKlasaMaAtrybut = mr.DeclaringType.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
-            //var czyMetodaMaAtrybut = mr.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
+            var czyKlasaMaAtrybut = mr.DeclaringType.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
+            var czyMetodaMaAtrybut = mr.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
 
 
-            //if (czyKlasaMaAtrybut || czyMetodaMaAtrybut)
-            //{
-            //    return false; //interpertujemy
-            //}
+            if (czyKlasaMaAtrybut || czyMetodaMaAtrybut)
+            {
+                return false; //interpertujemy
+            }
 
-            //return true; //w innym wypadku wykonujemy metody
+            return true; //w innym wypadku wykonujemy metody
         }
     }
 }

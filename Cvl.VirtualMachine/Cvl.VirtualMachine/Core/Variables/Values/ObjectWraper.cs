@@ -25,7 +25,7 @@ namespace Cvl.VirtualMachine.Core.Variables.Values
 
         public override string ToString()
         {
-            return "OW: " + Warosc;
+            return $"OW:{Warosc}";
         }
     }
 }

@@ -19,7 +19,9 @@ namespace Cvl.VirtualMachine.TestApp
             //Mo
 
             var vm = new VirtualMachine.WirtualnaMaszyna();
-            vm.Start("Funkcja1", p);
+            vm.Start("Start", p);
+
+            var wynik = p.Funkcja1(1, 2, "3");
         }
     }
 }

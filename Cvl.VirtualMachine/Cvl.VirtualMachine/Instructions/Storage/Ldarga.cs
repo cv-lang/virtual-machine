@@ -24,21 +24,17 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     /// </summary>
     public class Ldarga : IndexedInstruction
     {
-        protected override void InstructionInicialize()
-        {
-            throw new NotImplementedException("instrukcja Ldarga");
-            //Index = ((Mono.Cecil.ParameterDefinition)Instruction.Operand).Index;
-            //if (((Mono.Cecil.ParameterDefinition)instrukcja.Operand).Method.HasThis)
-            //{
-            //    index++;
-            //}
-
-            //this.instrukcja = instrukcja;
-        }
-
         public override void Wykonaj()
         {
-            var o = HardwareContext.PobierzAdresArgumentu(Index);
+            var index = Index;
+            if (((System.Reflection.MethodInfo)
+                ((System.Reflection.ParameterInfo)Instruction.Operand).Member)
+                .CallingConvention.HasFlag(System.Reflection.CallingConventions.HasThis))
+            {
+                index++;
+            }
+
+            var o = HardwareContext.PobierzAdresArgumentu(index);
             HardwareContext.Push(o);
             HardwareContext.WykonajNastepnaInstrukcje();
         }

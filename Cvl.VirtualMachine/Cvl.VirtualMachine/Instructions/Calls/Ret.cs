@@ -14,7 +14,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             if (HardwareContext.Stos.IsEmpty())
             {
                 //mamy koniec wykonywania procedury (bez wyniku) 
-                //WirtualnaMaszyna.CzyWykonywacInstrukcje = false;
+                HardwareContext.CzyWykonywacInstrukcje = false;
                 //WirtualnaMaszyna.Status = VirtualMachineState.Executed;
                 return;
             }

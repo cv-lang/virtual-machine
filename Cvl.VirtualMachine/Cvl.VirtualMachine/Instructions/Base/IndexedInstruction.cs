@@ -34,13 +34,11 @@ namespace Cvl.VirtualMachine.Instructions.Base
                 {
                     throw new Exception($"brak obsugi instrukcji {instruction.Next} dla operanda {instruction.Operand}");
                 }
-
-
-
-
-            }
-            
-            
+            }   
+        }
+        public override string ToString()
+        {
+            return $"{Instruction} {Index}";
         }
     }
 }

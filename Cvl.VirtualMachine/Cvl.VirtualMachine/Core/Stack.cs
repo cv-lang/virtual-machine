@@ -66,13 +66,13 @@ namespace Cvl.VirtualMachine.Core
 
         public override string ToString()
         {
-            var str = stosWewnetrzny.Count + " :";
+            var str = stosWewnetrzny.Count + ": ";
 
             foreach (var item in stosWewnetrzny.ToList())
             {
                 if (item != null)
                 {
-                    str += item.ToString() + ";\n";
+                    str += item.ToString() + "; \n";
                 }
                 else
                 {

@@ -54,11 +54,7 @@ namespace Cvl.VirtualMachine.Core
         internal List<InstructionBase> Instrukcje
         {
             get
-            {
-                if (instrukcje == null)
-                {
-                    instrukcje = PobierzInstrukcjeMetody();
-                }
+            {                
                 return instrukcje;
             }
             set { instrukcje = value; }
@@ -73,6 +69,11 @@ namespace Cvl.VirtualMachine.Core
         public void WyczyscInstrukcje()
         {
             instrukcje = null;
+        }
+
+        public void WczytajInstrukcje()
+        {
+            instrukcje = PobierzInstrukcjeMetody();
         }
 
         public List<InstructionBase> PobierzInstrukcjeMetody()

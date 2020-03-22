@@ -10,6 +10,7 @@ namespace Cvl.VirtualMachine.Instructions
         internal Instruction Instruction { get; set; }
         public HardwareContext HardwareContext { get; set; }
         
+
         public virtual void Wykonaj()
         {
         }
@@ -17,12 +18,11 @@ namespace Cvl.VirtualMachine.Instructions
         public void Inicialize(Instruction instruction)
         {
             Instruction = instruction;
-        }
+        }        
 
-        protected virtual void InstructionInicialize()
+        public override string ToString()
         {
-
+            return $"{Instruction}";
         }
-
     }
 }

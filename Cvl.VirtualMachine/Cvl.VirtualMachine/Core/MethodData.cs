@@ -42,7 +42,7 @@ namespace Cvl.VirtualMachine.Core
                     wartosc = Obiekty[item].ToString();
                 }
 
-                str += item.ToString() + "=" + wartosc + ";\n";
+                str += item.ToString() + "=" + wartosc + "; \n";
             }
             return str;
         }

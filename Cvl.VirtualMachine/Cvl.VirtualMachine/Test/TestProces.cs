@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cvl.VirtualMachine.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,13 +9,21 @@ namespace Cvl.VirtualMachine.Test
     {
         public string JakasPropercja { get; set; }
         private int zmienna = 4;
+        public object Wynik { get; set; }
 
+        public void Start()
+        {
+            Wynik= Funkcja1(1, 2, "3");
+        }
+
+        [Interpret]
         public void Metoda1()
         {
             zmienna += 3;
         }
 
-        public int Funkcja1(int p1, int p2, ProcesTest p3)
+        [Interpret]
+        public int Funkcja1(int p1, int p2, string p3)
         {
             var zmienalokaln1 = p1;
             var zmienalokalna2 = p2;

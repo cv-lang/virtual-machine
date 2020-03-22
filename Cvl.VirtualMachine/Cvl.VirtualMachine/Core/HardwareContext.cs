@@ -18,7 +18,7 @@ namespace Cvl.VirtualMachine
         private InstructionBase aktualnaInstrukcja;
 
         public Metoda AktualnaMetoda { get; set; }
-        public bool CzyWykonywacInstrukcje { get; private set; } = true;
+        public bool CzyWykonywacInstrukcje { get; set; } = true;
 
         public void Execute()
         {
@@ -26,6 +26,9 @@ namespace Cvl.VirtualMachine
 
             while (CzyWykonywacInstrukcje)
             {
+                var zmienneLokalne = AktualnaMetoda.LocalVariables;
+                var argumenty = AktualnaMetoda.LocalArguments;
+                var stos = Stos;
                 //try
                 {
                     //if (NS.Debug.StopIterationNumber == NumerIteracji)
@@ -35,6 +38,7 @@ namespace Cvl.VirtualMachine
                     aktualnaInstrukcja = PobierzAktualnaInstrukcje();
                     aktualnaInstrukcja.Wykonaj();
                     NumerIteracji++;
+                    continue;
                 }
                 //catch (Exception ex)
                 //{

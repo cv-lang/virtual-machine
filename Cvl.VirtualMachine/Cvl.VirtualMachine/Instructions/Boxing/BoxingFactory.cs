@@ -3,18 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cvl.VirtualMachine.Instructions.Special
+namespace Cvl.VirtualMachine.Instructions.Boxing
 {
-    public class SpecialInstrictionsFactory : InstructionFactory
+    public class BoxingFactory : InstructionFactory
     {
         public override InstructionBase CreateInstruction(Instruction instrukcja)
         {
             switch (instrukcja.OpCode.Name)
             {
-                case "nop":
-                    return CreateInstruction<Nop>(instrukcja);
-                case "pop":
-                    return CreateInstruction<Pop>(instrukcja);
+                case "box":
+                    return CreateInstruction<Box>(instrukcja);
             }
             return null;
         }

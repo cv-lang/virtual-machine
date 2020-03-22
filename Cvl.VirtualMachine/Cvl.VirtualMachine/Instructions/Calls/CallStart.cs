@@ -18,11 +18,12 @@ namespace Cvl.VirtualMachine.Instructions.Calls
         {
             HardwareContext.WczytajLokalneArgumenty(1);
             var instancja = HardwareContext.PobierzLokalnyArgument(0);
+            
+            var metodaDoWykonania = new Metoda();
+            metodaDoWykonania.WyczyscInstrukcje();
+            metodaDoWykonania.WczytajInstrukcje();
 
-            Metoda.WyczyscInstrukcje();
-
-            HardwareContext.AktualnaMetoda = Metoda;
-            HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji = 0;
+            HardwareContext.AktualnaMetoda = metodaDoWykonania;
         }
 
         

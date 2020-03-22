@@ -15,7 +15,17 @@ namespace Cvl.VirtualMachine.Core.Variables.Addresses
             {
                 LokalneArgumenty.Obiekty[Indeks] = null;
             }
-            return LokalneArgumenty.Obiekty[Indeks];
+            var obj= LokalneArgumenty.Obiekty[Indeks];
+
+            if(obj is ObjectWraperBase objectWraper)
+            {
+                //mamy referencje do obieku opakowującego - pobieramy jego wartość
+                return objectWraper.GetValue();
+            } else
+            {
+                //mamy normalny obiekt, zwracamy go
+                return obj;
+            }
         }
 
         public override void SetNull()

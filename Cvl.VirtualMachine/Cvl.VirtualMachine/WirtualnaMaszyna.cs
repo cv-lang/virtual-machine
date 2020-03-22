@@ -3,6 +3,7 @@ using Cvl.VirtualMachine.Instructions;
 using Cvl.VirtualMachine.Instructions.Calls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cvl.VirtualMachine
@@ -35,15 +36,19 @@ namespace Cvl.VirtualMachine
 
         }
 
-        public void Start(string nazwaMetody, object process)
+        public void Start(string nazwaMetody, params object[] parametety)
         {
+            var process = parametety.First();
             var typ = process.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
             var m = new Metoda(startMethod, this);
+            m.WczytajInstrukcje();
             HardwareContext.AktualnaMetoda = m;
-            HardwareContext.Stos.PushObject(process);
+            //HardwareContext.Stos.PushObject(process);
+            m.LocalArguments.Wczytaj(parametety);
+            
 
-            m.Instrukcje = new List<InstructionBase>() { new CallStart(m) { HardwareContext = this.HardwareContext } };
+            //m.Instrukcje = new List<InstructionBase>() { new CallStart(m) { HardwareContext = this.HardwareContext } };
             HardwareContext.Execute();
         }
 
