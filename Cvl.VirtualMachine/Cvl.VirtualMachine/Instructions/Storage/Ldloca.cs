@@ -25,8 +25,10 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     public class Ldloca : IndexedInstruction
     {
         public override void Wykonaj()
-        {            
-            var o = HardwareContext.PobierzAdresZmiennejLokalnej(Index);
+        {
+            var index = GetIndex();
+
+            var o = HardwareContext.PobierzAdresZmiennejLokalnej(index);
             HardwareContext.Push(o);
             HardwareContext.WykonajNastepnaInstrukcje();
         }        

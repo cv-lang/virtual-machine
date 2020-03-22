@@ -21,7 +21,8 @@ namespace Cvl.VirtualMachine.TestApp
             var vm = new VirtualMachine.WirtualnaMaszyna();
             vm.Start("Start", p);
 
-            var wynik = p.Funkcja1(1, 2, "3");
+            var p2 = new ProcesTest();
+            var wynik = p2.Funkcja1(1, 2, "3");
         }
     }
 }

@@ -36,6 +36,23 @@ namespace Cvl.VirtualMachine.Instructions.Base
                 }
             }   
         }
+
+        protected int GetIndex()
+        {
+            var index = Index;
+
+            if(Instruction.Operand is System.Reflection.ParameterInfo parametrInfo)
+            {
+                var methodInfo = (System.Reflection.MethodInfo)parametrInfo.Member;
+                if(methodInfo.CallingConvention.HasFlag(System.Reflection.CallingConventions.HasThis))
+                {
+                    index++;
+                }
+            }            
+
+            return index;
+        }
+
         public override string ToString()
         {
             return $"{Instruction} {Index}";

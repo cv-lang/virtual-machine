@@ -16,7 +16,7 @@ namespace Cvl.VirtualMachine.Test
             Wynik= Funkcja1(1, 2, "3");
         }
 
-        [Interpret]
+        //[Interpret]
         public void Metoda1()
         {
             zmienna += 3;

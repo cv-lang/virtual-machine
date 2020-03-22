@@ -26,13 +26,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {
         public override void Wykonaj()
         {
-            var index = Index;
-            if (((System.Reflection.MethodInfo)
-                ((System.Reflection.ParameterInfo)Instruction.Operand).Member)
-                .CallingConvention.HasFlag(System.Reflection.CallingConventions.HasThis))
-            {
-                index++;
-            }
+            var index = GetIndex();
 
             var o = HardwareContext.PobierzAdresArgumentu(index);
             HardwareContext.Push(o);
