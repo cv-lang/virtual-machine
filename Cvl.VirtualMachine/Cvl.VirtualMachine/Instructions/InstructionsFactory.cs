@@ -13,12 +13,12 @@ namespace Cvl.VirtualMachine.Instructions
     public interface IInstructionFactory
     {
         InstructionBase CreateInstruction(Instruction instrukcja);
-        WirtualnaMaszyna WirtualnaMaszyna { get; set; }
+        VirtualMachine WirtualnaMaszyna { get; set; }
     }
 
     public class InstructionFactory : IInstructionFactory
     {
-        public WirtualnaMaszyna WirtualnaMaszyna { get; set; }
+        public VirtualMachine WirtualnaMaszyna { get; set; }
 
         public virtual InstructionBase CreateInstruction(Instruction instrukcja)
         {
@@ -45,7 +45,7 @@ namespace Cvl.VirtualMachine.Instructions
 
     public  class InstructionsFactory
     {
-        public InstructionBase UtworzInstrukcje(Instruction instrukcja, WirtualnaMaszyna wirtualnaMaszyna)
+        public InstructionBase UtworzInstrukcje(Instruction instrukcja, VirtualMachine wirtualnaMaszyna)
         {
             if(instructionFactories == null)
             {

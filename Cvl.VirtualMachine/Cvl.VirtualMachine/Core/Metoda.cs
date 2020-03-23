@@ -21,7 +21,7 @@ namespace Cvl.VirtualMachine.Core
             instrukcje = null;
         }
 
-        public Metoda(MethodInfo metoda, WirtualnaMaszyna wirtualnaMaszyna) : this()
+        public Metoda(MethodInfo metoda, VirtualMachine wirtualnaMaszyna) : this()
         {
             methodInfo = metoda;
             var m = this;
@@ -43,7 +43,7 @@ namespace Cvl.VirtualMachine.Core
         public int OffsetWykonywanejInstrukcji { get; internal set; }
         public string Xml { get; set; }
 
-        public WirtualnaMaszyna WirtualnaMaszyna { get; set; }
+        public VirtualMachine WirtualnaMaszyna { get; set; }
 
 
         public int NumerWykonywanejInstrukcji { get; set; }

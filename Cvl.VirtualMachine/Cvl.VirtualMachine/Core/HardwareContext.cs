@@ -11,11 +11,12 @@ namespace Cvl.VirtualMachine
 {
     public class HardwareContext
     {
-        public WirtualnaMaszyna WirtualnaMaszyna { get; internal set; }
+        public VirtualMachine WirtualnaMaszyna { get; internal set; }
 
         public Stack Stos { get; set; } = new Stack();
         public long NumerIteracji { get; set; }
         private InstructionBase aktualnaInstrukcja;
+        public VirtualMachineState Status { get; set; }
 
         public Metoda AktualnaMetoda { get; set; }
         public bool CzyWykonywacInstrukcje { get; set; } = true;

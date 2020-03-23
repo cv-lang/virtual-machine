@@ -9,11 +9,12 @@ namespace Cvl.VirtualMachine.Test
     {
         public string JakasPropercja { get; set; }
         private int zmienna = 4;
-        public object Wynik { get; set; }
+        public int Wynik { get; set; }
 
-        public void Start()
+        public int Start()
         {
             Wynik= Funkcja1(1, 2, "3");
+            return Wynik;
         }
 
         //[Interpret]

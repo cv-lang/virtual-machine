@@ -14,7 +14,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     /// </summary>
     public class Call : InstructionBase
     {
-        public WirtualnaMaszyna WirtualnaMaszyna { get; set; }
+        public VirtualMachine WirtualnaMaszyna { get; set; }
 
         public override void Wykonaj()
         {
@@ -34,17 +34,17 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
             parameters.Reverse();
 
-            if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(WirtualnaMaszyna))
+            if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(VirtualMachine))
             {
                 //wywołał metodę do hibernacji wirtualnej maszyny
-                WirtualnaMaszyna.HibernateVirtualMachine();
+                VirtualMachine.HibernateVirtualMachine();
                 return;
             }
 
-            if (method.Name.Equals("EndProcess") && method.DeclaringType == typeof(WirtualnaMaszyna))
+            if (method.Name.Equals("EndProcess") && method.DeclaringType == typeof(VirtualMachine))
             {
                 //wywołał metodę do hibernacji wirtualnej maszyny
-                WirtualnaMaszyna.EndProcessVirtualMachine();
+                VirtualMachine.EndProcessVirtualMachine();
                 return;
             }
 

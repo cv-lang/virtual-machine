@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Cvlang Organization</Authors>
+    <Version>0.1.0</Version>
+    <PackageProjectUrl>https://github.com/cv-lang/virtual-machine</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/cv-lang/virtual-machine</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>C#, .net Core</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

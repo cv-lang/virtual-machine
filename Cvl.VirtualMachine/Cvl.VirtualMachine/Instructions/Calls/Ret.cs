@@ -37,9 +37,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 if (HardwareContext.Stos.IsEmpty())
                 {
                     //mamy koniec wykonywania funkcji (zwracającej wynik)
-                    //WirtualnaMaszyna.CzyWykonywacInstrukcje = false;
-                    //WirtualnaMaszyna.Status = VirtualMachineState.Executed;
-                    //WirtualnaMaszyna.Wynik = wynik;
+                    HardwareContext.CzyWykonywacInstrukcje = false;
+                    HardwareContext.Status = VirtualMachineState.Executed;
+                    HardwareContext.PushObject(wynik); //zwracam wynik na stosie
                     return;
                 }
 

@@ -18,8 +18,8 @@ namespace Cvl.VirtualMachine.TestApp
 
             //Mo
 
-            var vm = new VirtualMachine.WirtualnaMaszyna();
-            vm.Start("Start", p);
+            var vm = new Cvl.VirtualMachine.VirtualMachine();
+            var w1 = vm.Start<int>("Funkcja1", p, 1, 2, "3");
 
             var p2 = new ProcesTest();
             var wynik = p2.Funkcja1(1, 2, "3");

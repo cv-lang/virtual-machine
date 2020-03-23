@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Cvl.VirtualMachine
 {
-    public class WirtualnaMaszyna
+    public class VirtualMachine
     {
-        public WirtualnaMaszyna()
+        public VirtualMachine()
         {
             HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
         }
@@ -52,7 +52,12 @@ namespace Cvl.VirtualMachine
             HardwareContext.Execute();
         }
 
-        
+        public T Start<T>(string nazwaMetody, params object[] parametet)
+        {
+            Start(nazwaMetody, parametet);
+            var ret = HardwareContext.PopObject();
+            return (T)ret;
+        }
 
         public void WalidujMetodyObiektu(object instancjaObiektu)
         {
