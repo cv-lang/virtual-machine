@@ -54,6 +54,7 @@ namespace Cvl.VirtualMachine
 
         public T Start<T>(string nazwaMetody, params object[] parametet)
         {
+            HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
             Start(nazwaMetody, parametet);
             var ret = HardwareContext.PopObject();
             return (T)ret;

@@ -13,6 +13,12 @@ namespace Cvl.VirtualMachine.Instructions.Arithmetic
             {
                 case "add":
                     return CreateInstruction<Add>(instrukcja);
+                case "sub":
+                    return CreateInstruction<Sub>(instrukcja);
+                case "mul":
+                    return CreateInstruction<Mul>(instrukcja);
+                case "div":
+                    return CreateInstruction<Div>(instrukcja);
             }
             return null;
         }
