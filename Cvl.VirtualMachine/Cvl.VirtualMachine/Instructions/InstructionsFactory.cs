@@ -25,12 +25,16 @@ namespace Cvl.VirtualMachine.Instructions
             return null;
         }
 
-        public T CreateInstruction<T>(Instruction instruction)
+        public T CreateInstruction<T>(Instruction instruction, Action<T> a = null)
             where T : InstructionBase, new()
         {
             var intst = new T();
             intst.HardwareContext = WirtualnaMaszyna.HardwareContext;
             intst.Inicialize(instruction);
+            if(a != null)
+            {
+                a.Invoke(intst);
+            }
             return intst;
         }
 

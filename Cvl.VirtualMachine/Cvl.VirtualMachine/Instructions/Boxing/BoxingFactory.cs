@@ -13,6 +13,10 @@ namespace Cvl.VirtualMachine.Instructions.Boxing
             {
                 case "box":
                     return CreateInstruction<Box>(instrukcja);
+                case "unbox":
+                    return CreateInstruction<Unbox>(instrukcja);
+                case "unbox.any":
+                    return CreateInstruction<Unbox_Any>(instrukcja);
             }
             return null;
         }

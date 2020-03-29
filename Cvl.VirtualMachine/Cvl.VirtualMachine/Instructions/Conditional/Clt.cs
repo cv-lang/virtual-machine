@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Cvl.VirtualMachine.Instructions.Conditional
 {
-    //Compares two values. If the first value is less than the second, the integer value 1 (int32) is pushed onto the evaluation stack; otherwise 0 (int32) is pushed onto the evaluation stack.
+    /// <summary>
+    /// Compares two values. If the first value is less than the second, the integer value 1 (int32) is pushed onto the evaluation stack; otherwise 0 (int32) is pushed onto the evaluation stack.
+    /// </summary>
     public class Clt : InstructionBase
     {        
         public override void Wykonaj()
@@ -12,7 +14,10 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             dynamic b = HardwareContext.PopObject();
             dynamic a = HardwareContext.PopObject();
 
-            dynamic wynik = a < b ? 1 : 0;
+            int one = 1;
+            int zero = 0;
+
+            int wynik = a < b ? one : zero;
             HardwareContext.PushObject(wynik);
             HardwareContext.WykonajNastepnaInstrukcje();
         }

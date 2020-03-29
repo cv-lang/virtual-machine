@@ -1,11 +1,12 @@
-﻿using Mono.Reflection;
+﻿using Cvl.VirtualMachine.Instructions.Special;
+using Mono.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cvl.VirtualMachine.Instructions.Special
+namespace Cvl.VirtualMachine.Instructions.Exceptions
 {
-    public class SpecialInstrictionsFactory : InstructionFactory
+    public class ExceptionsInstrutionsFactory : InstructionFactory
     {
         public override InstructionBase CreateInstruction(Instruction instrukcja)
         {

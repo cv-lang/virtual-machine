@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,12 +7,26 @@
     <PackageProjectUrl>https://github.com/cv-lang/virtual-machine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/cv-lang/virtual-machine</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageTags>C#, .net Core</PackageTags>
+    <PackageTags>C#, .net Core, Virtual Machine, Application checkpointing, Hibernate</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Cvlang Organization</Copyright>
+    <Description>Virtual machine written in C #. Allows you to suspend and restore thread execution - even those saved to disk (Hibernate).
+Allows for Application checkpointing.
+The code is executed instruction by instruction. (Virtual machine emulates all instructions from IL)</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Mono.Reflection" Version="2.0.0" />
     <PackageReference Include="SharpSerializer" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -3,16 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cvl.VirtualMachine.Instructions.Special
+namespace Cvl.VirtualMachine.Instructions.Converts
 {
-    public class SpecialInstrictionsFactory : InstructionFactory
+    public class ConvertInstructionFactory : InstructionFactory
     {
         public override InstructionBase CreateInstruction(Instruction instrukcja)
         {
             switch (instrukcja.OpCode.Name)
             {
-                case "nop":
-                    return CreateInstruction<Nop>(instrukcja);
+                case "conv.i4":
+                    return CreateInstruction<Conv>(instrukcja, i=> i.ConvertType = ConvertType.i4);
+                
             }
             return null;
         }

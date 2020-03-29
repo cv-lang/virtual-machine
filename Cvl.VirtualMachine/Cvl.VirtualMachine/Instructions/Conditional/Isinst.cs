@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Cvl.VirtualMachine.Instructions.Conditional
 {
+    /// <summary>
+    /// Tests whether an object reference (type O) is an instance of a particular class.
+    /// https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.isinst?view=netframework-4.8
+    /// </summary>
     public class Isinst : InstructionBase
     {        
         public override void Wykonaj()
