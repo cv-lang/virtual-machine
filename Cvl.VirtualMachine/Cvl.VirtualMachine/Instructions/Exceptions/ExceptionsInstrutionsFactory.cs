@@ -12,8 +12,12 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
         {
             switch (instrukcja.OpCode.Name)
             {
-                case "nop":
-                    return CreateInstruction<Nop>(instrukcja);
+                case "throw":
+                    return CreateInstruction<Throw>(instrukcja);
+                case "endfinally":
+                    return CreateInstruction<Endfinally>(instrukcja);
+                case "leave.s":
+                    return CreateInstruction<Leave_S>(instrukcja);
             }
             return null;
         }

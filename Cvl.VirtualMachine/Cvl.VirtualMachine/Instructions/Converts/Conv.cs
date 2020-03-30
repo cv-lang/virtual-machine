@@ -6,10 +6,13 @@ namespace Cvl.VirtualMachine.Instructions.Converts
 {
     public enum ConvertType
     {
-        i4
+        i4,
+        r8
     }
 
-    //
+    /// <summary>
+    /// Converts the value on top of the evaluation stack to ...
+    /// </summary>
     public class Conv : InstructionBase
     {
         public ConvertType ConvertType;
@@ -21,6 +24,9 @@ namespace Cvl.VirtualMachine.Instructions.Converts
             {
                 case ConvertType.i4:
                     HardwareContext.PushObject((int)a);
+                    break;
+                case ConvertType.r8:
+                    HardwareContext.PushObject((double)a);
                     break;
             }           
 

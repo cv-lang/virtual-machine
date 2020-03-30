@@ -34,6 +34,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             Ldc inst = null;
             switch (instrukcja.OpCode.Name)
             {
+                case "ldc.i4.0":
+                    return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = 0);
                 case "ldc.i4.1":
                     return CreateInstruction<Ldc>(instrukcja, i=> i.ConstValue=1);
                 case "ldc.i4.2":
@@ -41,7 +43,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
                 case "ldc.i4.3":
                     return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue =3);
                 case "ldc.i4.4":
-                    return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue =4);
+                    return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue =4);                
+                case "ldc.i4.s":
+                    return CreateInstruction<Ldc>(instrukcja);
                 case "ldc.r8":
                     return CreateInstruction<Ldc>(instrukcja);
             }

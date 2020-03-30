@@ -13,7 +13,10 @@ namespace Cvl.VirtualMachine.Instructions.Converts
             {
                 case "conv.i4":
                     return CreateInstruction<Conv>(instrukcja, i=> i.ConvertType = ConvertType.i4);
-                
+                case "conv.r8":
+                    return CreateInstruction<Conv>(instrukcja, i => i.ConvertType = ConvertType.r8);
+
+
             }
             return null;
         }
