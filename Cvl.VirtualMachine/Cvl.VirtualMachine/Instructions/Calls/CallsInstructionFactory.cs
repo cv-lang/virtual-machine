@@ -12,13 +12,13 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             switch (instrukcja.OpCode.Name)
             {
                 case "call":
-                    var call= CreateInstruction<Call>(instrukcja);
-                    call.WirtualnaMaszyna = WirtualnaMaszyna;
-                    return call;
+                    return CreateInstruction<Call>(instrukcja, i=> i.WirtualnaMaszyna = WirtualnaMaszyna);
                 case "callvirt":
                     return CreateInstruction<Callvirt>(instrukcja);
                 case "ret":
                     return CreateInstruction<Ret>(instrukcja);
+                case "constrained.":
+                    return CreateInstruction<Constrained>(instrukcja);
             }
             return null;
         }
