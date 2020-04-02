@@ -19,6 +19,9 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             else if (b is int && a is bool)
             {
                 a = a ? 1 : 0;
+            } else if( a is Enum && b is int)
+            {
+                a = (int)a;
             }
 
             dynamic wynik = a == b;

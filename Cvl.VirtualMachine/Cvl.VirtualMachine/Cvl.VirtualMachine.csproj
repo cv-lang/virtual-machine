@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>Cvlang Organization</Authors>
-    <Version>0.2</Version>
+    <Version>0.2.1</Version>
     <PackageProjectUrl>https://github.com/cv-lang/virtual-machine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/cv-lang/virtual-machine</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
@@ -15,8 +15,8 @@
     <Description>Virtual machine written in C #. Allows you to suspend and restore thread execution - even those saved to disk (Hibernate).
 Allows for Application checkpointing.
 The code is executed instruction by instruction. (Virtual machine emulates all instructions from IL)</Description>
-    <AssemblyVersion>0.2.0.0</AssemblyVersion>
-    <FileVersion>0.2.0.0</FileVersion>
+    <AssemblyVersion>0.2.1.0</AssemblyVersion>
+    <FileVersion>0.2.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
