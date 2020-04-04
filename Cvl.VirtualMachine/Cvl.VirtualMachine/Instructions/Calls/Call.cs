@@ -1,5 +1,6 @@
 ﻿using Cvl.VirtualMachine.Core;
 using Cvl.VirtualMachine.Core.Attributes;
+using Cvl.VirtualMachine.Instructions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,7 +87,18 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         }
                     }
 
-                    var ret = method.Invoke(instance, dopasowaneParametry.ToArray());
+                    object ret = null;
+                    try
+                    {
+                        ret = method.Invoke(instance, dopasowaneParametry.ToArray());
+                    } catch(Exception exception)
+                    {
+                        //wyjątek z zewnętrznej funkcji
+                        HardwareContext.Status = VirtualMachineState.Exception;
+                        Throw.ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, exception);
+                        return;
+                    }
+
                     if (method.ReturnType == typeof(void))
                     {
                         //nie zwracam wyniku

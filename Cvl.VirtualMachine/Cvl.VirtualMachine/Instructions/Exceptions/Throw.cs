@@ -1,6 +1,7 @@
 ﻿using Cvl.VirtualMachine.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cvl.VirtualMachine.Instructions.Exceptions
@@ -17,38 +18,42 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
         public static void ObslugaRzuconegoWyjatku(VirtualMachine wirtualnaMaszyna, object rzuconyWyjatek)
         {
             var aktywnaMetod = wirtualnaMaszyna.HardwareContext.AktualnaMetoda;
-            //while (true)
-            //{
-            //    var czyObslugujeWyjatek = aktywnaMetod.CzyObslugujeWyjatki();
-            //    if (czyObslugujeWyjatek)
-            //    {
-            //        var bloki = aktywnaMetod.PobierzBlokiObslugiWyjatkow();
-            //        var blok = bloki.FirstOrDefault();
-            //        if (blok != null)
-            //        {
-            //            //obsługujemy pierwszys blok
-            //            wirtualnaMaszyna.AktualnaMetoda = aktywnaMetod;
-            //            wirtualnaMaszyna.AktualnaMetoda.NumerWykonywanejInstrukcji
-            //                = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(blok.HandlerStart.Offset);
+            while (true)
+            {
+                var czyObslugujeWyjatek = aktywnaMetod.CzyObslugujeWyjatki();
+                if (czyObslugujeWyjatek)
+                {
+                    var bloki = aktywnaMetod.PobierzBlokiObslugiWyjatkow();
+                    var blok = bloki.FirstOrDefault();
+                    if (blok != null)
+                    {
+                        //obsługujemy pierwszys blok
+                        wirtualnaMaszyna.HardwareContext.AktualnaMetoda = aktywnaMetod;
+                        wirtualnaMaszyna.HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji
+                            = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(blok.HandlerOffset);
 
-            //            wirtualnaMaszyna.Stos.PushObject(rzuconyWyjatek); 
-            //            if (blok.HandlerType == ExceptionHandlerType.Catch)
-            //            {
-            //                //wracam do zwykłej obsługi kodu                            
-            //                wirtualnaMaszyna.Status = VirtualMachineState.Executing;
-            //            }
+                        wirtualnaMaszyna.HardwareContext.Stos.PushObject(rzuconyWyjatek);
+                        if (blok.CatchType != null)
+                        {
+                            //wracam do zwykłej obsługi kodu                            
+                            wirtualnaMaszyna.HardwareContext.Status = VirtualMachineState.Executing;
+                        } else
+                        {
 
-            //            return;
-            //        }
-            //    }
+                            throw new Exception("Brak obsługi blogu Catch w instrukcji Throw");
+                        }
 
-            //    aktywnaMetod = wirtualnaMaszyna.Stos.PobierzNastepnaMetodeZeStosu();
-            //    if (aktywnaMetod == null)
-            //    {
-            //        //mamy koniec stosu
-            //        throw new Exception("Koniec stosu w obsłudze wyjątku", rzuconyWyjatek as Exception);
-            //    }
-            //}
+                        return;
+                    }
+                }
+
+                aktywnaMetod = wirtualnaMaszyna.HardwareContext.Stos.PobierzNastepnaMetodeZeStosu();
+                if (aktywnaMetod == null)
+                {
+                    //mamy koniec stosu
+                    throw new Exception("Koniec stosu w obsłudze wyjątku", rzuconyWyjatek as Exception);
+                }
+            }
         }
     }
 }

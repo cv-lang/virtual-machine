@@ -1,5 +1,6 @@
 ﻿using Cvl.VirtualMachine.Core.Tools;
 using Cvl.VirtualMachine.Instructions;
+using Mono.Cecil.Cil;
 using Mono.Reflection;
 using System;
 using System.Collections.Generic;
@@ -134,30 +135,30 @@ namespace Cvl.VirtualMachine.Core
             }
         }
 
-        //public List<ExceptionHandler> PobierzBlokiObslugiWyjatkow()
-        //{
-        //    var lista = new List<ExceptionHandler>();
-        //    var metoda = PobierzOpisMetody().GetMethodDefinition;
-        //    int offset = OffsetWykonywanejInstrukcji;
+       
+        public List<ExceptionHandlingClause> PobierzBlokiObslugiWyjatkow()
+        {
+            var lista = new List<ExceptionHandlingClause>();
+            var exceptionClauses = PobierzOpisMetody().GetMethodBody().ExceptionHandlingClauses;
+            int offset = OffsetWykonywanejInstrukcji;
 
-        //    foreach (var item in metoda.Body.ExceptionHandlers)
-        //    {
-        //        if(item.TryStart.Offset < offset && item.TryEnd.Offset > offset)
-        //        {
-        //            lista.Add(item);
-        //        }
-        //    }
+            foreach (var item in exceptionClauses)
+            {
+                if (item.TryOffset < offset && (item.TryOffset + item.TryLength) > offset)
+                {
+                    lista.Add(item);
+                }
+            }
 
-        //    return lista;
-        //}
+            return lista;
+        }
 
 
 
         public bool CzyObslugujeWyjatki()
         {
             var metoda = PobierzOpisMetody();
-            //return metoda.Body.ExceptionHandlers.Count > 0;
-            return false;
+            return metoda.GetMethodBody().ExceptionHandlingClauses.Count > 0;
         }
 
         public override string ToString()
