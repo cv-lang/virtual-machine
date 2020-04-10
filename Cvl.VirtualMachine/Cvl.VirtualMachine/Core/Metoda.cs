@@ -1,6 +1,5 @@
 ﻿using Cvl.VirtualMachine.Core.Tools;
 using Cvl.VirtualMachine.Instructions;
-using Mono.Cecil.Cil;
 using Mono.Reflection;
 using System;
 using System.Collections.Generic;

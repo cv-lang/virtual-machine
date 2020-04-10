@@ -31,7 +31,6 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {
         public override InstructionBase CreateInstruction(Instruction instrukcja)
         {
-            Ldc inst = null;
             switch (instrukcja.OpCode.Name)
             {
                 case "ldc.i4.m1":

@@ -19,16 +19,26 @@ namespace Cvl.VirtualMachine
         public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
-        
 
-        internal static void HibernateVirtualMachine()
+
+        /// <summary>
+        /// Metoda służy do hibernowania wirtualnej maszyny
+        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
+        /// </summary>
+        public void HibernateVirtualMachine()
         {
-            throw new NotImplementedException();
+            CzyWykonywacInstrukcje = false;
+            HardwareContext.Status = VirtualMachineState.Hibernated;
         }
 
-        internal static void EndProcessVirtualMachine()
+        /// <summary>
+        /// Metoda służy do kończenia wykonywania wirtualnej maszyny
+        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
+        /// </summary>
+        public void EndProcessVirtualMachine()
         {
-            throw new NotImplementedException();
+            CzyWykonywacInstrukcje = false;
+            HardwareContext.Status = VirtualMachineState.Executed;
         }
 
         public void WykonajMetode()
