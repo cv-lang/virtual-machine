@@ -21,25 +21,7 @@ namespace Cvl.VirtualMachine
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
 
 
-        /// <summary>
-        /// Metoda służy do hibernowania wirtualnej maszyny
-        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
-        /// </summary>
-        public void HibernateVirtualMachine()
-        {
-            CzyWykonywacInstrukcje = false;
-            HardwareContext.Status = VirtualMachineState.Hibernated;
-        }
-
-        /// <summary>
-        /// Metoda służy do kończenia wykonywania wirtualnej maszyny
-        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
-        /// </summary>
-        public void EndProcessVirtualMachine()
-        {
-            CzyWykonywacInstrukcje = false;
-            HardwareContext.Status = VirtualMachineState.Executed;
-        }
+        
 
         public void WykonajMetode()
         {
@@ -85,5 +67,47 @@ namespace Cvl.VirtualMachine
                 var i = m.PobierzInstrukcjeMetody(); //pobierma instrukcje metody - jeśli brakuje jakiejś instrukcji rzuca wyjątek
             }
         }
+
+        #region Hibernation and restoring
+
+        /// <summary>
+        /// Metoda służy do hibernowania wirtualnej maszyny
+        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
+        /// </summary>
+        public void HibernateVirtualMachine()
+        {
+            CzyWykonywacInstrukcje = false;
+            HardwareContext.Status = VirtualMachineState.Hibernated;
+        }
+
+        /// <summary>
+        /// Metoda służy do kończenia wykonywania wirtualnej maszyny
+        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
+        /// </summary>
+        public void EndProcessVirtualMachine()
+        {
+            CzyWykonywacInstrukcje = false;
+            HardwareContext.Status = VirtualMachineState.Executed;
+        }
+
+        /// <summary>
+        /// Metoda służy do hibernowania wirtualnej maszyny
+        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
+        /// </summary>
+        public static void Hibernate()
+        {
+
+        }
+
+        /// <summary>
+        /// Metoda służy do kończenia wykonywania wirtualnej maszyny
+        /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
+        /// </summary>
+        public static void EndProcess()
+        {
+
+        }
+
+        #endregion
     }
 }

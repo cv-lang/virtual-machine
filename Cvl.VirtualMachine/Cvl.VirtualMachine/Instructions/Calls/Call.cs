@@ -38,14 +38,14 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(VirtualMachine))
             {
                 //wywołał metodę do hibernacji wirtualnej maszyny
-                VirtualMachine.HibernateVirtualMachine();
+                VirtualMachine.Hibernate();
                 return;
             }
 
             if (method.Name.Equals("EndProcess") && method.DeclaringType == typeof(VirtualMachine))
             {
                 //wywołał metodę do hibernacji wirtualnej maszyny
-                VirtualMachine.EndProcessVirtualMachine();
+                VirtualMachine.EndProcess();
                 return;
             }
 
