@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cvl.VirtualMachine\Cvl.VirtualMachine.csproj" />
+    <ProjectReference Include="..\Cvl.VirtualMachine.Standard\Cvl.VirtualMachine.Standard.csproj" />
   </ItemGroup>
 
 </Project>

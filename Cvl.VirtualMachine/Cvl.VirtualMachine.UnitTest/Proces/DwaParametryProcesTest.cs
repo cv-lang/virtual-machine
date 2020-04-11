@@ -38,11 +38,11 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         {
             var proces = new RepozytoriumTestProces();
             var vm = new VirtualMachine();
-            var vmWynik = vm.Start<object>("Start", proces);
+            var vmWynik = (List<Person>)vm.Start<object>("Start", proces);
 
             proces = new RepozytoriumTestProces();
-            var wynik = proces.Start();
-            Assert.IsTrue(wynik.Equals(vmWynik));
+            var wynik = (List<Person>)proces.Start();
+            Assert.IsTrue(wynik.Count == vmWynik.Count && wynik[0].Equals(vmWynik[0]));
         }
     }
 
@@ -86,7 +86,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         public object Start()
         {
             var rep = new RepozytoriumTypowane<Person>();
-            var pracownicy = rep.PobierzObiektyTypowane();
+            List<Person> pracownicy = rep.PobierzObiektyTypowane();
 
             int i = 0;
             foreach (var pracownik in pracownicy)
