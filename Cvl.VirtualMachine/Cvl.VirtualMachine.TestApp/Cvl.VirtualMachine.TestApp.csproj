@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cvl.VirtualMachine\Cvl.VirtualMachine.NetCore31.csproj" />
+    <ProjectReference Include="..\Cvl.VirtualMachine.Standard\Cvl.VirtualMachine.Standard.csproj" />
   </ItemGroup>
 
 </Project>

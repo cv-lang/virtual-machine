@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cvl.VirtualMachine</RootNamespace>
     <AssemblyName>Cvl.VirtualMachine</AssemblyName>
-    <Version>0.8.1</Version>
+    <Version>0.8.2</Version>
     <Authors>Cvlang Organization</Authors>
     <Company>Cvlang Organization</Company>
     <Product>Cvl.VirtualMachine</Product>
