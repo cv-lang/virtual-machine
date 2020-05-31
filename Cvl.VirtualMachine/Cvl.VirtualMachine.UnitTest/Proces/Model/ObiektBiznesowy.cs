@@ -6,7 +6,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Model
 {
     public class ObiektBiznesowy
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public override int GetHashCode()
         {

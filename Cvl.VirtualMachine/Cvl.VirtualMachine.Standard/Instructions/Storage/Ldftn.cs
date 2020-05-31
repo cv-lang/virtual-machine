@@ -26,8 +26,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {        
         public override void Wykonaj()
         {
-            var methodDefiniton = Instruction.Operand;
-            HardwareContext.PushObject(methodDefiniton);
+            var methodDefiniton = Instruction.Operand as System.Reflection.MethodInfo;
+            
+            HardwareContext.PushObject(methodDefiniton.MethodHandle.GetFunctionPointer());
             HardwareContext.WykonajNastepnaInstrukcje();
         }
     }
