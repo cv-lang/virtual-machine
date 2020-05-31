@@ -25,108 +25,88 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
             }
 
             listaParametrow.Reverse();
-
-            //Obsługa akcji z dwoma parametrami
-            if (typ.Name.Contains("Action"))
+            
+            var constructorInfo = md as ConstructorInfo;
+            if (constructorInfo != null)
             {
-                var p_1 = listaParametrow[1];
-                var p_0 = listaParametrow[0];
-
-                var genericArgument = typMono.GetGenericArguments()[0];
-                var gaSystem = genericArgument;
-
-                var metoda = p_1 as MethodInfo;
-                var nazwaMetody = metoda.Name;
-
-                var actionT = typeof(Action<>).MakeGenericType(gaSystem);
-                var action = Delegate.CreateDelegate(actionT, p_0, nazwaMetody);
-                HardwareContext.PushObject(action);
-                HardwareContext.WykonajNastepnaInstrukcje();
-            }
-            else
-            {
-                var constructorInfo = md as ConstructorInfo;
-                if (constructorInfo != null)
+                if (md.IsStatic)
                 {
-                    if (md.IsStatic)
+                    var nowyObiekt = constructorInfo.Invoke(null, listaParametrow.ToArray());
+                    //Activator.CreateInstance(typ, listaParametrow.ToArray());
+                    HardwareContext.PushObject(nowyObiekt);
+                }
+                else
+                {
+                    if (listaParametrow.Any() == false)
                     {
-                        var nowyObiekt = constructorInfo.Invoke(null, listaParametrow.ToArray());
-                        //Activator.CreateInstance(typ, listaParametrow.ToArray());
+                        //tworze po prostu dany obiekt - danego typu
+                        var nowyObiekt = Activator.CreateInstance(typ, null);
                         HardwareContext.PushObject(nowyObiekt);
                     }
                     else
                     {
-                        if (listaParametrow.Any() == false)
+                        var dopasowaneTypowoParametry = new List<object>();
+                        var constructorParametrerTypes = constructorInfo.GetParameters();
+                        for (int i = 0; i < listaParametrow.Count; i++)
                         {
-                            //tworze po prostu dany obiekt - danego typu
-                            var nowyObiekt = Activator.CreateInstance(typ, null);
-                            HardwareContext.PushObject(nowyObiekt);
-                        }
-                        else
-                        {
-                            var dopasowaneTypowoParametry = new List<object>();
-                            var constructorParametrerTypes = constructorInfo.GetParameters();
-                            for (int i = 0; i < listaParametrow.Count; i++)
+                            var parameter = listaParametrow[i];
+                            var typParametru = parameter.GetType();
+                            var typKonstruktora = constructorParametrerTypes[i].ParameterType;
+
+                            if(parameter is MethodInfo parameterMethodInfo)
                             {
-                                var parameter = listaParametrow[i];
-                                var typParametru = parameter.GetType();
-                                var typKonstruktora = constructorParametrerTypes[i].ParameterType;
 
-                                if(parameter is MethodInfo parameterMethodInfo)
-                                {
-
-                                }
-
-
-                                if (typKonstruktora == typeof(IntPtr) && typParametru == typeof(bool))
-                                {
-                                    dopasowaneTypowoParametry.Add(((bool)parameter ? 1:0));
-                                }
-                                else
-                                {
-                                    dopasowaneTypowoParametry.Add(parameter);
-                                }
                             }
 
-                            var nowyObiekt = constructorInfo.Invoke(dopasowaneTypowoParametry.ToArray());
-                            HardwareContext.PushObject(nowyObiekt);
 
-                            ////wyszukuje odpowiedniego konstruktora, przykładowo dla Func<JakisObiekt, bool> konstruktor
-                            ////zamiast bool musi być przekonwertowany na IntPrt
-                            ////var types = new Type[listaParametrow.Count];
-                            ////foreach (Object parameter in listaParametrow)
-                            ////{
-                            ////    var parameterType = parameter.GetType();
-
-                            ////}
-
-                            //var parameterTypes = listaParametrow.Select(x => x.GetType()).ToArray();
-
-                            //var constructor = typ.GetConstructor(BindingFlags.CreateInstance | BindingFlags.Instance |
-                            //                   BindingFlags.NonPublic | BindingFlags.Public,
-                            //    null, parameterTypes, null);
-
-                            //if (constructor != null)
-                            //{
-                            //    var nowyObiekt = constructor.Invoke(listaParametrow.ToArray());
-                            //    HardwareContext.PushObject(nowyObiekt);
-                            //}
-                            //else
-                            //{
-                            //    var nowyObiekt = Activator.CreateInstance(typ, listaParametrow.ToArray());
-                            //    HardwareContext.PushObject(nowyObiekt);
-                            //}
+                            if (typKonstruktora == typeof(IntPtr) && typParametru == typeof(bool))
+                            {
+                                dopasowaneTypowoParametry.Add(((bool)parameter ? 1:0));
+                            }
+                            else
+                            {
+                                dopasowaneTypowoParametry.Add(parameter);
+                            }
                         }
+
+                        var nowyObiekt = constructorInfo.Invoke(dopasowaneTypowoParametry.ToArray());
+                        HardwareContext.PushObject(nowyObiekt);
+
+                        ////wyszukuje odpowiedniego konstruktora, przykładowo dla Func<JakisObiekt, bool> konstruktor
+                        ////zamiast bool musi być przekonwertowany na IntPrt
+                        ////var types = new Type[listaParametrow.Count];
+                        ////foreach (Object parameter in listaParametrow)
+                        ////{
+                        ////    var parameterType = parameter.GetType();
+
+                        ////}
+
+                        //var parameterTypes = listaParametrow.Select(x => x.GetType()).ToArray();
+
+                        //var constructor = typ.GetConstructor(BindingFlags.CreateInstance | BindingFlags.Instance |
+                        //                   BindingFlags.NonPublic | BindingFlags.Public,
+                        //    null, parameterTypes, null);
+
+                        //if (constructor != null)
+                        //{
+                        //    var nowyObiekt = constructor.Invoke(listaParametrow.ToArray());
+                        //    HardwareContext.PushObject(nowyObiekt);
+                        //}
+                        //else
+                        //{
+                        //    var nowyObiekt = Activator.CreateInstance(typ, listaParametrow.ToArray());
+                        //    HardwareContext.PushObject(nowyObiekt);
+                        //}
                     }
                 }
-                else
-                {
-                    var nowyObiekt = md.Invoke(null, listaParametrow.ToArray());
-                    //Activator.CreateInstance(typ, listaParametrow.ToArray());
-                    HardwareContext.PushObject(nowyObiekt);
-                }
-                HardwareContext.WykonajNastepnaInstrukcje();
             }
+            else
+            {
+                var nowyObiekt = md.Invoke(null, listaParametrow.ToArray());
+                //Activator.CreateInstance(typ, listaParametrow.ToArray());
+                HardwareContext.PushObject(nowyObiekt);
+            }
+            HardwareContext.WykonajNastepnaInstrukcje();          
         }
     }
 }
