@@ -28,9 +28,10 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             //pobieram statyczną zmienną
             var fieldDefinition = Instruction.Operand as System.Reflection.FieldInfo;
-            var typ = fieldDefinition.DeclaringType;//.GetSystemType();
-            var field = typ.GetField(fieldDefinition.Name);
-            var val = field.GetValue(null);
+            var val = fieldDefinition.GetValue(null);
+            //var typ = fieldDefinition.DeclaringType;//.GetSystemType();
+            //var field = typ.GetField(fieldDefinition.Name);
+            //var val = field.GetValue(null);
 
             HardwareContext.PushObject(val);
             HardwareContext.WykonajNastepnaInstrukcje();

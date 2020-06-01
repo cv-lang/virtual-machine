@@ -122,6 +122,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     m.NazwaMetody = nazwaMetodyBazowej; //to będzie już uruchomienie na właściwym obiekcie
                     m.AssemblyName = method.Module.FullyQualifiedName;
                     m.NumerWykonywanejInstrukcji = 0;
+                    m.WirtualnaMaszyna = HardwareContext.WirtualnaMaszyna;
                     m.WczytajInstrukcje();
 
                     HardwareContext.AktualnaMetoda = m;

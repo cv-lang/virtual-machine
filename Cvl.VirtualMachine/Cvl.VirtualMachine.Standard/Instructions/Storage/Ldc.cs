@@ -1,6 +1,7 @@
 ﻿using Mono.Reflection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Cvl.VirtualMachine.Instructions.Storage
@@ -35,6 +36,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             {
                 case "ldc.i4.m1":
                     return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = -1);
+                case "ldc.i4":
+                    return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = (int)instrukcja.Operand);
                 case "ldc.i4.0":
                     return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = 0);
                 case "ldc.i4.1":
@@ -50,6 +53,17 @@ namespace Cvl.VirtualMachine.Instructions.Storage
                 case "ldc.r8":
                     return CreateInstruction<Ldc>(instrukcja);
             }
+
+            if(instrukcja.OpCode.Name.Contains("ldc.i4"))
+            {
+                
+                var vs = instrukcja.OpCode.Name.Split('.').Last();
+                var v = int.Parse(vs);
+
+                return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = v);
+            }
+
+
             return null;
         }
     }

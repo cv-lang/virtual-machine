@@ -28,6 +28,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                     return CreateInstruction<Brfalse>(instrukcja);
                 case "brfalse.s":
                     return CreateInstruction<Brfalse>(instrukcja);
+                case "brtrue":
                 case "brtrue.s":
                     return CreateInstruction<Brtrue>(instrukcja);
                 case "isinst":
