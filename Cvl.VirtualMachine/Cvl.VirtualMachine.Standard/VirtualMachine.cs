@@ -1,9 +1,11 @@
 ﻿using Cvl.VirtualMachine.Core;
+using Cvl.VirtualMachine.Core.Attributes;
 using Cvl.VirtualMachine.Instructions;
 using Cvl.VirtualMachine.Instructions.Calls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Cvl.VirtualMachine
@@ -19,9 +21,7 @@ namespace Cvl.VirtualMachine
         public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
-
-
-        
+        public long BreakpointIterationNumber { get; set; } = -1;
 
         public void WykonajMetode()
         {
@@ -106,6 +106,36 @@ namespace Cvl.VirtualMachine
         public static void EndProcess()
         {
 
+        }
+
+
+
+        #endregion
+
+        #region Interprete choce
+        public string InterpreteNamespaces { get; set; }
+
+        internal bool CzyWykonacCzyInterpretowac(MethodInfo mr)
+        {
+            var czyKlasaMaAtrybut = mr.DeclaringType.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
+            var czyMetodaMaAtrybut = mr.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
+
+
+            if (czyKlasaMaAtrybut || czyMetodaMaAtrybut)
+            {
+                return false; //interpertujemy
+            }
+
+            if(string.IsNullOrEmpty(InterpreteNamespaces) == false)
+            {
+                var namespaces = InterpreteNamespaces.Split(';');
+                if( namespaces.Any(x=> mr.DeclaringType.Namespace.Contains(x)) )
+                {
+                    return false; //interpretujrmy
+                }
+            }
+
+            return true; //w innym wypadku wykonujemy metody
         }
 
         #endregion

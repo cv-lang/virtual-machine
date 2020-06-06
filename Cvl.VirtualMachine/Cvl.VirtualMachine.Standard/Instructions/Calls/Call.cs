@@ -114,7 +114,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     //interpretowanie
 
                     var nazwaMetodyBazowej = method.Name;
-                    var typDef = instance.GetType();
+                    //var typDef = instance.GetType();
                     var staraMetoda = HardwareContext.AktualnaMetoda;
 
                     var m = new Metoda(method, WirtualnaMaszyna);
@@ -640,16 +640,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
         ///         false - znaczy interpretować</returns>
         public bool CzyWykonacCzyInterpretowac(MethodInfo mr)
         {
-            var czyKlasaMaAtrybut = mr.DeclaringType.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
-            var czyMetodaMaAtrybut = mr.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
-
-
-            if (czyKlasaMaAtrybut || czyMetodaMaAtrybut)
-            {
-                return false; //interpertujemy
-            }
-
-            return true; //w innym wypadku wykonujemy metody
+            return HardwareContext.WirtualnaMaszyna.CzyWykonacCzyInterpretowac(mr);            
         }
     }
 }

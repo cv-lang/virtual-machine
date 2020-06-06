@@ -4,6 +4,7 @@ using Cvl.VirtualMachine.Core.Variables.Addresses;
 using Cvl.VirtualMachine.Instructions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -30,6 +31,11 @@ namespace Cvl.VirtualMachine
                 var zmienneLokalne = AktualnaMetoda.LocalVariables;
                 var argumenty = AktualnaMetoda.LocalArguments;
                 var stos = Stos;
+
+                if(WirtualnaMaszyna.BreakpointIterationNumber == NumerIteracji)
+                {
+                    Debugger.Break();
+                }
                 //try
                 {
                     //if (NS.Debug.StopIterationNumber == NumerIteracji)

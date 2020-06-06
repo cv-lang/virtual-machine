@@ -12,7 +12,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     {        
         public override void Wykonaj()
         {
-
+            //throw new NotImplementedException();
             HardwareContext.WykonajNastepnaInstrukcje();
         }
     }
