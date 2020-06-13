@@ -4,6 +4,7 @@ using Cvl.VirtualMachine.Instructions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
@@ -77,6 +78,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     foreach (var parameter in parameters)
                     {
                         var methodParam = method.GetParameters()[i];
+                        i++;
+
                         if (methodParam.ParameterType == typeof(bool) && parameter is int)
                         {
                             dopasowaneParametry.Add(Convert.ToBoolean((int)parameter));
@@ -90,7 +93,35 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     object ret = null;
                     try
                     {
-                        ret = method.Invoke(instance, dopasowaneParametry.ToArray());
+                        if (instance == null && method.IsStatic == false)
+                        {
+                            //wykonywanie metody nie statycznej dla instance==null np. null.Equals(..)
+
+                            var expressionParameters = new List<UnaryExpression>();
+                            i = 0;
+                            foreach (var item in dopasowaneParametry)
+                            {
+                                var methodParam = method.GetParameters()[i];
+                                i++;
+                                expressionParameters
+                                    .Add(Expression.Convert(Expression.Constant(item), methodParam.ParameterType));
+                            }
+
+                            var call = Expression.Call(Expression.Constant(instance,
+                                //typeof(int?)),
+                                //method.DeclaringType),
+                                HardwareContext.ConstrainedType), //ConstrainedType set by Constrained instruction
+                                method,
+                                expressionParameters);
+
+                            HardwareContext.ConstrainedType = null;
+                            var lambda = Expression.Lambda(call).Compile();
+                            ret = lambda.DynamicInvoke();
+                        } else
+                        {
+                            //standardowe wykonywanie metod
+                            ret = method.Invoke(instance, dopasowaneParametry.ToArray());
+                        }
                     } catch(Exception exception)
                     {
                         //wyjątek z zewnętrznej funkcji
@@ -640,6 +671,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
         ///         false - znaczy interpretować</returns>
         public bool CzyWykonacCzyInterpretowac(MethodInfo mr)
         {
+            if(mr.IsAbstract)
+            {
+                return true;
+            }
+
             return HardwareContext.WirtualnaMaszyna.CzyWykonacCzyInterpretowac(mr);            
         }
     }

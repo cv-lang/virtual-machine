@@ -87,7 +87,12 @@ namespace Cvl.VirtualMachine.Core
         {
             while (stosWewnetrzny.Count > 0)
             {
-                var o = stosWewnetrzny.Pop();
+                var o = Pop();
+                if(o is ObjectWraper wo)
+                {
+                    o = wo.Warosc;
+                }
+
                 if (o is Metoda)
                 {
                     return o as Metoda;

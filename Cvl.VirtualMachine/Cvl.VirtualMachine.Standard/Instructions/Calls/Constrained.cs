@@ -12,6 +12,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     {        
         public override void Wykonaj()
         {
+            HardwareContext.ConstrainedType = (Type)this.Instruction.Operand;
             //throw new NotImplementedException();
             HardwareContext.WykonajNastepnaInstrukcje();
         }

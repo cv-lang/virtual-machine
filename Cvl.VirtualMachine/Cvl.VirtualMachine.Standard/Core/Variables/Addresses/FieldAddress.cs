@@ -12,7 +12,7 @@ namespace Cvl.VirtualMachine.Core.Variables.Addresses
 
         public override object GetValue()
         {
-            var val = Field.GetValue(Object);
+            var val = Field.GetValue(Object);            
             return val;
         }
     }
