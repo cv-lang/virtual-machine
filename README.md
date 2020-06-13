@@ -1,5 +1,5 @@
 # virtual-machine
-<img width="150" src="https://raw.githubusercontent.com/cv-lang/virtual-machine/master/Cvl.VirtualMachine/docs/logo-virtualmachine-m.png" alt="virtualmachine-logo"/>
+<img width="150" src="https://github.com/cv-lang/virtual-machine/blob/master/Cvl.VirtualMachine/Cvl.VirtualMachine.Standard/Icons/logo-virtualmachine-m.png?raw=true" alt="virtualmachine-logo"/>
 .Net Core Virtual Machine - executing .Net Core library (dll) in C#
 
 
