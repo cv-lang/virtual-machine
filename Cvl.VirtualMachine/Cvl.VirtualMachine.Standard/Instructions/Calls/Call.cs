@@ -15,12 +15,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     /// Calls the method indicated by the passed method descriptor.
     /// </summary>
     public class Call : InstructionBase
-    {
-        public VirtualMachine WirtualnaMaszyna { get; set; }
-
+    {        
         public override void Wykonaj()
         {
-            var method = Instruction.Operand as System.Reflection.MethodInfo;
+            var method = Instruction.Operand as System.Reflection.MethodBase;
             //var methodDef = methodRef.Resolve();
             var parameters = new List<object>();
             object instance = null;
@@ -61,7 +59,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             //else
             {
                 //Wykonywanie
-                if (CzyWykonacCzyInterpretowac(method) == true)
+                if (CzyWykonacCzyInterpretowac(method, instance) == true)
                 {
                     //wykonywanie
                     Type type = instance?.GetType();
@@ -111,7 +109,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                                 //typeof(int?)),
                                 //method.DeclaringType),
                                 HardwareContext.ConstrainedType), //ConstrainedType set by Constrained instruction
-                                method,
+                                (MethodInfo)method,
                                 expressionParameters);
 
                             HardwareContext.ConstrainedType = null;
@@ -130,13 +128,16 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         return;
                     }
 
-                    if (method.ReturnType == typeof(void))
+                    if (method is MethodInfo methodInfo)
                     {
-                        //nie zwracam wyniku
-                    }
-                    else
-                    {
-                        HardwareContext.PushObject(ret);
+                        if (methodInfo.ReturnType == typeof(void))
+                        {
+                            //nie zwracam wyniku
+                        }
+                        else
+                        {
+                            HardwareContext.PushObject(ret);
+                        }
                     }
                     HardwareContext.WykonajNastepnaInstrukcje();
                 }
@@ -148,12 +149,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     //var typDef = instance.GetType();
                     var staraMetoda = HardwareContext.AktualnaMetoda;
 
-                    var m = new Metoda(method, WirtualnaMaszyna);
-                    m.NazwaTypu = method.DeclaringType.FullName;
-                    m.NazwaMetody = nazwaMetodyBazowej; //to będzie już uruchomienie na właściwym obiekcie
-                    m.AssemblyName = method.Module.FullyQualifiedName;
-                    m.NumerWykonywanejInstrukcji = 0;
-                    m.WirtualnaMaszyna = HardwareContext.WirtualnaMaszyna;
+                    var m = new Metoda(method, HardwareContext.WirtualnaMaszyna, instance);
+                    
                     m.WczytajInstrukcje();
 
                     HardwareContext.AktualnaMetoda = m;
@@ -669,9 +666,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
         /// <param name="md"></param>
         /// <returns>true - znaczy wykonywać
         ///         false - znaczy interpretować</returns>
-        public bool CzyWykonacCzyInterpretowac(MethodInfo mr)
+        public bool CzyWykonacCzyInterpretowac(MethodBase mr, object instance)
         {
-            if(mr.IsAbstract)
+            if(mr.IsAbstract && instance.GetType().IsAbstract)
             {
                 return true;
             }

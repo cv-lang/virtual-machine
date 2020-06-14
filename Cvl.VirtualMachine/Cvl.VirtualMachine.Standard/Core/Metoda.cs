@@ -21,21 +21,33 @@ namespace Cvl.VirtualMachine.Core
             instrukcje = null;
         }
 
-        public Metoda(MethodInfo metoda, VirtualMachine wirtualnaMaszyna) : this()
-        {
-            methodInfo = metoda;
+        public Metoda(MethodBase metoda, VirtualMachine wirtualnaMaszyna, object instance) : this()
+        {          
+            if(instance != null & metoda.IsVirtual)
+            {
+                //mamy wirtualną metodę, pobieramy z typu
+                methodInfo = instance.GetType().GetMethod(metoda.Name, 
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            }
+            else
+            {
+                methodInfo = metoda;
+            }
+
+            
             var m = this;
-            m.AssemblyName = metoda.Module.FullyQualifiedName;
-            m.NazwaTypu = metoda.DeclaringType.FullName;
-            m.NazwaMetody = metoda.Name;
+            m.AssemblyName = methodInfo.Module.FullyQualifiedName;
+            m.NazwaTypu = methodInfo.DeclaringType.FullName;
+            m.NazwaMetody = methodInfo.Name;
             m.NumerWykonywanejInstrukcji = 0;
-            Xml = Serializer.SerializeObject(metoda.DeclaringType);
+            Xml = Serializer.SerializeObject(methodInfo.DeclaringType);
             WirtualnaMaszyna = wirtualnaMaszyna;
+            
         }
 
         #region Propercje
 
-        private MethodInfo methodInfo;
+        private MethodBase methodInfo;
 
         public string NazwaTypu { get; set; }
         public string NazwaMetody { get; set; }
@@ -116,7 +128,7 @@ namespace Cvl.VirtualMachine.Core
             return Instrukcje.IndexOf(inst);
         }
 
-        public MethodInfo PobierzOpisMetody()
+        public MethodBase PobierzOpisMetody()
         {
             if (methodInfo != null)
             {

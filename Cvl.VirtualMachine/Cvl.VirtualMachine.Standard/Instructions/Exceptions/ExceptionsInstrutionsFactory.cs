@@ -16,8 +16,9 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                     return CreateInstruction<Throw>(instrukcja);
                 case "endfinally":
                     return CreateInstruction<Endfinally>(instrukcja);
+                case "leave":
                 case "leave.s":
-                    return CreateInstruction<Leave_S>(instrukcja);
+                    return CreateInstruction<Leave>(instrukcja);
             }
             return null;
         }

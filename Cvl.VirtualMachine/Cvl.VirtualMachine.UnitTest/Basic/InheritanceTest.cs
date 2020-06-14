@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Cvl.VirtualMachine.Core.Attributes;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -47,6 +48,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
     public abstract class A
     {
+        [Interpret]
         public abstract int GetValue();
     }
 

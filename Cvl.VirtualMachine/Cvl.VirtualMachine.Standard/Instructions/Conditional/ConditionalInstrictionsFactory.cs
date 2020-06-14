@@ -11,6 +11,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
         {
             switch (instrukcja.OpCode.Name)
             {
+                case "beq":
                 case "beq.s":
                     return CreateInstruction<Beq>(instrukcja);
                 case "br.s":
@@ -33,6 +34,21 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                     return CreateInstruction<Brtrue>(instrukcja);
                 case "isinst":
                     return CreateInstruction<Isinst>(instrukcja);
+                case "bne.un.s":
+                    return CreateInstruction<Bne>(instrukcja);
+                case "bgt.s":
+                case "bgt.un.s":
+                case "bgt.un":
+                    return CreateInstruction<Bgt>(instrukcja);
+                case "blt":
+                case "blt.s":
+                    return CreateInstruction<Blt>(instrukcja);
+                case "bge":
+                case "bge.s":
+                    return CreateInstruction<Bge>(instrukcja);
+                case "ble":
+                case "ble.s":
+                    return CreateInstruction<Ble>(instrukcja);                
             }
             return null;
         }

@@ -12,6 +12,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             switch (instrukcja.OpCode.Name)
             {
+                case "stloc":
                 case "stloc.s":
                     return CreateIndexedInstruction<Stloc>(instrukcja);
                 case "stloc.0":

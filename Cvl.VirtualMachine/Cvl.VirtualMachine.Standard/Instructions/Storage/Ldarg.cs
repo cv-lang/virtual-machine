@@ -19,7 +19,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
                 case "ldarg.2":
                     return CreateIndexedInstruction<Ldarg>(instrukcja, 2);
                 case "ldarg.3":
-                    return CreateIndexedInstruction<Ldarg>(instrukcja, 3);                
+                    return CreateIndexedInstruction<Ldarg>(instrukcja, 3);
+                case "ldarg.s":
+                    return CreateIndexedInstruction<Ldarg>(instrukcja);
             }
             return null;
         }

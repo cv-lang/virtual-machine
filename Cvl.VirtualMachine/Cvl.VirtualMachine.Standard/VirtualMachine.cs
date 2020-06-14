@@ -33,7 +33,7 @@ namespace Cvl.VirtualMachine
             var process = parametety.First();
             var typ = process.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
-            var m = new Metoda(startMethod, this);
+            var m = new Metoda(startMethod, this, process);
             m.WczytajInstrukcje();
             HardwareContext.AktualnaMetoda = m;
             //HardwareContext.Stos.PushObject(process);
@@ -63,7 +63,7 @@ namespace Cvl.VirtualMachine
             //var metody = typDef.Methods;
             foreach (var metoda in typ.GetMethods())
             {
-                var m = new Metoda(metoda, this);
+                var m = new Metoda(metoda, this, instancjaObiektu);
                 var i = m.PobierzInstrukcjeMetody(); //pobierma instrukcje metody - jeśli brakuje jakiejś instrukcji rzuca wyjątek
             }
         }
@@ -115,7 +115,7 @@ namespace Cvl.VirtualMachine
         #region Interprete choce
         public string InterpreteNamespaces { get; set; }
 
-        internal bool CzyWykonacCzyInterpretowac(MethodInfo mr)
+        internal bool CzyWykonacCzyInterpretowac(MethodBase mr)
         {
             var czyKlasaMaAtrybut = mr.DeclaringType.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
             var czyMetodaMaAtrybut = mr.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(InterpretAttribute).FullName);
