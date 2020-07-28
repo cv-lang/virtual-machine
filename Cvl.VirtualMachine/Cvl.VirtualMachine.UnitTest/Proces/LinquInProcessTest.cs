@@ -45,7 +45,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
             return person1.Age;
         }
 
-        //[Interpret]
+        [Interpret]
         private List<Person> createDataList()
         {
             var persons = new List<Person>();

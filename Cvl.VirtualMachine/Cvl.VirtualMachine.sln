@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cvl.VirtualMachine.UnitTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cvl.VirtualMachine.NugetTestConsoleApp", "Cvl.VirtualMachine.NugetTestConsoleApp\Cvl.VirtualMachine.NugetTestConsoleApp.csproj", "{F5E4E8AB-3069-4C87-91B7-629E95A64435}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cvl.VirtualMachine.Standard", "Cvl.VirtualMachine.Standard\Cvl.VirtualMachine.Standard.csproj", "{BDF86FA5-D707-45F8-B9C0-07D8255BE489}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cvl.VirtualMachine.Standard", "Cvl.VirtualMachine.Standard\Cvl.VirtualMachine.Standard.csproj", "{BDF86FA5-D707-45F8-B9C0-07D8255BE489}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cvl.VirtualMachine.TestAppFramework", "Cvl.VirtualMachine.TestAppFramework\Cvl.VirtualMachine.TestAppFramework.csproj", "{6FD309BA-59AE-4A66-9E9B-925C04E8A642}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FD309BA-59AE-4A66-9E9B-925C04E8A642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FD309BA-59AE-4A66-9E9B-925C04E8A642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FD309BA-59AE-4A66-9E9B-925C04E8A642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FD309BA-59AE-4A66-9E9B-925C04E8A642}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

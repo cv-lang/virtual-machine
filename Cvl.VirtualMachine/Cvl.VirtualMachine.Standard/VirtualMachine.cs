@@ -10,6 +10,17 @@ using System.Text;
 
 namespace Cvl.VirtualMachine
 {
+    [Interpret]
+    public class ProcesAction
+    {
+        public Action Action { get;  set; }
+
+        public void Start()
+        {
+            Action.Invoke();
+        }
+    }
+
     public class VirtualMachine
     {
         public VirtualMachine()
@@ -20,6 +31,8 @@ namespace Cvl.VirtualMachine
         public HardwareContext HardwareContext { get; set; } 
         public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
+        
+
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
         public long BreakpointIterationNumber { get; set; } = -1;
 
@@ -27,13 +40,20 @@ namespace Cvl.VirtualMachine
         {
 
         }
-
         public void Start(string nazwaMetody, params object[] parametety)
         {
             var process = parametety.First();
             var typ = process.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
-            var m = new Metoda(startMethod, this, process);
+            
+            Start(startMethod, parametety);
+        }
+
+        public void Start(MethodInfo methodInfo, params object[] parametety)
+        {
+            var process = parametety.First();
+            var typ = process.GetType();
+            var m = new Metoda(methodInfo, this, process);
             m.WczytajInstrukcje();
             HardwareContext.AktualnaMetoda = m;
             //HardwareContext.Stos.PushObject(process);
@@ -50,6 +70,13 @@ namespace Cvl.VirtualMachine
             Start(nazwaMetody, parametet);
             var ret = HardwareContext.PopObject();
             return (T)ret;
+        }
+
+        public void Start(Action p)
+        {
+            var proces = new ProcesAction();
+            proces.Action = p;
+            Start(p.Method, p.Target);
         }
 
         public void WalidujMetodyObiektu(object instancjaObiektu)
@@ -113,7 +140,7 @@ namespace Cvl.VirtualMachine
         #endregion
 
         #region Interprete choce
-        public string InterpreteNamespaces { get; set; }
+        public string InterpreteFullNameTypes { get; set; }
 
         internal bool CzyWykonacCzyInterpretowac(MethodBase mr)
         {
@@ -126,10 +153,10 @@ namespace Cvl.VirtualMachine
                 return false; //interpertujemy
             }
 
-            if(string.IsNullOrEmpty(InterpreteNamespaces) == false)
+            if(string.IsNullOrEmpty(InterpreteFullNameTypes) == false)
             {
-                var namespaces = InterpreteNamespaces.Split(';');
-                if( namespaces.Any(x=> mr.DeclaringType.Namespace.Contains(x)) )
+                var namespaces = InterpreteFullNameTypes.Split(';');
+                if( namespaces.Any(x=> mr.DeclaringType.FullName.Contains(x)) )
                 {
                     return false; //interpretujrmy
                 }
