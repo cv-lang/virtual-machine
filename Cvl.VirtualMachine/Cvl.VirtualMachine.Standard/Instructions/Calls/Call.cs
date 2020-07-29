@@ -8,11 +8,14 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
+using Cvl.VirtualMachine.Core.Variables;
+using Cvl.VirtualMachine.Core.Variables.Values;
 
 namespace Cvl.VirtualMachine.Instructions.Calls
 {
     /// <summary>
     /// Calls the method indicated by the passed method descriptor.
+    /// https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.call?view=netcore-3.1
     /// </summary>
     public class Call : InstructionBase
     {        
@@ -22,6 +25,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             //var methodDef = methodRef.Resolve();
             var parameters = new List<object>();
             object instance = null;
+            object instancePop = null;
 
             foreach (var paramDef in method.GetParameters())
             {
@@ -29,10 +33,20 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             }
             if (method.IsStatic == false)
             {
-                instance = HardwareContext.PopObject();
+                instancePop = HardwareContext.Pop();
+                if (instancePop is ObjectWraperBase wraper)
+                {
+                    instance = wraper.GetValue();
+                }
+                else
+                {
+                    instance = instancePop;
+                }
             }
 
             parameters.Reverse();
+
+            HardwareContext.WirtualnaMaszyna.EventCall(method, parameters);
 
             if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(VirtualMachine))
             {
@@ -62,12 +76,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 if (CzyWykonacCzyInterpretowac(method, instance) == true)
                 {
                     //wykonywanie
-                    Type type = instance?.GetType();
-                    if (type == null)
-                    {
-                        //mamy statyczną metodę
-                        // = methodDef.DeclaringType.GetSystemType();
-                    }
+
+                    //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
+                    HardwareContext.WirtualnaMaszyna.EventRet();
 
                     //var methodInfo = type.GetMethod(methodRef);
                     var dopasowaneParametry = new List<object>();
@@ -91,7 +102,20 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     object ret = null;
                     try
                     {
-                        if (instance == null && method.IsStatic == false)
+                        if (method.IsConstructor == true)
+                        {
+                            var constructor = method as ConstructorInfo;
+                            ret = constructor.Invoke(dopasowaneParametry.ToArray());
+                            if (instancePop is ObjectWraperBase wraperBase)
+                            {
+                                wraperBase.SetValue(ret);
+                            }
+                            else
+                            {
+                                HardwareContext.PushObject(ret);
+                            }
+                        } 
+                        else if (instance == null && method.IsStatic == false)
                         {
                             //wykonywanie metody nie statycznej dla instance==null np. null.Equals(..)
 
@@ -119,6 +143,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         {
                             //standardowe wykonywanie metod
                             ret = method.Invoke(instance, dopasowaneParametry.ToArray());
+
                         }
                     } catch(Exception exception)
                     {

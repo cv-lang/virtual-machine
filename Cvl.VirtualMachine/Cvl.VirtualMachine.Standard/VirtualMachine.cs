@@ -28,7 +28,10 @@ namespace Cvl.VirtualMachine
             HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
         }
 
-        public HardwareContext HardwareContext { get; set; } 
+        public HardwareContext HardwareContext { get; set; }
+
+        
+
         public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
         
@@ -48,6 +51,8 @@ namespace Cvl.VirtualMachine
             
             Start(startMethod, parametety);
         }
+
+        
 
         public void Start(MethodInfo methodInfo, params object[] parametety)
         {
@@ -163,6 +168,54 @@ namespace Cvl.VirtualMachine
             }
 
             return true; //w innym wypadku wykonujemy metody
+        }
+
+
+
+        #endregion
+
+        #region Eventy logów
+
+        private int callLevel = 0;
+        internal void EventRet()
+        {
+            callLevel--;
+        }
+
+        internal void EventCall(MethodBase method, List<object> parameters)
+        {
+            callLevel++;
+            var n = new StringBuilder();
+            for (int i = 0; i < callLevel; i++)
+            {
+                n.Append(" ");
+            }
+
+            string para = "";
+            foreach (object parameter in parameters)
+            {
+                var p = parameter?.ToString() ?? "null";
+                if (p.Length > 100)
+                {
+                    p = p.Substring(0, 99);
+                }
+
+                para += p + ", ";
+            }
+
+            n.Append($"{method.Name} ({para}) iter:{HardwareContext.NumerIteracji}");
+
+            Console.WriteLine(n.ToString());
+        }
+
+        internal void EventThrowException(Exception rzuconyWyjatek)
+        {
+            Console.WriteLine($"Wyjątek rzucony {rzuconyWyjatek.Message}");
+        }
+
+        internal void EventHandleException(string v)
+        {
+            Console.WriteLine($"ExceptionHandler {v}");
         }
 
         #endregion

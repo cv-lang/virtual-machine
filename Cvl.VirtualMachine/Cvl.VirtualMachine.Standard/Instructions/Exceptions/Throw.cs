@@ -12,21 +12,29 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
         {
             HardwareContext.Status = VirtualMachineState.Exception;
             var rzuconyWyjatek = HardwareContext.PopObject();
+            HardwareContext.WirtualnaMaszyna.EventThrowException(rzuconyWyjatek as Exception);
+
             ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, rzuconyWyjatek);
         }
 
         public static void ObslugaRzuconegoWyjatku(VirtualMachine wirtualnaMaszyna, object rzuconyWyjatek)
         {
+            wirtualnaMaszyna.EventHandleException("Przechodzenie przez stos po metodach obsługi wyjątu");
             var aktywnaMetod = wirtualnaMaszyna.HardwareContext.AktualnaMetoda;
             while (true)
             {
+                
                 var czyObslugujeWyjatek = aktywnaMetod.CzyObslugujeWyjatki();
+                wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, czy obsługuje wyjątek {czyObslugujeWyjatek}");
                 if (czyObslugujeWyjatek)
                 {
+
                     var bloki = aktywnaMetod.PobierzBlokiObslugiWyjatkow();
                     var blok = bloki.FirstOrDefault();
                     if (blok != null)
                     {
+                        wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody} ... blok obsługi");
+
                         //obsługujemy pierwszys blok
                         wirtualnaMaszyna.HardwareContext.AktualnaMetoda = aktywnaMetod;
                         wirtualnaMaszyna.HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji
@@ -37,8 +45,12 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         {
                             //wracam do zwykłej obsługi kodu                            
                             wirtualnaMaszyna.HardwareContext.Status = VirtualMachineState.Executing;
-                        } else
+                            wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
+
+                        }
+                        else
                         {
+                            wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... Brak obsługi blogu Catch w instrukcji Throw");
 
                             throw new Exception("Brak obsługi blogu Catch w instrukcji Throw");
                         }

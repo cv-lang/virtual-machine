@@ -10,6 +10,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     {        
         public override void Wykonaj()
         {
+            HardwareContext.WirtualnaMaszyna.EventRet();
+
             //sprawdzam czy jest coś jeszcze na stosie
             if (HardwareContext.Stos.IsEmpty())
             {

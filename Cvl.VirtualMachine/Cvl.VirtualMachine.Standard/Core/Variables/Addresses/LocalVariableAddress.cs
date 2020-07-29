@@ -18,6 +18,11 @@ namespace Cvl.VirtualMachine.Core.Variables.Addresses
             return LokalneZmienne.Obiekty[Indeks];
         }
 
+        public override void SetValue(object ret)
+        {
+            LokalneZmienne.Obiekty[Indeks] = ret;
+        }
+
         public override void SetNull()
         {
             LokalneZmienne.Obiekty[Indeks] = null;

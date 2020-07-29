@@ -15,5 +15,15 @@ namespace Cvl.VirtualMachine.Core.Variables.Addresses
             var val = Field.GetValue(Object);            
             return val;
         }
+
+        public override void SetValue(object ret)
+        {
+            Field.SetValue(Object, ret);
+        }
+
+        public override void SetNull()
+        {
+            Field.SetValue(Object, null);
+        }
     }
 }

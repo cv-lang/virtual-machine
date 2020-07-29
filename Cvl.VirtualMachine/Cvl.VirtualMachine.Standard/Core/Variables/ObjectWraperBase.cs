@@ -15,5 +15,10 @@ namespace Cvl.VirtualMachine.Core.Variables
         {
 
         }
+
+        public virtual void SetValue(object ret)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

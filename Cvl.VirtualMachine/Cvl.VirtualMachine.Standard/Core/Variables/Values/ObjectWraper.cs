@@ -18,6 +18,11 @@ namespace Cvl.VirtualMachine.Core.Variables.Values
 
         }
 
+        public override void SetValue(object ret)
+        {
+            Warosc = ret;
+        }
+
         public override object GetValue()
         {
             return Warosc;

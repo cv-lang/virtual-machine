@@ -17,7 +17,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             var ret = i1.Equals(i2);
             Assert.IsFalse(ret);
-
+            
             try
             {
 
@@ -53,6 +53,44 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             {
 
             }            
+        }
+
+
+        [Test]
+        public void Test2()
+        {
+            var vm = new VirtualMachine();
+            vm.BreakpointIterationNumber = 14;
+            var process = new NullThisTestProcess();
+
+            var r1 = process.Start();
+            var r2 = vm.Start<string>("Start", process);
+
+            Assert.AreEqual(r1, r2);
+        }
+    }
+
+
+    public class NullThisTestProcess
+    {
+        public string Start()
+        {
+            var sb = new StringBuilder();
+
+            Nullable<Int32> i1 = 11;
+            Nullable<Int32> i2 = 22;
+            i1 = null;
+
+            var ret = i1.Equals(i2);
+            Assert.IsFalse(ret);
+            sb.AppendLine($"{ret}");
+
+            DateTime? startDate = DateTime.Now;
+
+            DateTime startDate2 = DateTime.Now;
+
+            sb.AppendLine($"{startDate2.ToShortDateString()} { startDate.Value.ToShortDateString()}");
+            return sb.ToString();
         }
     }
 }

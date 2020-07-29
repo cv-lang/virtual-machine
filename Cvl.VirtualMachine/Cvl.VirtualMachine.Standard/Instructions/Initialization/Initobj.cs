@@ -37,12 +37,11 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        var v = Activator.CreateInstance(typInstancji);
+                        adres.SetValue(v);
                     }
                 }
             }
-
-            //TODO: Coś trzeba tu jeszcze chyba zrobić
 
             HardwareContext.WykonajNastepnaInstrukcje();
         }
