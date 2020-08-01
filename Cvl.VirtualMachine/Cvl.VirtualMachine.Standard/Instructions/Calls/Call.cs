@@ -77,8 +77,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 {
                     //wykonywanie
 
-                    //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
-                    HardwareContext.WirtualnaMaszyna.EventRet();
+                    
 
                     //var methodInfo = type.GetMethod(methodRef);
                     var dopasowaneParametry = new List<object>();
@@ -106,6 +105,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         {
                             var constructor = method as ConstructorInfo;
                             ret = constructor.Invoke(dopasowaneParametry.ToArray());
+                            //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
+                            HardwareContext.WirtualnaMaszyna.EventRet(ret);
+
                             if (instancePop is ObjectWraperBase wraperBase)
                             {
                                 wraperBase.SetValue(ret);
@@ -139,11 +141,16 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                             HardwareContext.ConstrainedType = null;
                             var lambda = Expression.Lambda(call).Compile();
                             ret = lambda.DynamicInvoke();
+
+                            //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
+                            HardwareContext.WirtualnaMaszyna.EventRet(ret);
                         } else
                         {
                             //standardowe wykonywanie metod
                             ret = method.Invoke(instance, dopasowaneParametry.ToArray());
 
+                            //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
+                            HardwareContext.WirtualnaMaszyna.EventRet(ret);
                         }
                     } catch(Exception exception)
                     {

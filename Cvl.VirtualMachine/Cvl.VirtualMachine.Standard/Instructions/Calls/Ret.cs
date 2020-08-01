@@ -10,11 +10,12 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     {        
         public override void Wykonaj()
         {
-            HardwareContext.WirtualnaMaszyna.EventRet();
+            
 
             //sprawdzam czy jest coś jeszcze na stosie
             if (HardwareContext.Stos.IsEmpty())
             {
+                HardwareContext.WirtualnaMaszyna.EventRet();
                 //mamy koniec wykonywania procedury (bez wyniku) 
                 HardwareContext.CzyWykonywacInstrukcje = false;
                 //WirtualnaMaszyna.Status = VirtualMachineState.Executed;
@@ -23,6 +24,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
             //mamy wynik
             var dane = HardwareContext.PopObject();
+            HardwareContext.WirtualnaMaszyna.EventRet(dane);
+
             if (dane is Metoda)
             {
 

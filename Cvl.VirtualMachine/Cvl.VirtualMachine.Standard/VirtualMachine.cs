@@ -3,7 +3,9 @@ using Cvl.VirtualMachine.Core.Attributes;
 using Cvl.VirtualMachine.Instructions;
 using Cvl.VirtualMachine.Instructions.Calls;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -177,9 +179,18 @@ namespace Cvl.VirtualMachine
         #region Eventy logów
 
         private int callLevel = 0;
-        internal void EventRet()
+        internal void EventRet(object ret=null)
         {
             callLevel--;
+            var text = $".. Ret: ''{ret ?? "null"}''";
+
+            if (ret is ICollection collection)
+            {
+                text += $" count:{collection.Count}";
+            }
+
+            File.AppendAllText("wm-log.txt", text+ Environment.NewLine);
+            Console.WriteLine(text);
         }
 
         internal void EventCall(MethodBase method, List<object> parameters)
@@ -203,19 +214,25 @@ namespace Cvl.VirtualMachine
                 para += p + ", ";
             }
 
-            n.Append($"{method.Name} ({para}) iter:{HardwareContext.NumerIteracji}");
+            n.Append($"{method.Name} ({para}) iter:{HardwareContext.NumerIteracji} ");
 
-            Console.WriteLine(n.ToString());
+            var text = n.ToString();
+            File.AppendAllText("wm-log.txt", Environment.NewLine + text);
+            Console.Write(text);
         }
 
         internal void EventThrowException(Exception rzuconyWyjatek)
         {
-            Console.WriteLine($"Wyjątek rzucony {rzuconyWyjatek.Message}");
+            var text= $"Wyjątek rzucony {rzuconyWyjatek.Message}";
+            File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
+            Console.WriteLine(text);
         }
 
         internal void EventHandleException(string v)
         {
-            Console.WriteLine($"ExceptionHandler {v}");
+            var text = $"ExceptionHandler {v}";
+            File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
+            Console.WriteLine(text);
         }
 
         #endregion

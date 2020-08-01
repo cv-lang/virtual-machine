@@ -15,6 +15,19 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             Assert.AreEqual(process.GetEnum1(1), vm.Start<EnumTestStatus>("GetEnum1", process, 1));
 
+
+        }
+
+        [Test]
+        public void Test2()
+        {
+            var vm = new VirtualMachine();
+            var process = new EnumProces();
+
+            var ret = vm.Start<int>("Test2", process,2);
+            Assert.AreEqual(process.Test2(2), ret);
+
+
         }
     }
 
@@ -59,9 +72,23 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         {
             return EnumTestStatus.Init;
         }
+
+
+        public int Test2(int ruleTypeId)
+        {
+            var t1 = ruleTypeId == (int) RuleTypeEnum.ToDecission ? (int) RuleTypeEnum.ToChooseProcess : ruleTypeId;
+            return t1;
+        }
+
+        
     }
 
-
+    public enum RuleTypeEnum
+    {
+        Initial = 1,
+        ToDecission = 2,
+        ToChooseProcess = 3
+    }
 
     public enum EnumTestStatus
     {
