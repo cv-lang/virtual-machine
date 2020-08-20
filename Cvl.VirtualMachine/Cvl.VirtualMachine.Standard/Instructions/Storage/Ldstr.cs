@@ -23,8 +23,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         public override void Wykonaj()
         {
             string str = Instruction.Operand as string;
-            HardwareContext.PushObject(str);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(str);
+            WykonajNastepnaInstrukcje();
         }
     }
 }

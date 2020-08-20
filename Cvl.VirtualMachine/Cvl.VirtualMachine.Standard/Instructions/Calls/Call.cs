@@ -29,11 +29,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
             foreach (var paramDef in method.GetParameters())
             {
-                parameters.Add(HardwareContext.PopObject());
+                parameters.Add(MethodContext.PopObject());
             }
             if (method.IsStatic == false)
             {
-                instancePop = HardwareContext.Pop();
+                instancePop = MethodContext.Pop();
                 if (instancePop is ObjectWraperBase wraper)
                 {
                     instance = wraper.GetValue();
@@ -46,7 +46,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
             parameters.Reverse();
 
-            HardwareContext.WirtualnaMaszyna.EventCall(method, parameters);
+            MethodContext.WirtualnaMaszyna.EventCall(method, parameters);
 
             if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(VirtualMachine))
             {
@@ -106,7 +106,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                             var constructor = method as ConstructorInfo;
                             ret = constructor.Invoke(dopasowaneParametry.ToArray());
                             //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
-                            HardwareContext.WirtualnaMaszyna.EventRet(ret);
+                            MethodContext.WirtualnaMaszyna.EventRet(ret);
 
                             if (instancePop is ObjectWraperBase wraperBase)
                             {
@@ -114,7 +114,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                             }
                             else
                             {
-                                HardwareContext.PushObject(ret);
+                                MethodContext.PushObject(ret);
                             }
                         } 
                         else if (instance == null && method.IsStatic == false)
@@ -134,29 +134,29 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                             var call = Expression.Call(Expression.Constant(instance,
                                 //typeof(int?)),
                                 //method.DeclaringType),
-                                HardwareContext.ConstrainedType), //ConstrainedType set by Constrained instruction
+                                MethodContext.ConstrainedType), //ConstrainedType set by Constrained instruction
                                 (MethodInfo)method,
                                 expressionParameters);
 
-                            HardwareContext.ConstrainedType = null;
+                            MethodContext.ConstrainedType = null;
                             var lambda = Expression.Lambda(call).Compile();
                             ret = lambda.DynamicInvoke();
 
                             //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
-                            HardwareContext.WirtualnaMaszyna.EventRet(ret);
+                            MethodContext.WirtualnaMaszyna.EventRet(ret);
                         } else
                         {
                             //standardowe wykonywanie metod
                             ret = method.Invoke(instance, dopasowaneParametry.ToArray());
 
                             //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
-                            HardwareContext.WirtualnaMaszyna.EventRet(ret);
+                            MethodContext.WirtualnaMaszyna.EventRet(ret);
                         }
                     } catch(Exception exception)
                     {
                         //wyjątek z zewnętrznej funkcji
-                        HardwareContext.Status = VirtualMachineState.Exception;
-                        Throw.ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, exception);
+                        MethodContext.Status = VirtualMachineState.Exception;
+                        Throw.ObslugaRzuconegoWyjatku(MethodContext.WirtualnaMaszyna, exception);
                         return;
                     }
 
@@ -168,10 +168,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         }
                         else
                         {
-                            HardwareContext.PushObject(ret);
+                            MethodContext.PushObject(ret);
                         }
                     }
-                    HardwareContext.WykonajNastepnaInstrukcje();
+                    MethodContext.WykonajNastepnaInstrukcje();
                 }
                 else
                 {
@@ -179,31 +179,31 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
                     var nazwaMetodyBazowej = method.Name;
                     //var typDef = instance.GetType();
-                    var staraMetoda = HardwareContext.AktualnaMetoda;
+                    var staraMetoda = MethodContext.AktualnaMetoda;
 
-                    var m = new Metoda(method, HardwareContext.WirtualnaMaszyna, instance);
+                    var m = new Metoda(method, MethodContext.WirtualnaMaszyna, instance);
                     
                     m.WczytajInstrukcje();
 
-                    HardwareContext.AktualnaMetoda = m;
+                    MethodContext.AktualnaMetoda = m;
                     var iloscArgumentow = method.GetParameters().Count();
 
                     if (method.IsStatic == false)
                     {
-                        HardwareContext.PushObject(instance);
+                        MethodContext.PushObject(instance);
                         iloscArgumentow += 1;
                     }
 
                     foreach (var parameter in parameters)
                     {
-                        HardwareContext.PushObject(parameter);
+                        MethodContext.PushObject(parameter);
                     }
 
-                    HardwareContext.WczytajLokalneArgumenty(iloscArgumentow);
+                    MethodContext.WczytajLokalneArgumenty(iloscArgumentow);
 
 
                     //zapisuję aktualną metodę na stosie
-                    HardwareContext.PushObject(staraMetoda);
+                    MethodContext.PushObject(staraMetoda);
                 }
             }
 
@@ -231,7 +231,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             //}
 
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            MethodContext.WykonajNastepnaInstrukcje();
         }
 
         //private void getter(MethodReference methodReference, object instance, List<object> parameters)
@@ -705,7 +705,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 return true;
             }
 
-            return HardwareContext.WirtualnaMaszyna.CzyWykonacCzyInterpretowac(mr);            
+            return MethodContext.WirtualnaMaszyna.CzyWykonacCzyInterpretowac(mr);            
         }
     }
 }

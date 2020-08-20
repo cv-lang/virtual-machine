@@ -14,7 +14,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
         {
             var op = Instruction.Operand as Instruction;
             var nextOffset = op.Offset;
-            HardwareContext.WykonajSkok(nextOffset);
+            WykonajSkok(nextOffset);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Cvl.VirtualMachine.Instructions.Boxing
         {
             //nic nie robię - box i unbox jest robiony przez środowisko wykonujące
             //nie muszę tego emulować
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

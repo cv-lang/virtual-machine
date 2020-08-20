@@ -8,8 +8,8 @@ namespace Cvl.VirtualMachine.Instructions.Special
     {        
         public override void Wykonaj()
         {
-            HardwareContext.PopObject();
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PopObject();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

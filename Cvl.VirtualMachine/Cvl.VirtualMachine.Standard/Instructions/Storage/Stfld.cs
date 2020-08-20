@@ -28,13 +28,13 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         public override void Wykonaj()
         {
             //pobieram vartosc ze stosu
-            var objVal = HardwareContext.PopObject();
-            var obj = HardwareContext.PopObject();
+            var objVal = PopObject();
+            var obj = PopObject();
 
             var field = (System.Reflection.FieldInfo)Instruction.Operand;
             field.SetValue(obj, objVal);
             
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

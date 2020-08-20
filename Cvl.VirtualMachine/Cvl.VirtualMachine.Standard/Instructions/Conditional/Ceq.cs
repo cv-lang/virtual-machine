@@ -10,8 +10,8 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
 
         public override void Wykonaj()
         {
-            dynamic b = HardwareContext.PopObject();
-            dynamic a = HardwareContext.PopObject();
+            dynamic b = PopObject();
+            dynamic a = PopObject();
             if (a is int && b is bool)
             {
                 b = b ? 1 : 0;
@@ -25,8 +25,8 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             }
 
             dynamic wynik = a == b;
-            HardwareContext.PushObject(wynik);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(wynik);
+            WykonajNastepnaInstrukcje();
         }
     }
 }

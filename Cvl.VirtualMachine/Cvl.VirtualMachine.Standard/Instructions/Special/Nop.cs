@@ -13,7 +13,7 @@ namespace Cvl.VirtualMachine.Instructions.Special
     {
         public override void Wykonaj()
         {
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

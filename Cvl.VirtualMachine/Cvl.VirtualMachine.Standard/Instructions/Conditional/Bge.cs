@@ -13,8 +13,8 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {
         public override void Wykonaj()
         {
-            var value2 = HardwareContext.PopObject() as dynamic;
-            var value1 = HardwareContext.PopObject() as dynamic;
+            var value2 = PopObject() as dynamic;
+            var value1 = PopObject() as dynamic;
 
             var r = value1 > value2;
 
@@ -22,11 +22,11 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             {
                 var op = Instruction.Operand as Instruction;
                 var nextOffset = op.Offset;
-                HardwareContext.WykonajSkok(nextOffset);
+                WykonajSkok(nextOffset);
             }
             else
             {
-                HardwareContext.WykonajNastepnaInstrukcje();
+                WykonajNastepnaInstrukcje();
             }
         }
     }

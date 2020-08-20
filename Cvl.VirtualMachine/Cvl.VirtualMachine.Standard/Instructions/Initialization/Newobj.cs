@@ -21,7 +21,7 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
             var listaParametrow = new List<Object>();
             for (int i = 0; i < iloscParametrow; i++)
             {
-                listaParametrow.Add(HardwareContext.PopObject());
+                listaParametrow.Add(PopObject());
             }
 
             listaParametrow.Reverse();
@@ -33,7 +33,7 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
                 {
                     var nowyObiekt = constructorInfo.Invoke(null, listaParametrow.ToArray());
                     //Activator.CreateInstance(typ, listaParametrow.ToArray());
-                    HardwareContext.PushObject(nowyObiekt);
+                    PushObject(nowyObiekt);
                 }
                 else
                 {
@@ -41,7 +41,7 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
                     {
                         //tworze po prostu dany obiekt - danego typu
                         var nowyObiekt = Activator.CreateInstance(typ, null);
-                        HardwareContext.PushObject(nowyObiekt);
+                        PushObject(nowyObiekt);
                     }
                     else
                     {
@@ -70,7 +70,7 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
                         }
 
                         var nowyObiekt = constructorInfo.Invoke(dopasowaneTypowoParametry.ToArray());
-                        HardwareContext.PushObject(nowyObiekt);
+                        PushObject(nowyObiekt);
 
                         ////wyszukuje odpowiedniego konstruktora, przykładowo dla Func<JakisObiekt, bool> konstruktor
                         ////zamiast bool musi być przekonwertowany na IntPrt
@@ -104,9 +104,9 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
             {
                 var nowyObiekt = md.Invoke(null, listaParametrow.ToArray());
                 //Activator.CreateInstance(typ, listaParametrow.ToArray());
-                HardwareContext.PushObject(nowyObiekt);
+                PushObject(nowyObiekt);
             }
-            HardwareContext.WykonajNastepnaInstrukcje();          
+            WykonajNastepnaInstrukcje();          
         }
     }
 }

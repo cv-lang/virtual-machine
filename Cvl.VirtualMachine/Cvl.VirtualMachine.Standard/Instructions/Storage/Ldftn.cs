@@ -28,8 +28,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             var methodDefiniton = Instruction.Operand as System.Reflection.MethodInfo;
             
-            HardwareContext.PushObject(methodDefiniton.MethodHandle.GetFunctionPointer());
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(methodDefiniton.MethodHandle.GetFunctionPointer());
+            WykonajNastepnaInstrukcje();
         }
     }
 }

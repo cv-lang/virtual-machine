@@ -10,11 +10,11 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
-            HardwareContext.Status = VirtualMachineState.Exception;
-            var rzuconyWyjatek = HardwareContext.PopObject();
-            HardwareContext.WirtualnaMaszyna.EventThrowException(rzuconyWyjatek as Exception);
+            MethodContext.Status = VirtualMachineState.Exception;
+            var rzuconyWyjatek = PopObject();
+            MethodContext.WirtualnaMaszyna.EventThrowException(rzuconyWyjatek as Exception);
 
-            ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, rzuconyWyjatek);
+            ObslugaRzuconegoWyjatku(MethodContext.WirtualnaMaszyna, rzuconyWyjatek);
         }
 
         public static void ObslugaRzuconegoWyjatku(VirtualMachine wirtualnaMaszyna, object rzuconyWyjatek)

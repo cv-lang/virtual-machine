@@ -47,6 +47,11 @@ namespace Cvl.VirtualMachine.Core
 
         #region Propercje
 
+        public MethodData LocalArguments { get; set; }
+        public MethodData LocalVariables { get; set; }
+        //public Stack Stos { get; set; } = new Stack();
+
+
         private MethodBase methodInfo;
 
         public string NazwaTypu { get; set; }
@@ -59,8 +64,7 @@ namespace Cvl.VirtualMachine.Core
 
 
         public int NumerWykonywanejInstrukcji { get; set; }
-        public MethodData LocalArguments { get; set; }
-        public MethodData LocalVariables { get; set; }
+        
 
         private List<InstructionBase> instrukcje;
         internal List<InstructionBase> Instrukcje

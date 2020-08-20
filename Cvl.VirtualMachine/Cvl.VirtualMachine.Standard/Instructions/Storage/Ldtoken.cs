@@ -28,17 +28,17 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             if (Instruction.Operand is Type typ)
             {
-                HardwareContext.PushObject(typ.TypeHandle);
+                PushObject(typ.TypeHandle);
             } 
             else if(Instruction.Operand is System.Reflection.FieldInfo fieldInfo)             
             {
-                HardwareContext.PushObject(fieldInfo.FieldHandle);                
+                PushObject(fieldInfo.FieldHandle);                
             } 
             else
             {
                 throw new NotImplementedException($"Ldtoken: operand in not known type {Instruction.Operand.ToString()}");
             }
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }   
     }
 }

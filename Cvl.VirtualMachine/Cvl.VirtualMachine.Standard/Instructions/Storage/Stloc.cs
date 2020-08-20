@@ -36,18 +36,20 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         
         public override void Wykonaj()
         {
-            var o = HardwareContext.PopObject();
+            var o = PopObject();
 
             var a = Instruction.Operand as System.Reflection.LocalVariableInfo;
             if (a != null)
             {
-                HardwareContext.ZapiszLokalnaZmienna(o, a.LocalIndex);
+                ZapiszLokalnaZmienna(o, a.LocalIndex);
             }
             else
             {
-                HardwareContext.ZapiszLokalnaZmienna(o, Index);
+                ZapiszLokalnaZmienna(o, Index);
             }
-            HardwareContext.WykonajNastepnaInstrukcje();
-        }        
+            WykonajNastepnaInstrukcje();
+        }
+
+        
     }
 }

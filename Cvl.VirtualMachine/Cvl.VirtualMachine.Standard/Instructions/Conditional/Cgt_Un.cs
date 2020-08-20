@@ -13,32 +13,32 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {
         public override void Wykonaj()
         {
-            dynamic b = HardwareContext.PopObject();
-            dynamic a = HardwareContext.PopObject();
+            dynamic b = PopObject();
+            dynamic a = PopObject();
 
             if (b is int || a is int)
             {
                 dynamic wynik = a > b ? 1 : 0;
-                HardwareContext.PushObject(wynik);
+                PushObject(wynik);
             }
             else if (b is double || a is double)
             {
                 dynamic wynik = a > b ? 1 : 0;
-                HardwareContext.PushObject(wynik);
+                PushObject(wynik);
             }
             else if (b is float || a is float)
             {
                 dynamic wynik = a > b ? 1 : 0;
-                HardwareContext.PushObject(wynik);
+                PushObject(wynik);
             }
             else
             {
                 //mamy jakiś obiekt więc sprawdzamy czy jest różny
                 dynamic wynik = a != b ? 1 : 0;
-                HardwareContext.PushObject(wynik);
+                PushObject(wynik);
             }
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

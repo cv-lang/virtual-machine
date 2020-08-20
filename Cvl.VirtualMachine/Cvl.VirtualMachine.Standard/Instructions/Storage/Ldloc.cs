@@ -40,15 +40,17 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             var a = Instruction.Operand as System.Reflection.LocalVariableInfo;
             if (a != null)
             {
-                var o = HardwareContext.PobierzLokalnaZmienna(a.LocalIndex);
-                HardwareContext.PushObject(o);
+                var o = PobierzLokalnaZmienna(a.LocalIndex);
+                PushObject(o);
             }
             else
             {
-                var o = HardwareContext.PobierzLokalnaZmienna(Index);
-                HardwareContext.PushObject(o);
+                var o = PobierzLokalnaZmienna(Index);
+                PushObject(o);
             }
-            HardwareContext.WykonajNastepnaInstrukcje();
-        }        
+            WykonajNastepnaInstrukcje();
+        }
+
+        
     }
 }

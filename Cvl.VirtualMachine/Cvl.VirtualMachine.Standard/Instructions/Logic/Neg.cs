@@ -12,11 +12,11 @@ namespace Cvl.VirtualMachine.Instructions.Logic
     {
         public override void Wykonaj()
         {
-            dynamic a = HardwareContext.PopObject();
+            dynamic a = PopObject();
 
             dynamic wynik = !a;
-            HardwareContext.PushObject(wynik);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(wynik);
+            WykonajNastepnaInstrukcje();
         }
     }
 }

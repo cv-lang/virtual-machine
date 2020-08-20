@@ -18,19 +18,19 @@ namespace Cvl.VirtualMachine.Instructions.Converts
         public ConvertType ConvertType;
         public override void Wykonaj()
         {
-            dynamic a = HardwareContext.PopObject();
+            dynamic a = PopObject();
 
             switch(this.ConvertType)
             {
                 case ConvertType.i4:
-                    HardwareContext.PushObject((int)a);
+                    PushObject((int)a);
                     break;
                 case ConvertType.r8:
-                    HardwareContext.PushObject((double)a);
+                    PushObject((double)a);
                     break;
             }           
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

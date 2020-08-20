@@ -11,11 +11,11 @@ namespace Cvl.VirtualMachine.Instructions.Stacks
     {
         public override void Wykonaj()
         {
-            var o = HardwareContext.PopObject();
-            HardwareContext.PushObject(o);
-            HardwareContext.PushObject(o);
+            var o = PopObject();
+            PushObject(o);
+            PushObject(o);
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

@@ -9,15 +9,15 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
-            var rzuconyWyjatek = HardwareContext.PopObject();
-            if (HardwareContext.Status == VirtualMachineState.Exception)
+            var rzuconyWyjatek = PopObject();
+            if (MethodContext.Status == VirtualMachineState.Exception)
             {
                 //jestem w trakcie wyjątku, przechodzę przez stos do obsługi wyjątku
-                Throw.ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, rzuconyWyjatek);
+                Throw.ObslugaRzuconegoWyjatku(MethodContext.WirtualnaMaszyna, rzuconyWyjatek);
             }
             else
             {
-                HardwareContext.WykonajNastepnaInstrukcje();
+                WykonajNastepnaInstrukcje();
             }
         }
     }

@@ -17,7 +17,7 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
 
             var i = Instruction.Operand as Instruction;
             var nextOffset = i.Offset;
-            HardwareContext.WykonajSkok(nextOffset);
+            WykonajSkok(nextOffset);
         }
     }
 }

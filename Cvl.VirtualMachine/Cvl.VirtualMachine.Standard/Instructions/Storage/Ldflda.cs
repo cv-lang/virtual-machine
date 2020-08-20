@@ -29,7 +29,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         public override void Wykonaj()
         {
             //pobieram obiekt ze stosu
-            var obj = HardwareContext.PopObject();
+            var obj = PopObject();
 
             //szukam pola
             var field = (System.Reflection.FieldInfo)Instruction.Operand;
@@ -39,9 +39,9 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             fieldAddress.Object = obj;
 
             //kładę na stos wartość pola
-            HardwareContext.Push(fieldAddress);
+            Push(fieldAddress);
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

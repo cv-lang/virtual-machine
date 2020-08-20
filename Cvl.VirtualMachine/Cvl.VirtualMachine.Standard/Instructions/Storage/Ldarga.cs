@@ -29,11 +29,11 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             var index = GetIndex();
 
-            var o = HardwareContext.PobierzAdresArgumentu(index);
-            HardwareContext.Push(o);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            var o = PobierzAdresArgumentu(index);
+            Push(o);
+            WykonajNastepnaInstrukcje();
         }
 
-
+        
     }
 }

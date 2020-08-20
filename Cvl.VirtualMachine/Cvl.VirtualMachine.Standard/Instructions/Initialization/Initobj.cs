@@ -13,7 +13,7 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
         public override void Wykonaj()
         {
             //throw new NotImplementedException("instrukcja Initobj");
-            var ob = HardwareContext.Pop();
+            var ob = Pop();
 
             if (ob == null)
             {
@@ -43,7 +43,7 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
                 }
             }
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

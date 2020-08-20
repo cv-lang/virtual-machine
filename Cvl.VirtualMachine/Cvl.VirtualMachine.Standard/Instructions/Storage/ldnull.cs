@@ -21,8 +21,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {
         public override void Wykonaj()
         {
-            HardwareContext.PushObject(null);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(null);
+            WykonajNastepnaInstrukcje();
         }
     }
 }

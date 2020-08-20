@@ -33,8 +33,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             //var field = typ.GetField(fieldDefinition.Name);
             //var val = field.GetValue(null);
 
-            HardwareContext.PushObject(val);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(val);
+            WykonajNastepnaInstrukcje();
         }
     }
 }

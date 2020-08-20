@@ -13,18 +13,18 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {
         public override void Wykonaj()
         {
-            var value2 = HardwareContext.PopObject();
-            var value1 = HardwareContext.PopObject();
+            var value2 = PopObject();
+            var value1 = PopObject();
 
             if (value2 != value1)
             {
                 var op = Instruction.Operand as Instruction;
                 var nextOffset = op.Offset;
-                HardwareContext.WykonajSkok(nextOffset);
+                WykonajSkok(nextOffset);
             }
             else
             {
-                HardwareContext.WykonajNastepnaInstrukcje();
+                WykonajNastepnaInstrukcje();
             }
         }
     }

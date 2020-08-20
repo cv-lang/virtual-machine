@@ -27,7 +27,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     {
         public override void Wykonaj()
         {
-            var o = HardwareContext.PopObject();
+            var o = PopObject();
 
             //ustawiam statyczną zmienną wartością ze stosu
             var fieldDefinition = Instruction.Operand as FieldInfo;
@@ -36,7 +36,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             // var field = typ.GetField(fieldDefinition.Name);
             fieldDefinition.SetValue(null, o);
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

@@ -16,10 +16,10 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
             //var td = tr;
 
             var typ = tr;
-            var n = (int)HardwareContext.PopObject();
+            var n = (int)PopObject();
             object arr = Array.CreateInstance(typ, n);
-            HardwareContext.PushObject(arr);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(arr);
+            WykonajNastepnaInstrukcje();
         }
 
     }

@@ -67,7 +67,7 @@ namespace Cvl.VirtualMachine
         public InstructionBase PobierzAktualnaInstrukcje()
         {
             var ai = AktualnaMetoda.Instrukcje[AktualnaMetoda.NumerWykonywanejInstrukcji];
-            ai.HardwareContext = this.WirtualnaMaszyna.HardwareContext;
+            ai.MethodContext = this.WirtualnaMaszyna.HardwareContext;
             return ai;
         }
 

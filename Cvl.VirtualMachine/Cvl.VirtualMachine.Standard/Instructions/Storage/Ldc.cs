@@ -17,14 +17,14 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             if (ConstValue != null)
             {
-                HardwareContext.PushObject(ConstValue);
+                PushObject(ConstValue);
             }
             else
             {
                 var constVal = Instruction.Operand;
-                HardwareContext.PushObject(constVal);
+                PushObject(constVal);
             }
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 

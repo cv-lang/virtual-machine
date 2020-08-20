@@ -11,12 +11,12 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {        
         public override void Wykonaj()
         {
-            dynamic b = HardwareContext.PopObject();
-            dynamic a = HardwareContext.PopObject();
+            dynamic b = PopObject();
+            dynamic a = PopObject();
 
             dynamic wynik = a > b ? 1 : 0;
-            HardwareContext.PushObject(wynik);
-            HardwareContext.WykonajNastepnaInstrukcje();
+            PushObject(wynik);
+            WykonajNastepnaInstrukcje();
         }
     }
 }

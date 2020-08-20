@@ -8,13 +8,13 @@ namespace Cvl.VirtualMachine.Instructions.Arrays
     {
         public override void Wykonaj()
         {
-            var val = HardwareContext.PopObject();
-            var index = (int)HardwareContext.PopObject();
-            var array = (Array)HardwareContext.PopObject();
+            var val = PopObject();
+            var index = (int)PopObject();
+            var array = (Array)PopObject();
 
             array.SetValue(val, index);
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }

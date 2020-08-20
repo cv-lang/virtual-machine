@@ -12,7 +12,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {        
         public override void Wykonaj()
         {
-            dynamic b = HardwareContext.PopObject();
+            dynamic b = PopObject();
             if (b != null)
             {
                 var typ = b.GetType();
@@ -20,19 +20,19 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                 if (typOperanda.IsAssignableFrom(typ))
                 {
                     //mamy ten sam typ
-                    HardwareContext.PushObject(b);
+                    PushObject(b);
                 }
                 else
                 {
-                    HardwareContext.PushObject(null);
+                    PushObject(null);
                 }
             }
             else
             {
-                HardwareContext.PushObject(null);
+                PushObject(null);
             }
 
-            HardwareContext.WykonajNastepnaInstrukcje();
+            WykonajNastepnaInstrukcje();
         }
     }
 }
