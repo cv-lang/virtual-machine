@@ -15,7 +15,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var process = new ExceptionsTestProces();
 
             var ret2 = process.Start1();
-            var ret = vm.Start<int>("Start1", process);
+            var ret = vm.StartTestExecution<int>("Start1", process);
             
             Assert.AreEqual(ret2, ret);
         }
@@ -27,7 +27,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var process = new ExceptionsTestProces();
 
             var ret2 = process.Start2();
-            var ret = vm.Start<int>("Start2", process);
+            var ret = vm.StartTestExecution<int>("Start2", process);
 
             Assert.AreEqual(ret2, ret);
         }
@@ -39,7 +39,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var process = new ExceptionsTestProces();
 
             var ret2 = process.Start3();
-            var ret = vm.Start<int>("Start3", process);
+            var ret = vm.StartTestExecution<int>("Start3", process);
 
             Assert.AreEqual(ret2, ret);
         }

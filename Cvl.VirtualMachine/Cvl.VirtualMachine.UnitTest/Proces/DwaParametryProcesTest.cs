@@ -13,7 +13,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         {
             var proces = new DwaParametryProces();
             var vm = new VirtualMachine();
-            var vmWynik = vm.Start<object>("Start", proces);
+            var vmWynik = vm.StartTestExecution<object>("Start", proces);
 
             proces = new DwaParametryProces();
             var wynik = proces.Start();
@@ -26,7 +26,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         {
             var proces = new DodawaniePracownikaProces();
             var vm = new VirtualMachine();
-            var vmWynik = vm.Start<object>("Start", proces);
+            var vmWynik = vm.StartTestExecution<object>("Start", proces);
 
             proces = new DodawaniePracownikaProces();
             var wynik = proces.Start();
@@ -38,7 +38,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         {
             var proces = new RepozytoriumTestProces();
             var vm = new VirtualMachine();
-            var vmWynik = (List<Person>)vm.Start<object>("Start", proces);
+            var vmWynik = (List<Person>)vm.StartTestExecution<object>("Start", proces);
 
             proces = new RepozytoriumTestProces();
             var wynik = (List<Person>)proces.Start();

@@ -23,6 +23,12 @@ namespace Cvl.VirtualMachine
         }
     }
 
+    public class VirtualMachineResult<T>
+    {
+        public VirtualMachineState State { get; set; }
+        public T Result { get; set; }
+    }
+
     public class VirtualMachine
     {
         public VirtualMachine()
@@ -34,7 +40,7 @@ namespace Cvl.VirtualMachine
 
         
 
-        public bool CzyWykonywacInstrukcje { get; private set; } = true;
+        //public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
         
 
@@ -45,7 +51,7 @@ namespace Cvl.VirtualMachine
         {
 
         }
-        public void Start(string nazwaMetody, params object[] parametety)
+        public void Start(string nazwaMetody,  params object[] parametety)
         {
             var process = parametety.First();
             var typ = process.GetType();
@@ -71,19 +77,48 @@ namespace Cvl.VirtualMachine
             HardwareContext.Execute();
         }
 
-        public T Start<T>(string nazwaMetody, params object[] parametet)
+        public VirtualMachineResult<T> Resume<T>()
+        {
+            HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
+            HardwareContext.Status = VirtualMachineState.Executing;
+            HardwareContext.CzyWykonywacInstrukcje = true;
+
+            HardwareContext.Execute();
+            if (HardwareContext.Status == VirtualMachineState.Hibernated)
+            {
+                return new VirtualMachineResult<T>() { State = HardwareContext.Status };
+            }
+
+            var ret = (T)HardwareContext.PopObject();
+            var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
+            return result;
+        }
+
+        public VirtualMachineResult<T> Start<T>(string nazwaMetody, params object[] parametet)
         {
             HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
             Start(nazwaMetody, parametet);
-            var ret = HardwareContext.PopObject();
-            return (T)ret;
+            if (HardwareContext.Status == VirtualMachineState.Hibernated)
+            {
+                return new VirtualMachineResult<T>() { State = HardwareContext.Status };
+            }
+
+            var ret = (T)HardwareContext.PopObject();
+            var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
+            return result;
+        }
+
+        public T StartTestExecution<T>(string nazwaMetody, params object[] parametet)
+        {
+            var res = Start<T>(nazwaMetody, parametet: parametet);
+            return res.Result;
         }
 
         public void Start(Action p)
         {
             var proces = new ProcesAction();
             proces.Action = p;
-            Start(p.Method, p.Target);
+            Start(p.Method, true, p.Target);
         }
 
         public void WalidujMetodyObiektu(object instancjaObiektu)
@@ -110,7 +145,7 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void HibernateVirtualMachine()
         {
-            CzyWykonywacInstrukcje = false;
+            HardwareContext.CzyWykonywacInstrukcje = false;
             HardwareContext.Status = VirtualMachineState.Hibernated;
         }
 
@@ -120,7 +155,7 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void EndProcessVirtualMachine()
         {
-            CzyWykonywacInstrukcje = false;
+            HardwareContext.CzyWykonywacInstrukcje = false;
             HardwareContext.Status = VirtualMachineState.Executed;
         }
 

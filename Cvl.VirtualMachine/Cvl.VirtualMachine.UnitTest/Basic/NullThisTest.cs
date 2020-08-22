@@ -64,7 +64,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var process = new NullThisTestProcess();
 
             var r1 = process.Start();
-            var r2 = vm.Start<string>("Start", process);
+            var r2 = vm.StartTestExecution<string>("Start", process);
 
             Assert.AreEqual(r1, r2);
         }

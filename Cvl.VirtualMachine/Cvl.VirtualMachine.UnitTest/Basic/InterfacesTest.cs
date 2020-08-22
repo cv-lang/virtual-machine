@@ -15,7 +15,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var process = new InterfacesProcessTest();
 
             var r1 = process.Start();
-            var r2 = vm.Start<int>("Start", process);
+            var r2 = vm.StartTestExecution<int>("Start", process);
 
             Assert.AreEqual(r1, r2);
         }

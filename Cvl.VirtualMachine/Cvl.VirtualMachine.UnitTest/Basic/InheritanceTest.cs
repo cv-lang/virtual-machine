@@ -14,9 +14,9 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var vm = new VirtualMachine();
             var process = new InheritanceProcesTest();
 
-            var r1 = vm.Start<int>("Start", process);
+            var r1 = vm.StartTestExecution<int>("Start", process);
 
-            Assert.AreEqual(process.Start(), r1);
+            Assert.AreEqual(process.Start(), (object)r1);
         }
     }
 

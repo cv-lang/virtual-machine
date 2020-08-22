@@ -12,7 +12,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.FromLife
         {
             var proces = new ChcekRulesProcessTest();
             var vm = new VirtualMachine();
-            var vmWynik = vm.Start<string>("Start", proces);
+            var vmWynik = vm.StartTestExecution<string>("Start", proces);
 
             proces = new ChcekRulesProcessTest();
             var wynik = proces.Start();

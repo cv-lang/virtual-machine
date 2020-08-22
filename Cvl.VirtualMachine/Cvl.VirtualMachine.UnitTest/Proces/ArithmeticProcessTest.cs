@@ -37,7 +37,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         {
             var proces = new ArithmeticProcess();
             var vm = new VirtualMachine();
-            var vmWynik = vm.Start<object>("Start", proces);
+            var vmWynik = vm.StartTestExecution<object>("Start", proces);
             
             proces = new ArithmeticProcess();
             var wynik = proces.Start();

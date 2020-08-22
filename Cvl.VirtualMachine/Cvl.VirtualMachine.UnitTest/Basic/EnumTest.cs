@@ -13,7 +13,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var vm = new VirtualMachine();
             var process = new EnumProces();
 
-            Assert.AreEqual(process.GetEnum1(1), vm.Start<EnumTestStatus>("GetEnum1", process, 1));
+            Assert.AreEqual(process.GetEnum1(1), vm.StartTestExecution<EnumTestStatus>("GetEnum1", process, 1));
 
 
         }
@@ -24,7 +24,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var vm = new VirtualMachine();
             var process = new EnumProces();
 
-            var ret = vm.Start<int>("Test2", process,2);
+            var ret = vm.StartTestExecution<int>("Test2", process,2);
             Assert.AreEqual(process.Test2(2), ret);
 
 

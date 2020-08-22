@@ -20,10 +20,10 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Casting
             var process = new CastingTestProcess();
 
             //int
-            Assert.AreEqual(process.CastIB((byte)45), vm.Start<object>("CastIB", process,(byte)45)); //TODO: tu jest problem z konvertowaniem byte na int, którego formalnie nie ma!
-            Assert.AreEqual(process.CastIF(234.4f), vm.Start<int>("CastIF", process, 234.4f));
-            Assert.AreEqual(process.CastID(234.4d), vm.Start<int>("CastID", process, 234.4d));
-            Assert.AreEqual(process.CastIM(234.4m), vm.Start<int>("CastIM", process, 234.4m));
+            Assert.AreEqual(process.CastIB((byte)45), vm.StartTestExecution<object>("CastIB", process,(byte)45)); //TODO: tu jest problem z konvertowaniem byte na int, którego formalnie nie ma!
+            Assert.AreEqual(process.CastIF(234.4f), vm.StartTestExecution<int>("CastIF", process, 234.4f));
+            Assert.AreEqual(process.CastID(234.4d), vm.StartTestExecution<int>("CastID", process, 234.4d));
+            Assert.AreEqual(process.CastIM(234.4m), vm.StartTestExecution<int>("CastIM", process, 234.4m));
 
 
 

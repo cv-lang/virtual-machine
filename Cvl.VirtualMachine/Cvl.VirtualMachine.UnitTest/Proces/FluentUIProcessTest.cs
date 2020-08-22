@@ -14,7 +14,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces
         {
             var proces = new FluentUIProcess();
             var vm = new VirtualMachine();
-            var vmWynik = vm.Start<object>("Start",proces);
+            var vmWynik = vm.StartTestExecution<object>("Start",proces);
             
             proces = new FluentUIProcess();
             var wynik = proces.Start();
