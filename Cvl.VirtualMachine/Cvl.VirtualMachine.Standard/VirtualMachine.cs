@@ -51,18 +51,18 @@ namespace Cvl.VirtualMachine
         {
 
         }
-        public void Start(string nazwaMetody,  params object[] parametety)
+        private void start(string nazwaMetody,  params object[] parametety)
         {
             var process = parametety.First();
             var typ = process.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
             
-            Start(startMethod, parametety);
+            start(startMethod, parametety);
         }
 
         
 
-        public void Start(MethodInfo methodInfo, params object[] parametety)
+        private void start(MethodInfo methodInfo, params object[] parametety)
         {
             var process = parametety.First();
             var typ = process.GetType();
@@ -97,7 +97,7 @@ namespace Cvl.VirtualMachine
         public VirtualMachineResult<T> Start<T>(string nazwaMetody, params object[] parametet)
         {
             HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
-            Start(nazwaMetody, parametet);
+            start(nazwaMetody, parametet);
             if (HardwareContext.Status == VirtualMachineState.Hibernated)
             {
                 return new VirtualMachineResult<T>() { State = HardwareContext.Status };
@@ -118,7 +118,7 @@ namespace Cvl.VirtualMachine
         {
             var proces = new ProcesAction();
             proces.Action = p;
-            Start(p.Method, true, p.Target);
+            start(p.Method, true, p.Target);
         }
 
         public void WalidujMetodyObiektu(object instancjaObiektu)
