@@ -51,7 +51,16 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(VirtualMachine))
             {
                 //wywołał metodę do hibernacji wirtualnej maszyny
-                this.MethodContext.WirtualnaMaszyna.HibernateVirtualMachine();
+                if (parameters.Count > 0)
+                {
+                    var p = (object[])parameters[0];
+                    this.MethodContext.WirtualnaMaszyna.HibernateVirtualMachine(p);
+                }
+                else
+                {
+                    this.MethodContext.WirtualnaMaszyna.HibernateVirtualMachine(null);
+                }
+
                 return;
             }
 

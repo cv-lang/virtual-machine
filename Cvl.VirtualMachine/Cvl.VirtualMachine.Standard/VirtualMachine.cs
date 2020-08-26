@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Cvl.VirtualMachine.Core.Tools;
 
 namespace Cvl.VirtualMachine
 {
@@ -77,8 +78,9 @@ namespace Cvl.VirtualMachine
             HardwareContext.Execute();
         }
 
-        public VirtualMachineResult<T> Resume<T>()
+        public VirtualMachineResult<T> Resume<T>(object hibernateResumeParameter = null)
         {
+            HardwareContext.PushObject(hibernateResumeParameter);
             HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
             HardwareContext.Status = VirtualMachineState.Executing;
             HardwareContext.CzyWykonywacInstrukcje = true;
@@ -143,10 +145,11 @@ namespace Cvl.VirtualMachine
         /// Metoda służy do hibernowania wirtualnej maszyny
         /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
         /// </summary>
-        public void HibernateVirtualMachine()
+        public void HibernateVirtualMachine(object[] parameters)
         {
             HardwareContext.CzyWykonywacInstrukcje = false;
             HardwareContext.Status = VirtualMachineState.Hibernated;
+            HardwareContext.HibernateParams = parameters;
         }
 
         /// <summary>
@@ -163,9 +166,9 @@ namespace Cvl.VirtualMachine
         /// Metoda służy do hibernowania wirtualnej maszyny
         /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
         /// </summary>
-        public static void Hibernate()
+        public static object Hibernate(params object[] parameters)
         {
-
+            return null;
         }
 
         /// <summary>
@@ -213,47 +216,33 @@ namespace Cvl.VirtualMachine
 
         #region Eventy logów
 
+        public ILogMonitor LogMonitor { get; set; }
+
         private int callLevel = 0;
         internal void EventRet(object ret=null)
         {
             callLevel--;
-            var text = $".. Ret: ''{ret ?? "null"}''";
+            LogMonitor?.EventRet(ret, HardwareContext.NumerIteracji);
 
-            if (ret is ICollection collection)
-            {
-                text += $" count:{collection.Count}";
-            }
+            //var text = $".. Ret: ''{ret ?? "null"}''";
 
-            File.AppendAllText("wm-log.txt", text+ Environment.NewLine);
-            Console.WriteLine(text);
+            //if (ret is ICollection collection)
+            //{
+            //    text += $" count:{collection.Count}";
+            //}
+
+            //File.AppendAllText("wm-log.txt", text+ Environment.NewLine);
+            //Console.WriteLine(text);
         }
 
         internal void EventCall(MethodBase method, List<object> parameters)
         {
             callLevel++;
-            var n = new StringBuilder();
-            for (int i = 0; i < callLevel; i++)
-            {
-                n.Append(" ");
-            }
 
-            string para = "";
-            foreach (object parameter in parameters)
-            {
-                var p = parameter?.ToString() ?? "null";
-                if (p.Length > 100)
-                {
-                    p = p.Substring(0, 99);
-                }
+            LogMonitor?.EventCall(method, parameters, callLevel, HardwareContext.NumerIteracji);
 
-                para += p + ", ";
-            }
 
-            n.Append($"{method.Name} ({para}) iter:{HardwareContext.NumerIteracji} ");
-
-            var text = n.ToString();
-            File.AppendAllText("wm-log.txt", Environment.NewLine + text);
-            Console.Write(text);
+            
         }
 
         internal void EventThrowException(Exception rzuconyWyjatek)
@@ -268,6 +257,11 @@ namespace Cvl.VirtualMachine
             var text = $"ExceptionHandler {v}";
             File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
             Console.WriteLine(text);
+        }
+
+        public object[] GetHibernateParams()
+        {
+            return HardwareContext.HibernateParams;
         }
 
         #endregion

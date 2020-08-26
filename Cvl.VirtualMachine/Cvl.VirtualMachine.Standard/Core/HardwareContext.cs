@@ -22,7 +22,8 @@ namespace Cvl.VirtualMachine
         public Metoda AktualnaMetoda { get; set; }
         public bool CzyWykonywacInstrukcje { get; set; } = true;
         public Type ConstrainedType { get; internal set; }
-
+        public object[] HibernateParams { get; internal set; }
+        
         public void Execute()
         {
             //NS.Debug.VM = this; // do debugowania 
