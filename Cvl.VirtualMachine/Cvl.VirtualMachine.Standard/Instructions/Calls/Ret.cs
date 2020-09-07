@@ -24,7 +24,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
             //mamy wynik
             var dane = PopObject();
-            EventRet(dane);
+            
 
             if (dane is Metoda)
             {
@@ -36,6 +36,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             }
             else
             {
+                //loguje wykonanie ret
+                EventRet(dane);
+
                 //najpierw mamy wynik potem dane metody
                 var wynik = dane;
                 //sprawdzam czy jest coś jeszcze na stosie
