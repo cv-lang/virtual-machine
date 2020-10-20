@@ -248,14 +248,14 @@ namespace Cvl.VirtualMachine
         internal void EventThrowException(Exception rzuconyWyjatek)
         {
             var text= $"Wyjątek rzucony {rzuconyWyjatek.Message}";
-            File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
+            //File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
             Console.WriteLine(text);
         }
 
         internal void EventHandleException(string v)
         {
             var text = $"ExceptionHandler {v}";
-            File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
+            //File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
             Console.WriteLine(text);
         }
 
