@@ -66,8 +66,12 @@ var retInProcProces = inProcProces.Start();
 Assert.AreEqual(retInProcProces, retFromSerializedVM);
 ```
 
+## NuGet 'Cvl.VirtualMachine'
+PM> Install-Package Cvl.VirtualMachine -Version 0.9.1
+
+[NuGet package Cvl.VirtualMachine](https://www.nuget.org/packages/Cvl.VirtualMachine/)
+
 ## Dependencies
-[Mono.Cecil](https://github.com/jbevain/cecil) - will be removed
 
 [Mono.Reflection](https://github.com/jbevain/mono.reflection)
 
