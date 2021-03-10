@@ -83,7 +83,7 @@ namespace Cvl.VirtualMachine.Core
             return str;
         }
 
-        public Metoda PobierzNastepnaMetodeZeStosu()
+        public MethodState PobierzNastepnaMetodeZeStosu()
         {
             while (stosWewnetrzny.Count > 0)
             {
@@ -93,9 +93,9 @@ namespace Cvl.VirtualMachine.Core
                     o = wo.Warosc;
                 }
 
-                if (o is Metoda)
+                if (o is MethodState)
                 {
-                    return o as Metoda;
+                    return o as MethodState;
                 }
             }
 

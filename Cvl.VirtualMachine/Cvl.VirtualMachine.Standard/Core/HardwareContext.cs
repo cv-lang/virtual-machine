@@ -19,7 +19,7 @@ namespace Cvl.VirtualMachine
         private InstructionBase aktualnaInstrukcja;
         public VirtualMachineState Status { get; set; }
 
-        public Metoda AktualnaMetoda { get; set; }
+        public MethodState AktualnaMetoda { get; set; }
         public bool CzyWykonywacInstrukcje { get; set; } = true;
         public Type ConstrainedType { get; internal set; }
         public object[] HibernateParams { get; internal set; }

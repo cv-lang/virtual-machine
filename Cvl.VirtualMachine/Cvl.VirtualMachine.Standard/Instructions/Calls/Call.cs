@@ -16,6 +16,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     /// <summary>
     /// Calls the method indicated by the passed method descriptor.
     /// https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.call?view=netcore-3.1
+    /// https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf page 422
     /// </summary>
     public class Call : InstructionBase
     {        
@@ -190,7 +191,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     //var typDef = instance.GetType();
                     var staraMetoda = MethodContext.AktualnaMetoda;
 
-                    var m = new Metoda(method, MethodContext.WirtualnaMaszyna, instance);
+                    var m = new MethodState(method, MethodContext.WirtualnaMaszyna, instance);
                     
                     m.WczytajInstrukcje();
 

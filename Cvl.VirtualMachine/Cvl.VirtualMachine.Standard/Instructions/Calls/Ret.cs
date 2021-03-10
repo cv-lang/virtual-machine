@@ -26,11 +26,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             var dane = PopObject();
             
 
-            if (dane is Metoda)
+            if (dane is MethodState)
             {
 
                 //mamy metodę która nie zwraca 
-                var metodaDoWznowienia = dane as Metoda;
+                var metodaDoWznowienia = dane as MethodState;
                 MethodContext.AktualnaMetoda = metodaDoWznowienia;
                 MethodContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
             }
@@ -52,7 +52,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 }
 
 
-                var metodaDoWznowienia = PopObject() as Metoda;
+                var metodaDoWznowienia = PopObject() as MethodState;
                 PushObject(wynik); //zwracam wynik na stosie
                 MethodContext.AktualnaMetoda = metodaDoWznowienia;
                 MethodContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;

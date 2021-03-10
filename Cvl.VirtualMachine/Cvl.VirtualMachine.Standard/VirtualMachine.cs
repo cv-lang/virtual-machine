@@ -67,7 +67,7 @@ namespace Cvl.VirtualMachine
         {
             var process = parametety.First();
             var typ = process.GetType();
-            var m = new Metoda(methodInfo, this, process);
+            var m = new MethodState(methodInfo, this, process);
             m.WczytajInstrukcje();
             HardwareContext.AktualnaMetoda = m;
             //HardwareContext.Stos.PushObject(process);
@@ -134,7 +134,7 @@ namespace Cvl.VirtualMachine
             //var metody = typDef.Methods;
             foreach (var metoda in typ.GetMethods())
             {
-                var m = new Metoda(metoda, this, instancjaObiektu);
+                var m = new MethodState(metoda, this, instancjaObiektu);
                 var i = m.PobierzInstrukcjeMetody(); //pobierma instrukcje metody - jeśli brakuje jakiejś instrukcji rzuca wyjątek
             }
         }

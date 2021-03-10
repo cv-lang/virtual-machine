@@ -11,17 +11,18 @@ namespace Cvl.VirtualMachine.Core
 {
     /// <summary>
     /// Metoda która będzie wykonywana
+    /// https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf p.108
     /// </summary>
-    public class Metoda : ElementBase
+    public class MethodState : ElementBase
     {
-        public Metoda()
+        public MethodState()
         {
             LocalArguments = new MethodData();
             LocalVariables = new MethodData();
             instrukcje = null;
         }
 
-        public Metoda(MethodBase metoda, VirtualMachine wirtualnaMaszyna, object instance) : this()
+        public MethodState(MethodBase metoda, VirtualMachine wirtualnaMaszyna, object instance) : this()
         {          
             if(instance != null & metoda.IsVirtual)
             {

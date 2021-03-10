@@ -7,19 +7,19 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 {
     public class CallStart : InstructionBase
     {
-        public CallStart(Metoda metoda)
+        public CallStart(MethodState metoda)
         {
             Metoda = metoda;
         }
 
-        public Metoda Metoda { get; set; }
+        public MethodState Metoda { get; set; }
 
         public override void Wykonaj()
         {
             WczytajLokalneArgumenty(1);
             var instancja = PobierzLokalnyArgument(0);
             
-            var metodaDoWykonania = new Metoda();
+            var metodaDoWykonania = new MethodState();
             metodaDoWykonania.WyczyscInstrukcje();
             metodaDoWykonania.WczytajInstrukcje();
 
