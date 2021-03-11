@@ -34,10 +34,10 @@ namespace Cvl.VirtualMachine
     {
         public VirtualMachine()
         {
-            HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
+            HardwareContext = new ThreadOfControl() { WirtualnaMaszyna = this };
         }
 
-        public HardwareContext HardwareContext { get; set; }
+        public ThreadOfControl HardwareContext { get; set; }
 
         
 
@@ -98,7 +98,7 @@ namespace Cvl.VirtualMachine
 
         public VirtualMachineResult<T> Start<T>(string nazwaMetody, params object[] parametet)
         {
-            HardwareContext = new HardwareContext() { WirtualnaMaszyna = this };
+            HardwareContext = new ThreadOfControl() { WirtualnaMaszyna = this };
             start(nazwaMetody, parametet);
             if (HardwareContext.Status == VirtualMachineState.Hibernated)
             {

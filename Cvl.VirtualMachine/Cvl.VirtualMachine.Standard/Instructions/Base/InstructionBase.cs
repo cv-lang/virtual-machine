@@ -12,7 +12,7 @@ namespace Cvl.VirtualMachine.Instructions
     {
         internal Instruction Instruction { get; set; }
         public MethodState MethodContext { get; set; }
-        public HardwareContext HardwareContext { get; internal set; }
+        public ThreadOfControl HardwareContext { get; internal set; }
 
         public virtual void Wykonaj()
         {

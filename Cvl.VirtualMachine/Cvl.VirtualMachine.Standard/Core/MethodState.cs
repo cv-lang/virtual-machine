@@ -52,7 +52,7 @@ namespace Cvl.VirtualMachine.Core
 
         public MethodData LocalArguments { get; set; }
         public MethodData LocalVariables { get; set; }
-        public Stack Stos { get; set; } = new Stack();
+        public Stack EvaluationStack { get; set; } = new Stack();
 
         public Type ConstrainedType { get; internal set; }
 
@@ -147,12 +147,12 @@ namespace Cvl.VirtualMachine.Core
 
         public void PushObject(object o)
         {
-            Stos.PushObject(o);
+            EvaluationStack.PushObject(o);
         }
 
         public void Push(ElementBase o)
         {
-            Stos.Push(o);
+            EvaluationStack.Push(o);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Cvl.VirtualMachine.Core
         /// <returns></returns>
         public object PopObject()
         {
-            var ob = Stos.Pop();
+            var ob = EvaluationStack.Pop();
             if (ob is ObjectWraperBase)
             {
                 var v = ob as ObjectWraperBase;
@@ -174,7 +174,7 @@ namespace Cvl.VirtualMachine.Core
 
         public object Pop()
         {
-            var ob = Stos.Pop();
+            var ob = EvaluationStack.Pop();
 
             return ob;
         }
@@ -190,7 +190,7 @@ namespace Cvl.VirtualMachine.Core
             var lista = new object[iloscArgumentow];
             for (int i = iloscArgumentow - 1; i >= 0; i--)
             {
-                var o = Stos.Pop();
+                var o = EvaluationStack.Pop();
                 lista[i] = o;
             }
             LocalArguments.Wczytaj(lista);

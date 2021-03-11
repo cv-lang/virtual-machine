@@ -13,7 +13,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             
 
             //sprawdzam czy jest coś jeszcze na stosie
-            if (MethodContext.Stos.IsEmpty())
+            if (MethodContext.EvaluationStack.IsEmpty())
             {
                 EventRet();
                 //mamy koniec wykonywania procedury (bez wyniku) 
@@ -43,7 +43,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 var wynik = dane;
 
                 //sprawdzam czy jest coś jeszcze na stosie wywołań
-                if (HardwareContext.Stos.IsEmpty())
+                if (HardwareContext.CallStack.IsEmpty())
                 {
                     //mamy koniec wykonywania funkcji (zwracającej wynik)
                     MethodContext.CzyWykonywacInstrukcje = false;

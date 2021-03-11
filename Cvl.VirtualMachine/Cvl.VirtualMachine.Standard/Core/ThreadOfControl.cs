@@ -10,11 +10,11 @@ using System.Text;
 
 namespace Cvl.VirtualMachine
 {
-    public class HardwareContext
+    public class ThreadOfControl
     {
         public VirtualMachine WirtualnaMaszyna { get; internal set; }
 
-        public Stack Stos { get; set; } = new Stack();
+        public Stack CallStack { get; set; } = new Stack();
         public long NumerIteracji { get; set; }
         private InstructionBase aktualnaInstrukcja;
         public VirtualMachineState Status { get; set; }
@@ -32,7 +32,7 @@ namespace Cvl.VirtualMachine
             {
                 var zmienneLokalne = AktualnaMetoda.LocalVariables;
                 var argumenty = AktualnaMetoda.LocalArguments;
-                var stos = Stos;
+                var stos = CallStack;
 
                 if(WirtualnaMaszyna.BreakpointIterationNumber == NumerIteracji)
                 {
@@ -153,7 +153,7 @@ namespace Cvl.VirtualMachine
 
         public void PushObject(object o)
         {
-            Stos.PushObject(o);
+            CallStack.PushObject(o);
         }
 
         //public void Push(ElementBase o)
@@ -168,7 +168,7 @@ namespace Cvl.VirtualMachine
         /// <returns></returns>
         public object PopObject()
         {
-            var ob = Stos.Pop();
+            var ob = CallStack.Pop();
             if (ob is ObjectWraperBase)
             {
                 var v = ob as ObjectWraperBase;
