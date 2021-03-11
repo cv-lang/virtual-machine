@@ -80,10 +80,10 @@ namespace Cvl.VirtualMachine
 
         public VirtualMachineResult<T> Resume<T>(object hibernateResumeParameter = null)
         {
-            HardwareContext.PushObject(hibernateResumeParameter);
+            HardwareContext.AktualnaMetoda.PushObject(hibernateResumeParameter);
             HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
             HardwareContext.Status = VirtualMachineState.Executing;
-            HardwareContext.CzyWykonywacInstrukcje = true;
+            HardwareContext.AktualnaMetoda.CzyWykonywacInstrukcje = true;
 
             HardwareContext.Execute();
             if (HardwareContext.Status == VirtualMachineState.Hibernated)
@@ -91,7 +91,7 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = HardwareContext.Status };
             }
 
-            var ret = (T)HardwareContext.PopObject();
+            var ret = (T)HardwareContext.AktualnaMetoda.PopObject();
             var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
             return result;
         }
@@ -105,7 +105,7 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = HardwareContext.Status };
             }
 
-            var ret = (T)HardwareContext.PopObject();
+            var ret = (T)HardwareContext.AktualnaMetoda.PopObject();
             var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
             return result;
         }
@@ -147,7 +147,7 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void HibernateVirtualMachine(object[] parameters)
         {
-            HardwareContext.CzyWykonywacInstrukcje = false;
+            HardwareContext.AktualnaMetoda.CzyWykonywacInstrukcje = false;
             HardwareContext.Status = VirtualMachineState.Hibernated;
             HardwareContext.HibernateParams = parameters;
         }
@@ -158,7 +158,7 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void EndProcessVirtualMachine()
         {
-            HardwareContext.CzyWykonywacInstrukcje = false;
+            HardwareContext.AktualnaMetoda.CzyWykonywacInstrukcje = false;
             HardwareContext.Status = VirtualMachineState.Executed;
         }
 

@@ -10,7 +10,7 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
-            MethodContext.Status = VirtualMachineState.Exception;
+            HardwareContext.Status = VirtualMachineState.Exception;
             var rzuconyWyjatek = PopObject();
             MethodContext.WirtualnaMaszyna.EventThrowException(rzuconyWyjatek as Exception);
 

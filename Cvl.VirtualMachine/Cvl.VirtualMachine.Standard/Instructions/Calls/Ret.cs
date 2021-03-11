@@ -31,8 +31,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
                 //mamy metodę która nie zwraca 
                 var metodaDoWznowienia = dane as MethodState;
-                MethodContext.AktualnaMetoda = metodaDoWznowienia;
-                MethodContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
+                MethodContext = metodaDoWznowienia;
+                MethodContext.NumerWykonywanejInstrukcji++;
             }
             else
             {
@@ -41,21 +41,24 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
                 //najpierw mamy wynik potem dane metody
                 var wynik = dane;
-                //sprawdzam czy jest coś jeszcze na stosie
-                if (MethodContext.Stos.IsEmpty())
+
+                //sprawdzam czy jest coś jeszcze na stosie wywołań
+                if (HardwareContext.Stos.IsEmpty())
                 {
                     //mamy koniec wykonywania funkcji (zwracającej wynik)
                     MethodContext.CzyWykonywacInstrukcje = false;
-                    MethodContext.Status = VirtualMachineState.Executed;
+                    HardwareContext.Status = VirtualMachineState.Executed;
                     PushObject(wynik); //zwracam wynik na stosie
                     return;
                 }
 
 
-                var metodaDoWznowienia = PopObject() as MethodState;
+                var metodaDoWznowienia = HardwareContext.PopObject() as MethodState;
+                MethodContext = metodaDoWznowienia;
+                HardwareContext.AktualnaMetoda = metodaDoWznowienia;
                 PushObject(wynik); //zwracam wynik na stosie
-                MethodContext.AktualnaMetoda = metodaDoWznowienia;
-                MethodContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
+
+                MethodContext.NumerWykonywanejInstrukcji++;
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿using Cvl.VirtualMachine.Core.Tools;
+using Cvl.VirtualMachine.Core.Variables;
+using Cvl.VirtualMachine.Core.Variables.Addresses;
 using Cvl.VirtualMachine.Instructions;
 using Mono.Reflection;
 using System;
@@ -50,7 +52,11 @@ namespace Cvl.VirtualMachine.Core
 
         public MethodData LocalArguments { get; set; }
         public MethodData LocalVariables { get; set; }
-        //public Stack Stos { get; set; } = new Stack();
+        public Stack Stos { get; set; } = new Stack();
+
+        public Type ConstrainedType { get; internal set; }
+
+        public bool CzyWykonywacInstrukcje { get; set; } = true;
 
 
         private MethodBase methodInfo;
@@ -78,7 +84,6 @@ namespace Cvl.VirtualMachine.Core
         }
 
         #endregion
-
 
 
         #region Instrukcje
@@ -119,13 +124,135 @@ namespace Cvl.VirtualMachine.Core
 
         #endregion
 
+        #region Execution flow
+
+        public void WykonajNastepnaInstrukcje()
+        {
+            var am = this;
+            am.NumerWykonywanejInstrukcji++;
+            am.OffsetWykonywanejInstrukcji
+                = am.Instrukcje[am.NumerWykonywanejInstrukcji].Instruction.Offset;
+        }
+
+        public void WykonajSkok(int nowyOffset)
+        {
+            var am = this;
+            var ins = am.Instrukcje.FirstOrDefault(i => i.Instruction.Offset == nowyOffset);
+            am.NumerWykonywanejInstrukcji = am.Instrukcje.IndexOf(ins);
+        }
+
+        #endregion
+
+        #region Stack
+
+        public void PushObject(object o)
+        {
+            Stos.PushObject(o);
+        }
+
+        public void Push(ElementBase o)
+        {
+            Stos.Push(o);
+        }
+
+        /// <summary>
+        /// Zwraca obiekt
+        /// jeśli jest adres na stosie to zamienia na obiekt
+        /// </summary>
+        /// <returns></returns>
+        public object PopObject()
+        {
+            var ob = Stos.Pop();
+            if (ob is ObjectWraperBase)
+            {
+                var v = ob as ObjectWraperBase;
+                return v.GetValue();
+            }
+
+            return ob;
+        }
+
+        public object Pop()
+        {
+            var ob = Stos.Pop();
+
+            return ob;
+        }
 
 
 
+        #endregion
 
+        #region Local args
 
+        public void WczytajLokalneArgumenty(int iloscArgumentow)
+        {
+            var lista = new object[iloscArgumentow];
+            for (int i = iloscArgumentow - 1; i >= 0; i--)
+            {
+                var o = Stos.Pop();
+                lista[i] = o;
+            }
+            LocalArguments.Wczytaj(lista);
+        }
 
+        public void ZapiszLokalnyArgument(object o, int indeks)
+        {
+            LocalArguments.Ustaw(indeks, o);
+        }
 
+        public object PobierzLokalnyArgument(int indeks)
+        {
+            var obiekt = LocalArguments.Pobierz(indeks);
+            var ow = obiekt as ObjectWraperBase;
+            if (ow != null)
+            {
+                return ow.GetValue();
+            }
+            return obiekt;
+        }
+
+        public ArgumentAddress PobierzAdresArgumentu(int indeks)
+        {
+            var adres = new ArgumentAddress();
+            adres.Indeks = indeks;
+            adres.LokalneArgumenty = LocalArguments;
+
+            return adres;
+        }
+
+        #endregion
+
+        #region Local var
+
+        public void ZapiszLokalnaZmienna(object o, int indeks)
+        {
+            LocalVariables.Ustaw(indeks, o);
+        }
+
+        public object PobierzLokalnaZmienna(int indeks)
+        {
+            var obiekt = LocalVariables.Pobierz(indeks);
+            var ow = obiekt as ObjectWraperBase;
+            if (ow != null)
+            {
+                return ow.GetValue();
+            }
+            return obiekt;
+        }
+
+        public LocalVariableAddress PobierzAdresZmiennejLokalnej(int indeks)
+        {
+            var adres = new LocalVariableAddress();
+            adres.Indeks = indeks;
+            adres.LokalneZmienne = LocalVariables;
+
+            return adres;
+        }
+
+        #endregion
+
+       
 
         public int PobierzNumerInstrukcjiZOffsetem(int offset)
         {

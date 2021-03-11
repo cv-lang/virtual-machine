@@ -20,7 +20,7 @@ namespace Cvl.VirtualMachine
         public VirtualMachineState Status { get; set; }
 
         public MethodState AktualnaMetoda { get; set; }
-        public bool CzyWykonywacInstrukcje { get; set; } = true;
+        //public bool CzyWykonywacInstrukcje { get; set; } = true;
         public Type ConstrainedType { get; internal set; }
         public object[] HibernateParams { get; internal set; }
         
@@ -28,7 +28,7 @@ namespace Cvl.VirtualMachine
         {
             //NS.Debug.VM = this; // do debugowania 
 
-            while (CzyWykonywacInstrukcje)
+            while (AktualnaMetoda.CzyWykonywacInstrukcje)
             {
                 var zmienneLokalne = AktualnaMetoda.LocalVariables;
                 var argumenty = AktualnaMetoda.LocalArguments;
@@ -68,97 +68,98 @@ namespace Cvl.VirtualMachine
         public InstructionBase PobierzAktualnaInstrukcje()
         {
             var ai = AktualnaMetoda.Instrukcje[AktualnaMetoda.NumerWykonywanejInstrukcji];
-            ai.MethodContext = this.WirtualnaMaszyna.HardwareContext;
+            ai.MethodContext = AktualnaMetoda;
+            ai.HardwareContext =  this.WirtualnaMaszyna.HardwareContext;
             return ai;
         }
 
 
 
-        public void WczytajLokalneArgumenty(int iloscArgumentow)
-        {
-            var lista = new object[iloscArgumentow];
-            for (int i = iloscArgumentow - 1; i >= 0; i--)
-            {
-                var o = Stos.Pop();
-                lista[i] = o;
-            }
-            AktualnaMetoda.LocalArguments.Wczytaj(lista);
-        }
+        //public void WczytajLokalneArgumenty(int iloscArgumentow)
+        //{
+        //    var lista = new object[iloscArgumentow];
+        //    for (int i = iloscArgumentow - 1; i >= 0; i--)
+        //    {
+        //        var o = Stos.Pop();
+        //        lista[i] = o;
+        //    }
+        //    AktualnaMetoda.LocalArguments.Wczytaj(lista);
+        //}
 
-        public void ZapiszLokalnyArgument(object o, int indeks)
-        {
-            AktualnaMetoda.LocalArguments.Ustaw(indeks, o);
-        }
+        //public void ZapiszLokalnyArgument(object o, int indeks)
+        //{
+        //    AktualnaMetoda.LocalArguments.Ustaw(indeks, o);
+        //}
 
-        public object PobierzLokalnyArgument(int indeks)
-        {
-            var obiekt = AktualnaMetoda.LocalArguments.Pobierz(indeks);
-            var ow = obiekt as ObjectWraperBase;
-            if (ow != null)
-            {
-                return ow.GetValue();
-            }
-            return obiekt;
-        }
+        //public object PobierzLokalnyArgument(int indeks)
+        //{
+        //    var obiekt = AktualnaMetoda.LocalArguments.Pobierz(indeks);
+        //    var ow = obiekt as ObjectWraperBase;
+        //    if (ow != null)
+        //    {
+        //        return ow.GetValue();
+        //    }
+        //    return obiekt;
+        //}
 
-        public void ZapiszLokalnaZmienna(object o, int indeks)
-        {
-            AktualnaMetoda.LocalVariables.Ustaw(indeks, o);
-        }
+        //public void ZapiszLokalnaZmienna(object o, int indeks)
+        //{
+        //    AktualnaMetoda.LocalVariables.Ustaw(indeks, o);
+        //}
 
-        public object PobierzLokalnaZmienna(int indeks)
-        {
-            var obiekt = AktualnaMetoda.LocalVariables.Pobierz(indeks);
-            var ow = obiekt as ObjectWraperBase;
-            if (ow != null)
-            {
-                return ow.GetValue();
-            }
-            return obiekt;
-        }
+        //public object PobierzLokalnaZmienna(int indeks)
+        //{
+        //    var obiekt = AktualnaMetoda.LocalVariables.Pobierz(indeks);
+        //    var ow = obiekt as ObjectWraperBase;
+        //    if (ow != null)
+        //    {
+        //        return ow.GetValue();
+        //    }
+        //    return obiekt;
+        //}
 
-        public LocalVariableAddress PobierzAdresZmiennejLokalnej(int indeks)
-        {
-            var adres = new LocalVariableAddress();
-            adres.Indeks = indeks;
-            adres.LokalneZmienne = AktualnaMetoda.LocalVariables;
+        //public LocalVariableAddress PobierzAdresZmiennejLokalnej(int indeks)
+        //{
+        //    var adres = new LocalVariableAddress();
+        //    adres.Indeks = indeks;
+        //    adres.LokalneZmienne = AktualnaMetoda.LocalVariables;
 
-            return adres;
-        }
+        //    return adres;
+        //}
 
-        public ArgumentAddress PobierzAdresArgumentu(int indeks)
-        {
-            var adres = new ArgumentAddress();
-            adres.Indeks = indeks;
-            adres.LokalneArgumenty = AktualnaMetoda.LocalArguments;
+        //public ArgumentAddress PobierzAdresArgumentu(int indeks)
+        //{
+        //    var adres = new ArgumentAddress();
+        //    adres.Indeks = indeks;
+        //    adres.LokalneArgumenty = AktualnaMetoda.LocalArguments;
 
-            return adres;
-        }
+        //    return adres;
+        //}
 
-        public void WykonajNastepnaInstrukcje()
-        {
-            var am = AktualnaMetoda;
-            am.NumerWykonywanejInstrukcji++;
-            am.OffsetWykonywanejInstrukcji
-                = am.Instrukcje[am.NumerWykonywanejInstrukcji].Instruction.Offset;
-        }
+        //public void WykonajNastepnaInstrukcje()
+        //{
+        //    var am = AktualnaMetoda;
+        //    am.NumerWykonywanejInstrukcji++;
+        //    am.OffsetWykonywanejInstrukcji
+        //        = am.Instrukcje[am.NumerWykonywanejInstrukcji].Instruction.Offset;
+        //}
 
-        public void WykonajSkok(int nowyOffset)
-        {
-            var am = AktualnaMetoda;
-            var ins = am.Instrukcje.FirstOrDefault(i => i.Instruction.Offset == nowyOffset);
-            am.NumerWykonywanejInstrukcji = am.Instrukcje.IndexOf(ins);
-        }
+        //public void WykonajSkok(int nowyOffset)
+        //{
+        //    var am = AktualnaMetoda;
+        //    var ins = am.Instrukcje.FirstOrDefault(i => i.Instruction.Offset == nowyOffset);
+        //    am.NumerWykonywanejInstrukcji = am.Instrukcje.IndexOf(ins);
+        //}
 
         public void PushObject(object o)
         {
             Stos.PushObject(o);
         }
 
-        public void Push(ElementBase o)
-        {
-            Stos.Push(o);
-        }
+        //public void Push(ElementBase o)
+        //{
+        //    Stos.Push(o);
+        //}
 
         /// <summary>
         /// Zwraca obiekt
@@ -177,16 +178,16 @@ namespace Cvl.VirtualMachine
             return ob;
         }
 
-        public object Pop()
-        {
-            var ob = Stos.Pop();
+        //public object Pop()
+        //{
+        //    var ob = Stos.Pop();
 
-            return ob;
-        }
+        //    return ob;
+        //}
 
-        public object PobierzElementZeStosu(int numerElementuOdSzczytu)
-        {
-            return Stos.PobierzElementZeStosu(numerElementuOdSzczytu);
-        }
+        //public object PobierzElementZeStosu(int numerElementuOdSzczytu)
+        //{
+        //    return Stos.PobierzElementZeStosu(numerElementuOdSzczytu);
+        //}
     }
 }

@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Cvl.VirtualMachine.Core.Variables.Addresses;
+using Cvl.VirtualMachine.Core;
 
 namespace Cvl.VirtualMachine.Instructions
 {
     public class InstructionBase
     {
         internal Instruction Instruction { get; set; }
-        public HardwareContext MethodContext { get; set; }
-        
+        public MethodState MethodContext { get; set; }
+        public HardwareContext HardwareContext { get; internal set; }
 
         public virtual void Wykonaj()
         {

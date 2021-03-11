@@ -23,7 +23,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             metodaDoWykonania.WyczyscInstrukcje();
             metodaDoWykonania.WczytajInstrukcje();
 
-            this.MethodContext.AktualnaMetoda = metodaDoWykonania;
+            this.MethodContext = metodaDoWykonania;
+            this.HardwareContext.AktualnaMetoda = metodaDoWykonania; //TODO: do usuniecia
         }
 
         

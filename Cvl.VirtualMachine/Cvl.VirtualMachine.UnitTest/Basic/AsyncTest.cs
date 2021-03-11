@@ -9,16 +9,16 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 {
     public class AsyncTest
     {
-        [Test]
-        public void Test1()
-        {
-            var vm = new VirtualMachine();
-            var process = new ProcessWithAsync();
+        //[Test]
+        //public void Test1()
+        //{
+        //    var vm = new VirtualMachine();
+        //    var process = new ProcessWithAsync();
 
-            Assert.AreEqual(process.SynchronicStart(), vm.StartTestExecution<string>("SynchronicStart", process));
+        //    Assert.AreEqual(process.SynchronicStart(), vm.StartTestExecution<string>("SynchronicStart", process));
 
 
-        }
+        //}
     }
 
     public class ProcessWithAsync

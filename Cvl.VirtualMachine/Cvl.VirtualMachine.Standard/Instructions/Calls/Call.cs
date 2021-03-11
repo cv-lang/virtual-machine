@@ -165,7 +165,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     } catch(Exception exception)
                     {
                         //wyjątek z zewnętrznej funkcji
-                        MethodContext.Status = VirtualMachineState.Exception;
+                        HardwareContext.Status = VirtualMachineState.Exception;
                         Throw.ObslugaRzuconegoWyjatku(MethodContext.WirtualnaMaszyna, exception);
                         return;
                     }
@@ -189,13 +189,13 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
                     var nazwaMetodyBazowej = method.Name;
                     //var typDef = instance.GetType();
-                    var staraMetoda = MethodContext.AktualnaMetoda;
+                    var staraMetoda = MethodContext;
 
                     var m = new MethodState(method, MethodContext.WirtualnaMaszyna, instance);
                     
                     m.WczytajInstrukcje();
 
-                    MethodContext.AktualnaMetoda = m;
+                    MethodContext = m;
                     var iloscArgumentow = method.GetParameters().Count();
 
                     if (method.IsStatic == false)
@@ -211,9 +211,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
                     MethodContext.WczytajLokalneArgumenty(iloscArgumentow);
 
-
+                    
                     //zapisuję aktualną metodę na stosie
-                    MethodContext.PushObject(staraMetoda);
+                    HardwareContext.PushObject(staraMetoda);
+
+                    HardwareContext.AktualnaMetoda = MethodContext;
                 }
             }
 
