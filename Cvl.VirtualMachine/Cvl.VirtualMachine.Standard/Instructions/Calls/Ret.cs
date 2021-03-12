@@ -10,9 +10,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
     {        
         public override void Wykonaj()
         {
-            
+            //mamy wynik
+            object wynik = "null";
 
-            //sprawdzam czy jest coś jeszcze na stosie
+            //sprawdzam czy jest coś jeszcze na stosie, jeśli jet to jest to wynik, który trzeba zwrócić
             if (MethodContext.EvaluationStack.IsEmpty())
             {
                 EventRet();
@@ -21,45 +22,40 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 //WirtualnaMaszyna.Status = VirtualMachineState.Executed;
                 return;
             }
-
-            //mamy wynik
-            var dane = PopObject();
-            
-
-            if (dane is MethodState)
+            else
             {
+                // mamy wynik metody, pobieram ze stosu
+                wynik = PopObject();
 
-                //mamy metodę która nie zwraca 
-                var metodaDoWznowienia = dane as MethodState;
-                MethodContext = metodaDoWznowienia;
-                MethodContext.NumerWykonywanejInstrukcji++;
+                //loguje wykonanie ret
+                EventRet(wynik);
+            }
+
+
+            //mamy inne metody na stosie wywołań - przekazuje ostatniej wynik
+            var metodaDoWznowienia = HardwareContext.PopObject() as MethodState;
+            if (wynik == "null")
+            {
+                //metoda bez wyniku
             }
             else
             {
-                //loguje wykonanie ret
-                EventRet(dane);
-
-                //najpierw mamy wynik potem dane metody
-                var wynik = dane;
-
-                //sprawdzam czy jest coś jeszcze na stosie wywołań
-                if (HardwareContext.CallStack.IsEmpty())
-                {
-                    //mamy koniec wykonywania funkcji (zwracającej wynik)
-                    MethodContext.CzyWykonywacInstrukcje = false;
-                    HardwareContext.Status = VirtualMachineState.Executed;
-                    PushObject(wynik); //zwracam wynik na stosie
-                    return;
-                }
-
-
-                var metodaDoWznowienia = HardwareContext.PopObject() as MethodState;
-                MethodContext = metodaDoWznowienia;
-                HardwareContext.AktualnaMetoda = metodaDoWznowienia;
-                PushObject(wynik); //zwracam wynik na stosie
-
-                MethodContext.NumerWykonywanejInstrukcji++;
+                metodaDoWznowienia.PushObject(wynik);
             }
+
+            metodaDoWznowienia.NumerWykonywanejInstrukcji++;
+
+
+            //sprawdzam czy koniec wykonania VM - jest coś jeszcze na stosie wywołań - jeśli nie to kończymy wątek i wirtualną maszynę
+            if (HardwareContext.CallStack.IsEmpty())
+            {
+                //mamy koniec wykonywania funkcji (zwracającej wynik)
+                MethodContext.CzyWykonywacInstrukcje = false;
+                HardwareContext.Status = VirtualMachineState.Executed;
+                HardwareContext.Result = wynik; //zwracam wynik na stosie
+                return;
+            }
+
         }
     }
 }

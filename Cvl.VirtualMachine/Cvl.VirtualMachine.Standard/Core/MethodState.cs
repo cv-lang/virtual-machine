@@ -52,7 +52,7 @@ namespace Cvl.VirtualMachine.Core
 
         public MethodData LocalArguments { get; set; }
         public MethodData LocalVariables { get; set; }
-        public Stack EvaluationStack { get; set; } = new Stack();
+        public EvaluationStack EvaluationStack { get; set; } = new EvaluationStack();
 
         public Type ConstrainedType { get; internal set; }
 

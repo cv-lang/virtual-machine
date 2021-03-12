@@ -9,9 +9,9 @@ namespace Cvl.VirtualMachine.Core
     /// <summary>
     /// Stos wirtualnej maszyny
     /// </summary>
-    public class Stack
+    public class EvaluationStack
     {
-        public Stack()
+        public EvaluationStack()
         {
             stosWewnetrzny = new Stack<ElementBase>();
         }

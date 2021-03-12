@@ -24,7 +24,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             metodaDoWykonania.WczytajInstrukcje();
 
             this.MethodContext = metodaDoWykonania;
-            this.HardwareContext.AktualnaMetoda = metodaDoWykonania; //TODO: do usuniecia
+            this.HardwareContext.PushAktualnaMetode(metodaDoWykonania); //TODO: do usuniecia
         }
 
         

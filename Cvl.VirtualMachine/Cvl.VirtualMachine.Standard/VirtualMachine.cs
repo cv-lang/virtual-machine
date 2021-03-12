@@ -68,8 +68,8 @@ namespace Cvl.VirtualMachine
             var process = parametety.First();
             var typ = process.GetType();
             var m = new MethodState(methodInfo, this, process);
+            HardwareContext.PushAktualnaMetode(m);
             m.WczytajInstrukcje();
-            HardwareContext.AktualnaMetoda = m;
             //HardwareContext.Stos.PushObject(process);
             m.LocalArguments.Wczytaj(parametety);
             
@@ -105,7 +105,7 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = HardwareContext.Status };
             }
 
-            var ret = (T)HardwareContext.AktualnaMetoda.PopObject();
+            var ret = (T)HardwareContext.Result;
             var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
             return result;
         }

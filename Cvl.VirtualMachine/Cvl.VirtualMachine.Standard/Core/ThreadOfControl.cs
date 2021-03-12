@@ -14,21 +14,32 @@ namespace Cvl.VirtualMachine
     {
         public VirtualMachine WirtualnaMaszyna { get; internal set; }
 
-        public Stack CallStack { get; set; } = new Stack();
+        public CallStack CallStack { get; set; } = new CallStack();
         public long NumerIteracji { get; set; }
         private InstructionBase aktualnaInstrukcja;
         public VirtualMachineState Status { get; set; }
 
-        public MethodState AktualnaMetoda { get; set; }
+        public MethodState AktualnaMetoda => CallStack.PobierzTopMethodState();
+
+        internal void PushAktualnaMetode(MethodState metodaDoWykonania)
+        {
+            CallStack.Push(metodaDoWykonania);
+        }
+
         //public bool CzyWykonywacInstrukcje { get; set; } = true;
         public Type ConstrainedType { get; internal set; }
         public object[] HibernateParams { get; internal set; }
-        
+
+        /// <summary>
+        /// Wynik działania wyritalnej maszyny - wątku
+        /// </summary>
+        public object Result { get; internal set; }
+
         public void Execute()
         {
             //NS.Debug.VM = this; // do debugowania 
 
-            while (AktualnaMetoda.CzyWykonywacInstrukcje)
+            while (CallStack.IsEmpty()==false && Status != VirtualMachineState.Executed && AktualnaMetoda.CzyWykonywacInstrukcje)
             {
                 var zmienneLokalne = AktualnaMetoda.LocalVariables;
                 var argumenty = AktualnaMetoda.LocalArguments;
@@ -47,6 +58,13 @@ namespace Cvl.VirtualMachine
                     aktualnaInstrukcja = PobierzAktualnaInstrukcje();
                     aktualnaInstrukcja.Wykonaj();
                     NumerIteracji++;
+
+                    if (CallStack.IsEmpty())
+                    {
+                        //kończymy wykonanie
+                        return;
+                    }
+
                     continue;
                 }
                 //catch (Exception ex)
@@ -151,9 +169,9 @@ namespace Cvl.VirtualMachine
         //    am.NumerWykonywanejInstrukcji = am.Instrukcje.IndexOf(ins);
         //}
 
-        public void PushObject(object o)
+        public void Push(MethodState o)
         {
-            CallStack.PushObject(o);
+            CallStack.Push(o);
         }
 
         //public void Push(ElementBase o)
@@ -166,15 +184,9 @@ namespace Cvl.VirtualMachine
         /// jeśli jest adres na stosie to zamienia na obiekt
         /// </summary>
         /// <returns></returns>
-        public object PopObject()
+        public MethodState PopObject()
         {
             var ob = CallStack.Pop();
-            if (ob is ObjectWraperBase)
-            {
-                var v = ob as ObjectWraperBase;
-                return v.GetValue();
-            }
-
             return ob;
         }
 

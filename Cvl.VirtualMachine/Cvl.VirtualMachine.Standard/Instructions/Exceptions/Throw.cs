@@ -36,11 +36,11 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody} ... blok obsługi");
 
                         //obsługujemy pierwszys blok
-                        wirtualnaMaszyna.HardwareContext.AktualnaMetoda = aktywnaMetod;
+                        wirtualnaMaszyna.HardwareContext.PushAktualnaMetode(aktywnaMetod);
                         wirtualnaMaszyna.HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji
                             = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(blok.HandlerOffset);
 
-                        wirtualnaMaszyna.HardwareContext.CallStack.PushObject(rzuconyWyjatek);
+                        wirtualnaMaszyna.HardwareContext.CallStack.PushException(rzuconyWyjatek);
                         if (blok.CatchType != null)
                         {
                             //wracam do zwykłej obsługi kodu                            

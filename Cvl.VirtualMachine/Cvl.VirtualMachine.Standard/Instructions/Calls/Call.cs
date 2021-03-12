@@ -213,9 +213,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
                     
                     //zapisuję aktualną metodę na stosie
-                    HardwareContext.PushObject(staraMetoda);
+                    HardwareContext.Push(staraMetoda);
 
-                    HardwareContext.AktualnaMetoda = MethodContext;
+                    HardwareContext.PushAktualnaMetode(MethodContext);
                 }
             }
 
