@@ -44,12 +44,6 @@ namespace Cvl.VirtualMachine.Core
             }
         }
 
-        public void PushException(object obiekt)
-        {
-            var w = new ObjectWraper(obiekt);
-            //Push(w);
-        }
-
         public void Push(MethodState obiekt)
         {
             stosWewnetrzny.Push(obiekt);
@@ -73,7 +67,7 @@ namespace Cvl.VirtualMachine.Core
             {
                 if (item != null)
                 {
-                    str += item.ToString() + "; \n";
+                    str += $"{item};\n ";
                 }
                 else
                 {

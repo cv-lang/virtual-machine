@@ -36,11 +36,11 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody} ... blok obsługi");
 
                         //obsługujemy pierwszys blok
-                        wirtualnaMaszyna.HardwareContext.PushAktualnaMetode(aktywnaMetod);
+                        //wirtualnaMaszyna.HardwareContext.PushAktualnaMetode(aktywnaMetod);
                         wirtualnaMaszyna.HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji
                             = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(blok.HandlerOffset);
 
-                        wirtualnaMaszyna.HardwareContext.CallStack.PushException(rzuconyWyjatek);
+                        wirtualnaMaszyna.HardwareContext.AktualnaMetoda.EvaluationStack.PushObject(rzuconyWyjatek);
                         if (blok.CatchType != null)
                         {
                             //wracam do zwykłej obsługi kodu                            
@@ -59,7 +59,8 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                     }
                 }
 
-                aktywnaMetod = wirtualnaMaszyna.HardwareContext.CallStack.PobierzNastepnaMetodeZeStosu();
+                wirtualnaMaszyna.HardwareContext.CallStack.PobierzNastepnaMetodeZeStosu();
+                aktywnaMetod = wirtualnaMaszyna.HardwareContext.AktualnaMetoda;
                 if (aktywnaMetod == null)
                 {
                     //mamy koniec stosu

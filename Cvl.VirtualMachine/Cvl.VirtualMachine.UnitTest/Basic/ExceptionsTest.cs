@@ -12,6 +12,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         public void Test1()
         {
             var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
             var process = new ExceptionsTestProces();
 
             var ret2 = process.Start1();
@@ -36,10 +37,24 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         public void Test3()
         {
             var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
             var process = new ExceptionsTestProces();
 
             var ret2 = process.Start3();
             var ret = vm.StartTestExecution<int>("Start3", process);
+
+            Assert.AreEqual(ret2, ret);
+        }
+
+        [Test]
+        public void Test4()
+        {
+            var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            var process = new ExceptionsTestProces();
+
+            var ret2 = process.Start4();
+            var ret = vm.StartTestExecution<int>("Start4", process);
 
             Assert.AreEqual(ret2, ret);
         }
@@ -81,6 +96,8 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return i;
         }
 
+        
+
         public int Start3()
         {
             int i = 0;     
@@ -94,6 +111,33 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
                 i += 1;
             }
             i += 1;
+
+            return i;
+        }
+
+        public int Start4()
+        {
+            int i = 0;
+
+            try
+            {
+                methodWitchThrowException();
+            }
+            catch (Exception ex)
+            {
+                i += 1;
+            }
+
+            i += 1;
+
+            try
+            {
+                interpretetMethod1();
+            }
+            catch (Exception ex)
+            {
+                i += 2;
+            }
 
             return i;
         }

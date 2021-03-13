@@ -184,7 +184,7 @@ namespace Cvl.VirtualMachine
         /// jeśli jest adres na stosie to zamienia na obiekt
         /// </summary>
         /// <returns></returns>
-        public MethodState PopObject()
+        public MethodState PopMethodState()
         {
             var ob = CallStack.Pop();
             return ob;

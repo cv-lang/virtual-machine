@@ -18,9 +18,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             {
                 EventRet();
                 //mamy koniec wykonywania procedury (bez wyniku) 
-                MethodContext.CzyWykonywacInstrukcje = false;
+                //MethodContext.CzyWykonywacInstrukcje = false;
                 //WirtualnaMaszyna.Status = VirtualMachineState.Executed;
-                return;
+               // return;
             }
             else
             {
@@ -33,18 +33,8 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
 
             //mamy inne metody na stosie wywołań - przekazuje ostatniej wynik
-            var metodaDoWznowienia = HardwareContext.PopObject() as MethodState;
-            if (wynik == "null")
-            {
-                //metoda bez wyniku
-            }
-            else
-            {
-                metodaDoWznowienia.PushObject(wynik);
-            }
-
-            metodaDoWznowienia.NumerWykonywanejInstrukcji++;
-
+            //ściągam ze stosu obecną metodę
+            HardwareContext.PopMethodState();
 
             //sprawdzam czy koniec wykonania VM - jest coś jeszcze na stosie wywołań - jeśli nie to kończymy wątek i wirtualną maszynę
             if (HardwareContext.CallStack.IsEmpty())
@@ -55,6 +45,18 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 HardwareContext.Result = wynik; //zwracam wynik na stosie
                 return;
             }
+
+            var metodaDoWznowienia = HardwareContext.AktualnaMetoda;
+            if (wynik == "null")
+            {
+                //metoda bez wyniku
+            }
+            else
+            {
+                metodaDoWznowienia.PushObject(wynik);
+            }
+
+            metodaDoWznowienia.NumerWykonywanejInstrukcji++;
 
         }
     }

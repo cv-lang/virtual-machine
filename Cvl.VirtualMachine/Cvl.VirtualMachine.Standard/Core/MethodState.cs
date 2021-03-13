@@ -306,7 +306,7 @@ namespace Cvl.VirtualMachine.Core
 
         public override string ToString()
         {
-            return NazwaMetody + " 0x" + OffsetWykonywanejInstrukcji.ToString("X") + " " + NazwaTypu + " " + AssemblyName;
+            return $"{NazwaMetody} {Instrukcje[this.NumerWykonywanejInstrukcji]}";
         }
     }
 }

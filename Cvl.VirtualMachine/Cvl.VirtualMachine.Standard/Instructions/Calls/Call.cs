@@ -187,14 +187,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 {
                     //interpretowanie
 
-                    var nazwaMetodyBazowej = method.Name;
-                    //var typDef = instance.GetType();
-                    var staraMetoda = MethodContext;
+                    //tworzę nową metodę i wrzucam ją na stos wykonania
 
                     var m = new MethodState(method, MethodContext.WirtualnaMaszyna, instance);
-                    
                     m.WczytajInstrukcje();
-
                     MethodContext = m;
                     var iloscArgumentow = method.GetParameters().Count();
 
@@ -210,11 +206,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     }
 
                     MethodContext.WczytajLokalneArgumenty(iloscArgumentow);
-
                     
-                    //zapisuję aktualną metodę na stosie
-                    HardwareContext.Push(staraMetoda);
 
+                    //wrzucam na stos wykonania nową metodę
                     HardwareContext.PushAktualnaMetode(MethodContext);
                 }
             }

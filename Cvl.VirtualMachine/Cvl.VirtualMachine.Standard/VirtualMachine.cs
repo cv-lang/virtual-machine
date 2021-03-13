@@ -91,7 +91,7 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = HardwareContext.Status };
             }
 
-            var ret = (T)HardwareContext.AktualnaMetoda.PopObject();
+            var ret = (T) HardwareContext.Result;
             var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
             return result;
         }

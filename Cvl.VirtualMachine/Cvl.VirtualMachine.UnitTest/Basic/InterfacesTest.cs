@@ -12,6 +12,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         public void Test1()
         {
             var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
             var process = new InterfacesProcessTest();
 
             var r1 = process.Start();
