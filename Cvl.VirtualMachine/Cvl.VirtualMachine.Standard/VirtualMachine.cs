@@ -30,14 +30,16 @@ namespace Cvl.VirtualMachine
         public T Result { get; set; }
     }
 
+
+    // wirutalna maszyna .net - base on https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf
     public class VirtualMachine
     {
         public VirtualMachine()
         {
-            HardwareContext = new ThreadOfControl() { WirtualnaMaszyna = this };
+            Thread = new ThreadOfControl() { WirtualnaMaszyna = this };
         }
 
-        public ThreadOfControl HardwareContext { get; set; }
+        public ThreadOfControl Thread { get; set; }
 
         
 
@@ -68,45 +70,45 @@ namespace Cvl.VirtualMachine
             var process = parametety.First();
             var typ = process.GetType();
             var m = new MethodState(methodInfo, this, process);
-            HardwareContext.PushAktualnaMetode(m);
+            Thread.PushAktualnaMetode(m);
             m.WczytajInstrukcje();
             //HardwareContext.Stos.PushObject(process);
             m.LocalArguments.Wczytaj(parametety);
             
 
             //m.Instrukcje = new List<InstructionBase>() { new CallStart(m) { HardwareContext = this.HardwareContext } };
-            HardwareContext.Execute();
+            Thread.Execute();
         }
 
         public VirtualMachineResult<T> Resume<T>(object hibernateResumeParameter = null)
         {
-            HardwareContext.AktualnaMetoda.PushObject(hibernateResumeParameter);
-            HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji++;
-            HardwareContext.Status = VirtualMachineState.Executing;
-            HardwareContext.AktualnaMetoda.CzyWykonywacInstrukcje = true;
+            Thread.AktualnaMetoda.PushObject(hibernateResumeParameter);
+            Thread.AktualnaMetoda.NumerWykonywanejInstrukcji++;
+            Thread.Status = VirtualMachineState.Executing;
+            Thread.AktualnaMetoda.CzyWykonywacInstrukcje = true;
 
-            HardwareContext.Execute();
-            if (HardwareContext.Status == VirtualMachineState.Hibernated)
+            Thread.Execute();
+            if (Thread.Status == VirtualMachineState.Hibernated)
             {
-                return new VirtualMachineResult<T>() { State = HardwareContext.Status };
+                return new VirtualMachineResult<T>() { State = Thread.Status };
             }
 
-            var ret = (T) HardwareContext.Result;
-            var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
+            var ret = (T) Thread.Result;
+            var result = new VirtualMachineResult<T>() { State = Thread.Status, Result = ret };
             return result;
         }
 
         public VirtualMachineResult<T> Start<T>(string nazwaMetody, params object[] parametet)
         {
-            HardwareContext = new ThreadOfControl() { WirtualnaMaszyna = this };
+            Thread = new ThreadOfControl() { WirtualnaMaszyna = this };
             start(nazwaMetody, parametet);
-            if (HardwareContext.Status == VirtualMachineState.Hibernated)
+            if (Thread.Status == VirtualMachineState.Hibernated)
             {
-                return new VirtualMachineResult<T>() { State = HardwareContext.Status };
+                return new VirtualMachineResult<T>() { State = Thread.Status };
             }
 
-            var ret = (T)HardwareContext.Result;
-            var result = new VirtualMachineResult<T>() { State = HardwareContext.Status, Result = ret };
+            var ret = (T)Thread.Result;
+            var result = new VirtualMachineResult<T>() { State = Thread.Status, Result = ret };
             return result;
         }
 
@@ -147,9 +149,9 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void HibernateVirtualMachine(object[] parameters)
         {
-            HardwareContext.AktualnaMetoda.CzyWykonywacInstrukcje = false;
-            HardwareContext.Status = VirtualMachineState.Hibernated;
-            HardwareContext.HibernateParams = parameters;
+            Thread.AktualnaMetoda.CzyWykonywacInstrukcje = false;
+            Thread.Status = VirtualMachineState.Hibernated;
+            Thread.HibernateParams = parameters;
         }
 
         /// <summary>
@@ -158,8 +160,8 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void EndProcessVirtualMachine()
         {
-            HardwareContext.AktualnaMetoda.CzyWykonywacInstrukcje = false;
-            HardwareContext.Status = VirtualMachineState.Executed;
+            Thread.AktualnaMetoda.CzyWykonywacInstrukcje = false;
+            Thread.Status = VirtualMachineState.Executed;
         }
 
         /// <summary>
@@ -222,7 +224,7 @@ namespace Cvl.VirtualMachine
         internal void EventRet(object ret=null)
         {
             callLevel--;
-            LogMonitor?.EventRet(ret, HardwareContext.NumerIteracji);
+            LogMonitor?.EventRet(ret, Thread.NumerIteracji);
 
             //var text = $".. Ret: ''{ret ?? "null"}''";
 
@@ -239,7 +241,7 @@ namespace Cvl.VirtualMachine
         {
             callLevel++;
 
-            LogMonitor?.EventCall(method, parameters, callLevel, HardwareContext.NumerIteracji);
+            LogMonitor?.EventCall(method, parameters, callLevel, Thread.NumerIteracji);
 
 
             
@@ -261,7 +263,7 @@ namespace Cvl.VirtualMachine
 
         public object[] GetHibernateParams()
         {
-            return HardwareContext.HibernateParams;
+            return Thread.HibernateParams;
         }
 
         #endregion

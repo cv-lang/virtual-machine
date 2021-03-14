@@ -29,7 +29,7 @@ namespace Cvl.VirtualMachine.Instructions
             where T : InstructionBase, new()
         {
             var intst = new T();
-            intst.HardwareContext = WirtualnaMaszyna.HardwareContext;
+            intst.HardwareContext = WirtualnaMaszyna.Thread;
             intst.MethodContext = intst.HardwareContext.AktualnaMetoda;
             intst.Inicialize(instruction);
             if(a != null)

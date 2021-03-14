@@ -87,7 +87,7 @@ namespace Cvl.VirtualMachine
         {
             var ai = AktualnaMetoda.Instrukcje[AktualnaMetoda.NumerWykonywanejInstrukcji];
             ai.MethodContext = AktualnaMetoda;
-            ai.HardwareContext =  this.WirtualnaMaszyna.HardwareContext;
+            ai.HardwareContext =  this.WirtualnaMaszyna.Thread;
             return ai;
         }
 

@@ -20,7 +20,7 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
         public static void ObslugaRzuconegoWyjatku(VirtualMachine wirtualnaMaszyna, object rzuconyWyjatek)
         {
             wirtualnaMaszyna.EventHandleException("Przechodzenie przez stos po metodach obsługi wyjątu");
-            var aktywnaMetod = wirtualnaMaszyna.HardwareContext.AktualnaMetoda;
+            var aktywnaMetod = wirtualnaMaszyna.Thread.AktualnaMetoda;
             while (true)
             {
                 
@@ -37,14 +37,14 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
 
                         //obsługujemy pierwszys blok
                         //wirtualnaMaszyna.HardwareContext.PushAktualnaMetode(aktywnaMetod);
-                        wirtualnaMaszyna.HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji
+                        wirtualnaMaszyna.Thread.AktualnaMetoda.NumerWykonywanejInstrukcji
                             = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(blok.HandlerOffset);
 
-                        wirtualnaMaszyna.HardwareContext.AktualnaMetoda.EvaluationStack.PushObject(rzuconyWyjatek);
+                        wirtualnaMaszyna.Thread.AktualnaMetoda.EvaluationStack.PushObject(rzuconyWyjatek);
                         if (blok.CatchType != null)
                         {
                             //wracam do zwykłej obsługi kodu                            
-                            wirtualnaMaszyna.HardwareContext.Status = VirtualMachineState.Executing;
+                            wirtualnaMaszyna.Thread.Status = VirtualMachineState.Executing;
                             wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
 
                         }
@@ -59,8 +59,8 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                     }
                 }
 
-                wirtualnaMaszyna.HardwareContext.CallStack.PobierzNastepnaMetodeZeStosu();
-                aktywnaMetod = wirtualnaMaszyna.HardwareContext.AktualnaMetoda;
+                wirtualnaMaszyna.Thread.CallStack.PobierzNastepnaMetodeZeStosu();
+                aktywnaMetod = wirtualnaMaszyna.Thread.AktualnaMetoda;
                 if (aktywnaMetod == null)
                 {
                     //mamy koniec stosu
