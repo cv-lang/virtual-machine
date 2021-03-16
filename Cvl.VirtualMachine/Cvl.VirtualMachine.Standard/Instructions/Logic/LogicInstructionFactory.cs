@@ -15,6 +15,10 @@ namespace Cvl.VirtualMachine.Instructions.Logic
                     return CreateInstruction<And>(instrukcja);
                 case "neg":
                     return CreateInstruction<Neg>(instrukcja);
+                case "or":
+                    return CreateInstruction<Or>(instrukcja);
+                case "xor":
+                    return CreateInstruction<Xor>(instrukcja);
             }
             return null;
         }
