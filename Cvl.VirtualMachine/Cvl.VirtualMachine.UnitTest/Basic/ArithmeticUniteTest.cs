@@ -46,6 +46,22 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
 
             //Assert.Pass();
         }
+
+        [Test]
+        public void Test2()
+        {
+            var vm = new VirtualMachine();
+            var process = new ArithmeticTestProcess();
+
+            //int
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<int>("Mod", process, 4, 2));
+            //decimal
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<decimal>("Mod", process, 4m, 2m));
+            //float
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<float>("Mod", process, 4f, 2f));
+            //double
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<double>("Mod", process, 4d, 2d));
+        }
     }
 
     public class ArithmeticTestProcess
@@ -72,6 +88,10 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
         {
             return a / b;
         }
+        public int Mod(int a, int b)
+        {
+            return a % b;
+        }
         #endregion
         #region decimal - add, sub, mul, div
 
@@ -93,6 +113,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
         public decimal DivM(decimal a, decimal b)
         {
             return a / b;
+        }
+
+        public decimal ModM(decimal a, decimal b)
+        {
+            return a % b;
         }
         #endregion
         #region float - add, sub, mul, div
@@ -116,6 +141,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
         {
             return a / b;
         }
+
+        public float ModF(float a, float b)
+        {
+            return a % b;
+        }
         #endregion
         #region double - add, sub, mul, div
 
@@ -137,6 +167,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
         public double DivD(double a, double b)
         {
             return a / b;
+        }
+
+        public double ModD(double a, double b)
+        {
+            return a % b;
         }
         #endregion
         #endregion
