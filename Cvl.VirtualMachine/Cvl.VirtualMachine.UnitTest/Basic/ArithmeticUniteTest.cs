@@ -56,11 +56,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
             //int
             Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<int>("Mod", process, 4, 2));
             //decimal
-            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<decimal>("Mod", process, 4m, 2m));
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<decimal>("ModM", process, 4m, 2m));
             //float
-            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<float>("Mod", process, 4f, 2f));
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<float>("ModF", process, 4f, 2f));
             //double
-            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<double>("Mod", process, 4d, 2d));
+            Assert.AreEqual(process.Mod(4, 2), vm.StartTestExecution<double>("ModD", process, 4d, 2d));
         }
     }
 
