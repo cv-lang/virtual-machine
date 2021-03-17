@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Cvl.VirtualMachine.Core.Tools;
+using Mono.Reflection;
 
 namespace Cvl.VirtualMachine
 {
@@ -63,6 +64,28 @@ namespace Cvl.VirtualMachine
             start(startMethod, parametety);
         }
 
+        private void sprawdziInstrukcje(MethodInfo methodInfo, List<Instruction> brakujaceInstrukcje, int level)
+        {
+            if(level <= 0 || methodInfo == null || methodInfo.IsAbstract )
+            { return; }
+
+            var instructions = methodInfo.GetInstructions();
+            foreach (var instruction in instructions)
+            {
+                var i = instructionsFactory.UtworzInstrukcje(instruction, this);
+                if(i == null)
+                {
+                    brakujaceInstrukcje.Add(instruction);
+                }
+
+                if(i is Call call)
+                {
+                    var mi= instruction.Operand as MethodInfo;
+                    sprawdziInstrukcje(mi, brakujaceInstrukcje, level - 1);
+                }
+
+            }
+        }
         
 
         private void start(MethodInfo methodInfo, params object[] parametety)
@@ -71,6 +94,15 @@ namespace Cvl.VirtualMachine
             var typ = process.GetType();
             var m = new MethodState(methodInfo, this, process);
             Thread.PushAktualnaMetode(m);
+
+            var brakujaceInstrukcje = new List<Instruction>();
+            sprawdziInstrukcje(methodInfo, brakujaceInstrukcje, 3);
+
+            if(brakujaceInstrukcje.Any())
+            {
+                throw new Exception($"Brak instrukcji: {string.Join(",", brakujaceInstrukcje.Select(x=> x.ToString()))}");
+            }
+
             m.WczytajInstrukcje();
             //HardwareContext.Stos.PushObject(process);
             m.LocalArguments.Wczytaj(parametety);

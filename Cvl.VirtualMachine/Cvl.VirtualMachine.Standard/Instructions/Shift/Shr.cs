@@ -8,8 +8,8 @@ namespace Cvl.VirtualMachine.Instructions.Shift
     {
         public override void Wykonaj()
         {
-            dynamic a = PopObject();
             dynamic b = PopObject();
+            dynamic a = PopObject();
 
             dynamic wynik = a >> b;
             PushObject(wynik);

@@ -115,7 +115,8 @@ namespace Cvl.VirtualMachine.Core
                 }
                 else
                 {
-
+                    //niema instrukcji
+                    throw new Exception($"Brak instrukcji {item}");
                 }
             }
 
