@@ -25,13 +25,19 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                     return CreateInstruction<Clt>(instrukcja);
                 case "ceq":
                     return CreateInstruction<Ceq>(instrukcja);
+                case "brzero":
+                case "brzero.s":
+                    return CreateInstruction<Brzero>(instrukcja);
                 case "brfalse":
-                    return CreateInstruction<Brfalse>(instrukcja);
                 case "brfalse.s":
                     return CreateInstruction<Brfalse>(instrukcja);
+                case "brnull":
+                    return CreateInstruction<Brnull>(instrukcja);
                 case "brtrue":
                 case "brtrue.s":
                     return CreateInstruction<Brtrue>(instrukcja);
+                case "brinst":
+                    return CreateInstruction<Brinst>(instrukcja);
                 case "isinst":
                     return CreateInstruction<Isinst>(instrukcja);
                 case "bne.un.s":
