@@ -12,8 +12,10 @@ namespace Cvl.VirtualMachine.Instructions.Shift
             switch (instrukcja.OpCode.Name)
             {
                 case "shl":
+                case "shl.un":
                     return CreateInstruction<Shl>(instrukcja);
                 case "shr":
+                case "shr.un":
                     return CreateInstruction<Shr>(instrukcja);
             }
             return null;

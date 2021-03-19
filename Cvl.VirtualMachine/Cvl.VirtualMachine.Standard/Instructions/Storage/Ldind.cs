@@ -30,8 +30,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     }
 
     /// <summary>
-    /// Loads the element at a specified array index onto the top of the evaluation stack as the type specified in the instruction.
-    /// https://docs.microsoft.com/pl-pl/dotnet/api/system.reflection.emit.opcodes.ldelem?view=net-5.0
+    /// load value of type native int into memory at address.
+    /// https://en.wikipedia.org/wiki/List_of_CIL_instructions
     /// </summary>
     public class Ldind : InstructionBase
     {

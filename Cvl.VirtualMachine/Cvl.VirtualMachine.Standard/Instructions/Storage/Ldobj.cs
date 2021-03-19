@@ -20,7 +20,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
 
     /// <summary>
     /// Kopiuje obiekt typu wartości wskazywany przez adres na początku stosu oceny.
-    /// https://docs.microsoft.com/pl-pl/dotnet/api/system.reflection.emit.opcodes.ldobj?view=net-5.0
+    /// https://docs.microsoft.com/en-us/dotnet/api/system.reflection.emit.opcodes.ldobj?view=net-5.0
     /// </summary>
     public class Ldobj : InstructionBase
     {

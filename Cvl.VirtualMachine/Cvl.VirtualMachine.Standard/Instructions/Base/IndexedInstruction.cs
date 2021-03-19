@@ -32,7 +32,7 @@ namespace Cvl.VirtualMachine.Instructions.Base
                 } 
                 else
                 {
-                    throw new Exception($"brak obsugi instrukcji {instruction.Next} dla operanda {instruction.Operand}");
+                    throw new Exception($"brak obsugi instrukcji {instruction} dla operanda {instruction.Operand}");
                 }
             }   
         }

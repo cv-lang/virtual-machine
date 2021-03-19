@@ -13,6 +13,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
             {
                 case "stind"://TODO:Testy 
                 case "stind.i":
+                case "stind.i1":
                 case "stind.i2":
                 case "stind.i4":
                 case "stind.i8":
@@ -26,8 +27,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     }
 
     /// <summary>
-    /// Loads the element at a specified array index onto the top of the evaluation stack as the type specified in the instruction.
-    /// https://docs.microsoft.com/pl-pl/dotnet/api/system.reflection.emit.opcodes.ldelem?view=net-5.0
+    ///Store value of type native int into memory at address.
+    /// https://en.wikipedia.org/wiki/List_of_CIL_instructions
     /// </summary>
     public class Stind : InstructionBase
     {

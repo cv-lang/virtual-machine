@@ -17,8 +17,10 @@ namespace Cvl.VirtualMachine.Instructions.Arithmetic
                     return CreateInstruction<Sub>(instrukcja);
                 case "mul":
                     return CreateInstruction<Mul>(instrukcja);
+                case "div.un":
                 case "div":
                     return CreateInstruction<Div>(instrukcja);
+                case "rem.un":
                 case "rem":
                     return CreateInstruction<Rem>(instrukcja);
             }

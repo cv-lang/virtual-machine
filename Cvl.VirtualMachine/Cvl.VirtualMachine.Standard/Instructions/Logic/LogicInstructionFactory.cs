@@ -19,6 +19,8 @@ namespace Cvl.VirtualMachine.Instructions.Logic
                     return CreateInstruction<Or>(instrukcja);
                 case "xor":
                     return CreateInstruction<Xor>(instrukcja);
+                case "not":
+                    return CreateInstruction<Not>(instrukcja);
             }
             return null;
         }

@@ -48,12 +48,17 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                     return CreateInstruction<Bgt>(instrukcja);
                 case "blt":
                 case "blt.s":
+                case "blt.un":
+                case "blt.un.s":
                     return CreateInstruction<Blt>(instrukcja);
                 case "bge":
                 case "bge.s":
+                case "bge.un.s": //TODO: dodać test
                     return CreateInstruction<Bge>(instrukcja);
                 case "ble":
                 case "ble.s":
+                case "ble.un":
+                case "ble.un.s": //TODO: dodać test
                     return CreateInstruction<Ble>(instrukcja);                
             }
             return null;
