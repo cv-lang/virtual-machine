@@ -14,6 +14,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
         {
             var proces = new HibernateWithPrarametersTestProcess();
             var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
             var vmWynik = vm.Start<object>("Start", proces);
             Assert.True(vmWynik.State == VirtualMachineState.Hibernated);
             Assert.True(proces.State == 1);

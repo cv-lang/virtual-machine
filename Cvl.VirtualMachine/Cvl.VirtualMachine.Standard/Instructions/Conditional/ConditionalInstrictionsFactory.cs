@@ -59,7 +59,9 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                 case "ble.s":
                 case "ble.un":
                 case "ble.un.s": //TODO: dodać test
-                    return CreateInstruction<Ble>(instrukcja);                
+                    return CreateInstruction<Ble>(instrukcja);
+                case "switch":
+                    return CreateInstruction<Switch>(instrukcja);
             }
             return null;
         }

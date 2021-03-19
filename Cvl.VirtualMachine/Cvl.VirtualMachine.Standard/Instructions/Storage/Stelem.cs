@@ -26,8 +26,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
     }
 
     /// <summary>
-    /// Loads the element at a specified array index onto the top of the evaluation stack as the type specified in the instruction.
-    /// https://docs.microsoft.com/pl-pl/dotnet/api/system.reflection.emit.opcodes.ldelem?view=net-5.0
+    /// Zastępuje element Array w danym indeksie wartością na stosie ewaluacyjnym, którego typ jest określony w instrukcji.
+    /// https://docs.microsoft.com/pl-pl/dotnet/api/system.reflection.emit.opcodes.Stelem?view=net-5.0
     /// </summary>
     public class Stelem : InstructionBase
     {
@@ -35,9 +35,10 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         public override void Wykonaj()
         {
             //pobieram obiekt ze stosu
+            var v = PopObject();
             var index = (int)PopObject();
             var ar = PopObject() as Array;
-            var v = PopObject();
+           
             ar.SetValue(v, index);
 
             WykonajNastepnaInstrukcje();
