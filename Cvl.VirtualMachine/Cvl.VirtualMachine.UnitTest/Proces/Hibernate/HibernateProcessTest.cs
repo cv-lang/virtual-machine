@@ -29,7 +29,8 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
             proces = new HibernateTestProcess();
             var wynik = proces.Start();
             Assert.AreEqual(wynik, vmWynik.Result);
-        }
+        }       
+
     }
 
     public class HibernateTestProcess

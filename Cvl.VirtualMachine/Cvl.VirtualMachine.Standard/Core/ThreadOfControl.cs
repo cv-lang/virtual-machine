@@ -56,7 +56,14 @@ namespace Cvl.VirtualMachine
                     //    System.Diagnostics.Debugger.Break();
                     //}
                     aktualnaInstrukcja = PobierzAktualnaInstrukcje();
-                    aktualnaInstrukcja.Wykonaj();
+                    try
+                    {
+
+                        aktualnaInstrukcja.Wykonaj();
+                    } catch(Exception ex)
+                    {
+                        throw new Exception($"Błąd w instrukcji {aktualnaInstrukcja} w metodzie {AktualnaMetoda}", ex);
+                    }
                     NumerIteracji++;
 
                     if (CallStack.IsEmpty())

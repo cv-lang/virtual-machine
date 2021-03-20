@@ -154,7 +154,7 @@ namespace Cvl.VirtualMachine
         {
             var proces = new ProcesAction();
             proces.Action = p;
-            start(p.Method, true, p.Target);
+            start(p.Method, p.Target);
         }
 
         public void WalidujMetodyObiektu(object instancjaObiektu)

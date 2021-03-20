@@ -27,7 +27,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var ret = vm.StartTestExecution<int>("Test2", process,2);
             Assert.AreEqual(process.Test2(2), ret);
 
-
+            Assert.AreEqual(process.Test3(RuleTypeEnum.ToChooseProcess), vm.StartTestExecution<int>("Test3", process, RuleTypeEnum.ToChooseProcess));
         }
     }
 
@@ -39,10 +39,10 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             status = (EnumTestStatus)i;
 
-            //if(status == EnumTestStatus.Init)
-            //{
-            //    return EnumTestStatus.Init;
-            //}
+            if (status == EnumTestStatus.Init)
+            {
+                return EnumTestStatus.Init;
+            }
 
             //if(status == EnumTestStatus.Progress)
             //{
@@ -55,7 +55,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             //}
 
             var stat2 = getStat();
-            if(stat2 == EnumTestStatus.Init)
+            if(stat2 != EnumTestStatus.Init)
             {
                 return stat2;
             } else if(stat2 == EnumTestStatus.Complite)
@@ -80,11 +80,23 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return t1;
         }
 
+
+        public int Test3(RuleTypeEnum ruleTypeEnum)
+        {
+            if(ruleTypeEnum != RuleTypeEnum.Initial )
+            {
+                return (int)RuleTypeEnum.Initial;
+            } else
+            {
+                return (int)RuleTypeEnum.ToChooseProcess;
+            }
+        }
         
     }
 
     public enum RuleTypeEnum
     {
+        Empty = 0,
         Initial = 1,
         ToDecission = 2,
         ToChooseProcess = 3
