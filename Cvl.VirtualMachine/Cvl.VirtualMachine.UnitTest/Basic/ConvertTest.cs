@@ -53,6 +53,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             Assert.AreEqual(process.Convert_u8(10.5), vm.StartTestExecution<UInt64>("Convert_u8", process, 10.5));
             Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<UInt64>("Convert_u8", process, -10.5));
 
+
         }
     }
 
@@ -83,11 +84,13 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         #region conv.r
         public float Convert_r(object value)
         {
+
             return Convert.ToSingle(value);
         }
         public float Convert_r4(object value)
         {
             return Convert.ToSingle(value);
+
         }
         public double Convert_r8(object value)
         {
