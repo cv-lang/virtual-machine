@@ -46,16 +46,16 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             Assert.AreEqual(process.Brfalse(2), vm.StartTestExecution<int>("Brfalse", process, 0));
 
             //Brinst
-            Assert.AreEqual(process.Brinst(2), vm.StartTestExecution<int>("Brinst", process, 2));
+            Assert.AreEqual(process.Brinst(null), vm.StartTestExecution<int>("Brinst", process, null));
 
             //Brnull
             Assert.AreEqual(process.Brnull(null), vm.StartTestExecution<int>("Brnull", process, null));
 
             //Brtrue
-            Assert.AreEqual(process.Brinst(2), vm.StartTestExecution<int>("Brtrue", process, 2));
+            Assert.AreEqual(process.Brtrue(2), vm.StartTestExecution<int>("Brtrue", process, 2));
 
             //Brzero
-            Assert.AreEqual(process.Brinst(0), vm.StartTestExecution<int>("Brzero", process, 0));
+            Assert.AreEqual(process.Brzero(0), vm.StartTestExecution<int>("Brzero", process, 0));
 
             //Ceq
             Assert.AreEqual(process.Ceq(2, 2), vm.StartTestExecution<int>("Ceq", process, 2, 2));
@@ -137,34 +137,34 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return 0;
         }
 
-        public int Brinst(dynamic value)
+        public int Brinst(object value)
         {
             if (value != null)
-                return 1;
-            return 0;
+                return 0;
+            return 1;
         }
 
-        public int Brnull(dynamic value)
+        public int Brnull(object value)
         {
             if (value == null)
                 return 1;
             return 0;
         }
 
-        public int Brtrue(dynamic value)
+        public int Brtrue(object value)
         {
             if (value != null)
                 return 1;
-            else if (value is bool && value == true)
+            else if (value is bool istrue && istrue  == true)
                 return 1;
-            else if (value != 0)
+            else if (value is int i && i != 0)
                 return 1;
             return 0;
         }
 
-        public int Brzero(dynamic value)
+        public int Brzero(object value)
         {
-            if (value == 0)
+            if (value is int i && i == 0)
                 return 1;
             return 0;
         }
@@ -200,13 +200,5 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         }
 
         #endregion
-
-        //TODO
-        public bool Isinst(dynamic value)
-        {
-            return true;
-        }
-
-
     }
 }

@@ -21,14 +21,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
             var process = new ArithmeticTestProcess();
 
             //uint
-            Assert.AreEqual(process.AddU((uint)1, (uint)2), vm.StartTestExecution<int>("Add", process, 1, 2));
-            //Assert.AreEqual(process.Sub(1, 2), vm.StartTestExecution<int>("Sub", process, 1, 2));
-            //Assert.AreEqual(process.Mul(1, 2), vm.StartTestExecution<int>("Mul", process, 1, 2));
-            //Assert.AreEqual(process.Div(4, 2), vm.StartTestExecution<int>("Div", process, 4, 2));
-            //Assert.AreEqual(process.Add(1, -2), vm.StartTestExecution<int>("Add", process, 1, -2));
-            //Assert.AreEqual(process.Sub(1, -2), vm.StartTestExecution<int>("Sub", process, 1, -2));
-            //Assert.AreEqual(process.Mul(1, -2), vm.StartTestExecution<int>("Mul", process, 1, -2));
-            //Assert.AreEqual(process.Div(4, -2), vm.StartTestExecution<int>("Div", process, 4, -2));
+            Assert.AreEqual(process.AddU(1, 2), vm.StartTestExecution<int>("AddU", process, 1, 2));
+            Assert.AreEqual(process.SubU(3, 2), vm.StartTestExecution<int>("SubU", process, 3, 2));
+            Assert.AreEqual(process.MulU(1, 2), vm.StartTestExecution<int>("MulU", process, 1, 2));
+            Assert.AreEqual(process.DivU(4, 2), vm.StartTestExecution<int>("DivU", process, 4, 2));
+            Assert.AreEqual(process.ModU(5, 2), vm.StartTestExecution<int>("ModU", process, 5, 2));
 
             //int
             Assert.AreEqual(process.Add(1, 2), vm.StartTestExecution<int>("Add", process, 1, 2));
@@ -92,15 +89,36 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
 
     public class ArithmeticTestProcess
     {
-        #region simple operation 
-        #region int - add, sub, mul, div
+        #region simple operation
+        #region uint - add, sub, mul, div, mod
 
-        public int Add(int a, int b)
+        public uint AddU(uint a, uint b)
         {
             return a + b;
         }
 
-        public uint AddU(uint a, uint b)
+        public uint SubU(uint a, uint b)
+        {
+            return a - b;
+        }
+
+        public uint MulU(uint a, uint b)
+        {
+            return a * b;
+        }
+
+        public uint DivU(uint a, uint b)
+        {
+            return a / b;
+        }
+        public uint ModU(uint a, uint b)
+        {
+            return a % b;
+        }
+        #endregion
+        #region int - add, sub, mul, div, mod
+
+        public int Add(int a, int b)
         {
             return a + b;
         }
@@ -124,7 +142,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
             return a % b;
         }
         #endregion
-        #region decimal - add, sub, mul, div
+        #region decimal - add, sub, mul, div, mod
 
         public decimal AddM(decimal a, decimal b)
         {
@@ -151,7 +169,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
             return a % b;
         }
         #endregion
-        #region float - add, sub, mul, div
+        #region float - add, sub, mul, div, mod
 
         public float AddF(float a, float b)
         {
@@ -178,7 +196,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
             return a % b;
         }
         #endregion
-        #region double - add, sub, mul, div
+        #region double - add, sub, mul, div, mod
 
         public double AddD(double a, double b)
         {
