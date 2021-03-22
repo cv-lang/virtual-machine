@@ -18,40 +18,40 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var vm = new VirtualMachine();
             var process = new ConvertTestProcess();
 
-            Assert.AreEqual(process.Convert_i(10.5), vm.StartTestExecution<int>("conv.i", process, 10.5));
+            Assert.AreEqual(process.Convert_i(10.5), vm.StartTestExecution<int>("Convert_i", process, 10.5));
 
-            Assert.AreEqual(process.Convert_i1(10.5), vm.StartTestExecution<SByte>("conv.i1", process, 10.5));
-            Assert.AreEqual(process.Convert_i1(200), vm.StartTestExecution<SByte>("conv.i1", process, 200));
+            Assert.AreEqual(process.Convert_i1(10.5), vm.StartTestExecution<SByte>("Convert_i1", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<SByte>("Convert_i1", process, 200));
 
-            Assert.AreEqual(process.Convert_i2(10.5), vm.StartTestExecution<short>("conv.i2", process, 10.5));
-            Assert.AreEqual(process.Convert_i2(40000), vm.StartTestExecution<short>("conv.i2", process, 40000));
+            Assert.AreEqual(process.Convert_i2(10.5), vm.StartTestExecution<short>("Convert_i2", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<short>("Convert_i2", process, 40000));
 
-            Assert.AreEqual(process.Convert_i4(10.5), vm.StartTestExecution<int>("conv.i4", process, 10.5));
+            Assert.AreEqual(process.Convert_i4(10.5), vm.StartTestExecution<int>("Convert_i4", process, 10.5));
 
-            Assert.AreEqual(process.Convert_i8(10.5), vm.StartTestExecution<int>("conv.i8", process, 10.5));
+            Assert.AreEqual(process.Convert_i8(10.5), vm.StartTestExecution<int>("Convert_i8", process, 10.5));
 
-            Assert.AreEqual(process.Convert_r(10.5), vm.StartTestExecution<float>("conv.r", process, 10.5));
+            Assert.AreEqual(process.Convert_r(10.5), vm.StartTestExecution<float>("Convert_r", process, 10.5));
 
-            Assert.AreEqual(process.Convert_r4(10.5), vm.StartTestExecution<float>("conv.r4", process, 10.5));
+            Assert.AreEqual(process.Convert_r4(10.5), vm.StartTestExecution<float>("Convert_r4", process, 10.5));
 
-            Assert.AreEqual(process.Convert_r8(10.5), vm.StartTestExecution<double>("conv.r8", process, 10.5));
+            Assert.AreEqual(process.Convert_r8(10.5), vm.StartTestExecution<double>("Convert_r8", process, 10.5));
 
-            Assert.AreEqual(process.Convert_u(10.5), vm.StartTestExecution<uint>("conv.u", process, 10.5));
-            Assert.AreEqual(process.Convert_u(-10.5), vm.StartTestExecution<uint>("conv.u", process, -10.5));
+            Assert.AreEqual(process.Convert_u(10.5), vm.StartTestExecution<uint>("Convert_u", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<SByte>("Convert_u", process, -10.5));
 
-            Assert.AreEqual(process.Convert_u1(10.5), vm.StartTestExecution<byte>("conv.u1", process, 10.5));
-            Assert.AreEqual(process.Convert_u1(-10), vm.StartTestExecution<byte>("conv.u1", process, -10));
-            Assert.AreEqual(process.Convert_u1(500), vm.StartTestExecution<byte>("conv.u1", process, 500));
+            Assert.AreEqual(process.Convert_u1(10.5), vm.StartTestExecution<byte>("Convert_u1", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<byte>("Convert_u1", process, -10));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<byte>("Convert_u1", process, 500));
 
-            Assert.AreEqual(process.Convert_u2(10.5), vm.StartTestExecution<ushort>("conv.u2", process, 10.5));
-            Assert.AreEqual(process.Convert_u2(70000), vm.StartTestExecution<ushort>("conv.u2", process, 70000));
-            Assert.AreEqual(process.Convert_u2(-10.5), vm.StartTestExecution<ushort>("conv.u2", process, -10.5));
+            Assert.AreEqual(process.Convert_u2(10.5), vm.StartTestExecution<ushort>("Convert_u2", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<ushort>("Convert_u2", process, 70000));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<ushort>("Convert_u2", process, -10.5));
 
-            Assert.AreEqual(process.Convert_u4(10.5), vm.StartTestExecution<UInt32>("conv.u4", process, 10.5));
-            Assert.AreEqual(process.Convert_u4(-10.5), vm.StartTestExecution<UInt32>("conv.u4", process, 10.5));
+            Assert.AreEqual(process.Convert_u4(10.5), vm.StartTestExecution<UInt32>("Convert_u4", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<UInt32>("Convert_u4", process, -10.5));
 
-            Assert.AreEqual(process.Convert_u8(10.5), vm.StartTestExecution<UInt64>("conv.u8", process, 10.5));
-            Assert.AreEqual(process.Convert_u8(-10.5), vm.StartTestExecution<UInt64>("conv.u8", process, 10.5));
+            Assert.AreEqual(process.Convert_u8(10.5), vm.StartTestExecution<UInt64>("Convert_u8", process, 10.5));
+            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<UInt64>("Convert_u8", process, -10.5));
 
         }
     }
@@ -69,7 +69,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         }
         public short Convert_i2(object value)
         {
-            return (short)value;
+            return Convert.ToInt16(value);
         }
         public int Convert_i4(object value)
         {
@@ -83,11 +83,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         #region conv.r
         public float Convert_r(object value)
         {
-            return (float)value;
+            return Convert.ToSingle(value);
         }
         public float Convert_r4(object value)
         {
-            return (float)value;
+            return Convert.ToSingle(value);
         }
         public double Convert_r8(object value)
         {
@@ -105,7 +105,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         }
         public ushort Convert_u2(object value)
         {
-            return (ushort)Convert.ToInt32(value);
+            return Convert.ToUInt16(value);
         }
         public UInt32 Convert_u4(object value)
         {
