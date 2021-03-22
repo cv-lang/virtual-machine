@@ -18,10 +18,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             //shl
             Assert.AreEqual(process.ShiftL(0b0010, 2), vm.StartTestExecution<int>("ShiftL", process, 0b0010, 2));
-            Assert.AreEqual(process.ShiftL(0b0010, 2), 0b1000);
+            Assert.AreEqual(process.ShiftL(-0b0010, -2), vm.StartTestExecution<int>("ShiftL", process, -0b0010, -2));
+
             //shr
             Assert.AreEqual(process.ShiftR(0b1000, 1), vm.StartTestExecution<int>("ShiftR", process, 0b1000, 1));
-            Assert.AreEqual(process.ShiftR(0b1000, 1), 0b100);
+            Assert.AreEqual(process.ShiftR(-0b1000, -1), vm.StartTestExecution<int>("ShiftR", process, -0b1000, -1));
         }
     }
 
