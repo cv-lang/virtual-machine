@@ -14,7 +14,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             var process = new EnumProces();
 
             Assert.AreEqual(process.GetEnum1(1), vm.StartTestExecution<EnumTestStatus>("GetEnum1", process, 1));
-
+            Assert.AreEqual(process.GetEnum1(-1), vm.StartTestExecution<EnumTestStatus>("GetEnum1", process, -1));
 
         }
 
