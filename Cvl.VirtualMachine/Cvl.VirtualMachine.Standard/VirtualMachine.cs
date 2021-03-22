@@ -96,7 +96,7 @@ namespace Cvl.VirtualMachine
             Thread.PushAktualnaMetode(m);
 
             var brakujaceInstrukcje = new List<Instruction>();
-            sprawdziInstrukcje(methodInfo, brakujaceInstrukcje, 2);
+            //sprawdziInstrukcje(methodInfo, brakujaceInstrukcje, 1);
 
             if(brakujaceInstrukcje.Any())
             {

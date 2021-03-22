@@ -20,6 +20,16 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
             var vm = new VirtualMachine();
             var process = new ArithmeticTestProcess();
 
+            //uint
+            Assert.AreEqual(process.AddU((uint)1, (uint)2), vm.StartTestExecution<int>("Add", process, 1, 2));
+            //Assert.AreEqual(process.Sub(1, 2), vm.StartTestExecution<int>("Sub", process, 1, 2));
+            //Assert.AreEqual(process.Mul(1, 2), vm.StartTestExecution<int>("Mul", process, 1, 2));
+            //Assert.AreEqual(process.Div(4, 2), vm.StartTestExecution<int>("Div", process, 4, 2));
+            //Assert.AreEqual(process.Add(1, -2), vm.StartTestExecution<int>("Add", process, 1, -2));
+            //Assert.AreEqual(process.Sub(1, -2), vm.StartTestExecution<int>("Sub", process, 1, -2));
+            //Assert.AreEqual(process.Mul(1, -2), vm.StartTestExecution<int>("Mul", process, 1, -2));
+            //Assert.AreEqual(process.Div(4, -2), vm.StartTestExecution<int>("Div", process, 4, -2));
+
             //int
             Assert.AreEqual(process.Add(1, 2), vm.StartTestExecution<int>("Add", process, 1, 2));
             Assert.AreEqual(process.Sub(1, 2), vm.StartTestExecution<int>("Sub", process, 1, 2));
@@ -86,6 +96,11 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Arithmetic
         #region int - add, sub, mul, div
 
         public int Add(int a, int b)
+        {
+            return a + b;
+        }
+
+        public uint AddU(uint a, uint b)
         {
             return a + b;
         }

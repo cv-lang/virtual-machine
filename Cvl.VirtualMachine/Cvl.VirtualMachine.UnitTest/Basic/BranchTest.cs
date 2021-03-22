@@ -16,6 +16,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         public void Test1()
         {
             var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
             var process = new BranchTestProcess();
 
 
@@ -125,13 +126,13 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return 1;
         }
 
-        public int Brfalse(dynamic value)
+        public int Brfalse(object value)
         {
             if (value == null)
                 return 1;
-            else if (value is bool && value == false)
+            else if (value is bool b && b == false)
                 return 1;
-            else if (value == 0)
+            else if (value is int i && i == 0)
                 return 1;
             return 0;
         }
