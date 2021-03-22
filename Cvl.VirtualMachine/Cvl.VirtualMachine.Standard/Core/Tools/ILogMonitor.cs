@@ -10,4 +10,20 @@ namespace Cvl.VirtualMachine.Core.Tools
         void EventRet(object ret, long iterationNumber);
         void EventCall(MethodBase method, List<object> parameters, int callLevel, long iterationNumber);
     }
+
+    public class ConsoleLogMonitor : ILogMonitor
+    {
+        public void EventCall(MethodBase method, List<object> parameters, int callLevel, long iterationNumber)
+        {
+            for (int i = 0; i < callLevel; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.WriteLine($"{method.Name}({string.Join(",", parameters)})");
+        }
+
+        public void EventRet(object ret, long iterationNumber)
+        {            
+        }
+    }
 }

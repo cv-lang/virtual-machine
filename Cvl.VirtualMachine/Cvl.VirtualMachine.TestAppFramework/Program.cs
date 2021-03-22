@@ -1,4 +1,5 @@
-﻿using Cvl.VirtualMachine.Test;
+﻿using Cvl.VirtualMachine.Core.Tools;
+using Cvl.VirtualMachine.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Cvl.VirtualMachine.TestAppFramework
             var p = new ProcesTest();
 
             var vm = new Cvl.VirtualMachine.VirtualMachine();
+            vm.LogMonitor = new ConsoleLogMonitor();
             vm.InterpreteFullNameTypes = "Cvl.VirtualMachine.Test";
             vm.Start(() =>
             {
