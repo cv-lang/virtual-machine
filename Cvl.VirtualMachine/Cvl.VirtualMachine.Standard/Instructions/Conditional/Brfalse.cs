@@ -20,9 +20,9 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             {
                 wynik = (bool)a;
             }
-            else if (a is int)
+            else if (a is int i)
             {
-                wynik = a == 1;
+                wynik = i == 1;
             }
             else
             {

@@ -156,9 +156,9 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             if (value != null)
                 return 1;
             else if (value is bool istrue && istrue  == true)
-                return 1;
+                return 2;
             else if (value is int i && i != 0)
-                return 1;
+                return 3;
             return 0;
         }
 
