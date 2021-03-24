@@ -51,8 +51,40 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             //Brnull
             Assert.AreEqual(process.Brnull(null), vm.StartTestExecution<int>("Brnull", process, null));
 
+            //Brinst
+            Assert.AreEqual(process.Brinst(2), vm.StartTestExecution<int>("Brinst", process, 2));
+
             //Brtrue
             Assert.AreEqual(process.Brtrue(2), vm.StartTestExecution<int>("Brtrue", process, 2));
+        }
+
+        [Test]
+        public void Test2()
+        {
+            var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            var process = new BranchTestProcess();
+
+            object i = new Int32();
+
+            ///Isinst_intSimple
+            ///
+
+            var t = process.Isinst_intSimple(0);
+
+            Assert.AreEqual(process.Isinst_intSimple(0), vm.StartTestExecution<bool>("Isinst_intSimple", process, 0));
+
+            //Assert.AreEqual(process.Isinst_int(0), vm.StartTestExecution<int>("Isinst_int", process, 0));            
+        }
+
+        [Test]
+        public void Test3()
+        {
+            var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            var process = new BranchTestProcess();
+
+            
 
             //Brzero
             Assert.AreEqual(process.Brzero(0), vm.StartTestExecution<int>("Brzero", process, 0));
@@ -68,8 +100,6 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             //Clt
             Assert.AreEqual(process.Clt(2, 2), vm.StartTestExecution<int>("Clt", process, 2, 2));
-
-
         }
     }
 
@@ -162,10 +192,33 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return 0;
         }
 
+        public bool Isinst_intSimple(object value)
+        {
+            return value is int;
+        }
+
+        public int Isinst_int(object value)
+        {
+            if (value is int)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
         public int Brzero(object value)
         {
-            if (value is int i && i == 0)
-                return 1;
+            if (value is int i)
+            {
+                if (i == 0)
+                {
+                    return 1;
+                }
+            }
             return 0;
         }
 

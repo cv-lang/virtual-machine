@@ -139,7 +139,17 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = Thread.Status };
             }
 
-            var ret = (T)Thread.Result;
+            T ret;
+
+            if (typeof(T) == typeof(bool))
+            {
+                dynamic r = Thread.Result;
+                ret = Convert.ToBoolean(r);
+            }
+            else
+            {
+                ret = (T)Thread.Result;
+            }
             var result = new VirtualMachineResult<T>() { State = Thread.Status, Result = ret };
             return result;
         }

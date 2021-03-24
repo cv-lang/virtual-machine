@@ -1,4 +1,6 @@
-﻿using Mono.Reflection;
+﻿using Cvl.VirtualMachine.Core.Variables;
+using Cvl.VirtualMachine.Core.Variables.Values;
+using Mono.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,27 +12,28 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {        
         public override void Wykonaj()
         {
-            var wynik = false;
+            var wynik = false;            
             dynamic a = PopObject();
+            
             if (a == null)
-            {
-                wynik = false;
-            }
-            else if (a is bool)
-            {
-                wynik = (bool)a;
-            }
-            else if (a is int i)
-            {
-                wynik = i == 1;
-            }
-            else
             {
                 wynik = true;
             }
+            else if (a is bool b)
+            {
+                wynik = b == false;
+            }
+            else if (a is int i)
+            {
+                wynik = i == 0;
+            }
+            else
+            {
+                wynik = false;
+            }
 
             
-            if (wynik == false)
+            if (wynik == true)
             {
                 var op = Instruction.Operand as Instruction;
                 var nextOffset = op.Offset;

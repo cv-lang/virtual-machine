@@ -16,15 +16,14 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             dynamic b = PopObject();
             dynamic a = PopObject();
 
-            if(a is null)
+            if(a is null && !(b is null))
             {
-                a = 0;
-            }
-            if(b is null)
+                PushObject(0);
+            } else
+            if(b is null && !(a is null))
             {
-                b = 0;
-            }
-
+                PushObject(1);
+            }  else
             if (b is int  && a is Enum )
             {
                 var wynik = (int)a > b ? 1 : 0;
