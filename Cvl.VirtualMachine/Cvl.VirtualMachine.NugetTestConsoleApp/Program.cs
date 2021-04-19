@@ -8,6 +8,7 @@ namespace Cvl.VirtualMachine.NugetTestConsoleApp
         {
             Console.WriteLine("Hello World!");
             var vm = new VirtualMachine();
+            Console.WriteLine(int.MaxValue);
         }
     }
 }
