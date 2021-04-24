@@ -14,6 +14,8 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
             {
                 case "throw":
                     return CreateInstruction<Throw>(instrukcja);
+                case "rethrow":
+                    return CreateInstruction<Rethrow>(instrukcja);                    
                 case "endfinally":
                     return CreateInstruction<Endfinally>(instrukcja);
                 case "leave":

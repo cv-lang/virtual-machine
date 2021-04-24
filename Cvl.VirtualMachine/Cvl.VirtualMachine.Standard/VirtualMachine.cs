@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Text;
 using Cvl.VirtualMachine.Core.Tools;
 using Mono.Reflection;
+using Cvl.ApplicationServer.Logs;
 
 namespace Cvl.VirtualMachine
 {
@@ -93,6 +94,7 @@ namespace Cvl.VirtualMachine
             var process = parametety.First();
             var typ = process.GetType();
             var m = new MethodState(methodInfo, this, process);
+            m.Logger = Logger;
             Thread.PushAktualnaMetode(m);
 
             var brakujaceInstrukcje = new List<Instruction>();
@@ -261,6 +263,7 @@ namespace Cvl.VirtualMachine
         #region Eventy logów
 
         public ILogMonitor LogMonitor { get; set; }
+        public Logger Logger { get; set; }
 
         private int callLevel = 0;
         internal void EventRet(object ret=null)

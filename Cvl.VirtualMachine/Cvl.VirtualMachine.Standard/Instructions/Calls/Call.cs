@@ -10,6 +10,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using Cvl.VirtualMachine.Core.Variables;
 using Cvl.VirtualMachine.Core.Variables.Values;
+using Cvl.ApplicationServer.Logs;
 
 namespace Cvl.VirtualMachine.Instructions.Calls
 {
@@ -46,7 +47,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             }
 
             parameters.Reverse();
-
+                        
             MethodContext.WirtualnaMaszyna.EventCall(method, parameters);
 
             if (method.Name.Equals("Hibernate") && method.DeclaringType == typeof(VirtualMachine))
@@ -115,6 +116,9 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         {
                             var constructor = method as ConstructorInfo;
                             ret = constructor.Invoke(dopasowaneParametry.ToArray());
+
+                            LogMethodCall(method.Name, dopasowaneParametry, ret);
+
                             //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
                             MethodContext.WirtualnaMaszyna.EventRet(ret);
 
@@ -190,6 +194,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     //tworzę nową metodę i wrzucam ją na stos wykonania
 
                     var m = new MethodState(method, MethodContext.WirtualnaMaszyna, instance);
+                    m.Logger = getSubLogger(method.Name, parameters);
                     m.WczytajInstrukcje();
                     MethodContext = m;
                     var iloscArgumentow = method.GetParameters().Count();
@@ -214,6 +219,27 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             }
 
 
+        }
+
+        private SubLogger getSubLogger(string name, List<object> parameters)
+        {
+            var log = MethodContext.Logger.GetSubLogger(memberName:name);
+            foreach (var item in parameters)
+            {
+                log.AddParameter(item);
+            }
+            return log;
+        }
+
+        private void LogMethodCall(string name, List<object> parameters, object ret)
+        {
+            var log =MethodContext.Logger.Trace($"Call {name}");
+            foreach (var item in parameters)
+            {
+                log.AddParameter(item);
+            }
+
+            log.AddParameter(ret, "return");
         }
 
         private void setter(MethodDefinition methodDefinition, object instance, List<object> parameters)

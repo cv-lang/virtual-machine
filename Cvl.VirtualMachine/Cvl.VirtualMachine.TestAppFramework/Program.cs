@@ -1,4 +1,5 @@
-﻿using Cvl.VirtualMachine.Core.Tools;
+﻿using Cvl.ApplicationServer.Logs.Factory;
+using Cvl.VirtualMachine.Core.Tools;
 using Cvl.VirtualMachine.Test;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,21 @@ namespace Cvl.VirtualMachine.TestAppFramework
     {
         static void Main(string[] args)
         {
+            var factoryLogger= new LoggerFactory(new ApplicationServer.Logs.Storage.FileLogStorage(), "test-vm");
+
             var p = new ProcesTest();
 
             var vm = new Cvl.VirtualMachine.VirtualMachine();
-            vm.LogMonitor = new ConsoleLogMonitor();
-            vm.InterpreteFullNameTypes = "Cvl.VirtualMachine.Test";
-            vm.Start(() =>
+            using (vm.Logger = factoryLogger.GetLogger())
             {
-                p.Start();
-            });
+
+                vm.LogMonitor = new ConsoleLogMonitor();
+                vm.InterpreteFullNameTypes = "Cvl.VirtualMachine.Test";
+                vm.Start(() =>
+                {
+                    p.Start();
+                });
+            }
         }
     }
 }

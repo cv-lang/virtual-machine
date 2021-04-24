@@ -58,6 +58,19 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             Assert.AreEqual(ret2, ret);
         }
+
+        [Test]
+        public void Test5()
+        {
+            var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            var process = new ExceptionsTestProces();
+
+            var ret2 = process.Start5();
+            var ret = vm.StartTestExecution<int>("Start5", process);
+
+            Assert.AreEqual(ret2, ret);
+        }
     }
 
     public class ExceptionsTestProces
@@ -139,6 +152,33 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
                 i += 2;
             }
 
+            return i;
+        }
+
+
+        public int Start5()
+        {
+            int i = 0;
+            try
+            {
+                i++;
+                try
+                {
+                    i++;
+                    methodWitchThrowException();
+                    i++;
+                } catch(Exception ex1)
+                {
+                    i++;
+                    throw;
+                }
+                i++;
+            }
+            catch (Exception ex2)
+            {
+                i++;
+            }
+            i++;
             return i;
         }
 

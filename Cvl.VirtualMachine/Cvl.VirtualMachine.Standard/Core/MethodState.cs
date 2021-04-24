@@ -1,4 +1,5 @@
-﻿using Cvl.VirtualMachine.Core.Tools;
+﻿using Cvl.ApplicationServer.Logs;
+using Cvl.VirtualMachine.Core.Tools;
 using Cvl.VirtualMachine.Core.Variables;
 using Cvl.VirtualMachine.Core.Variables.Addresses;
 using Cvl.VirtualMachine.Instructions;
@@ -82,6 +83,8 @@ namespace Cvl.VirtualMachine.Core
             }
             set { instrukcje = value; }
         }
+
+        public Logger Logger { get; internal set; }
 
         #endregion
 
