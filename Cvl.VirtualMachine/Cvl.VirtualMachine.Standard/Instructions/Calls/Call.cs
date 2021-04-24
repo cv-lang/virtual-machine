@@ -156,12 +156,16 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                             var lambda = Expression.Lambda(call).Compile();
                             ret = lambda.DynamicInvoke();
 
+                            LogMethodCall(method.Name, dopasowaneParametry, ret);
+
                             //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
                             MethodContext.WirtualnaMaszyna.EventRet(ret);
                         } else
                         {
                             //standardowe wykonywanie metod
                             ret = method.Invoke(instance, dopasowaneParametry.ToArray());
+
+                            LogMethodCall(method.Name, dopasowaneParametry, ret);
 
                             //po wykonaniu odznaczam że był powrót z funkcji (bo już nie będzie instrukcji ret)
                             MethodContext.WirtualnaMaszyna.EventRet(ret);
