@@ -34,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cvl.ApplicationServer, Version=0.10.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cvl.ApplicationServer.0.10.1\lib\netstandard2.0\Cvl.ApplicationServer.dll</HintPath>
+    <Reference Include="Cvl.ApplicationServer, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Cvl.ApplicationServer.0.11.0\lib\netstandard2.0\Cvl.ApplicationServer.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Reflection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Reflection.2.0.0\lib\net40\Mono.Reflection.dll</HintPath>

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cvl.VirtualMachine</RootNamespace>
     <AssemblyName>Cvl.VirtualMachine</AssemblyName>
-    <Version>0.10.1</Version>
+    <Version>0.11.0</Version>
     <Authors>Cvlang Organization</Authors>
     <Company>Cvlang Organization</Company>
     <Product>Cvl.VirtualMachine</Product>
@@ -22,7 +22,7 @@ The code is executed instruction by instruction. (Virtual machine emulates all i
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cvl.ApplicationServer" Version="0.10.1" />
+    <PackageReference Include="Cvl.ApplicationServer" Version="0.11.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Mono.Reflection" Version="2.0.0" />
     <PackageReference Include="SharpSerializer" Version="3.0.1" />
