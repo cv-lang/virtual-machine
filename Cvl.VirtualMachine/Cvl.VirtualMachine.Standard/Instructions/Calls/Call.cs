@@ -227,6 +227,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
         private SubLogger getSubLogger(string name, List<object> parameters)
         {
+            if (MethodContext.Logger == null)
+            {
+                return null;
+            }
+
             var log = MethodContext.Logger.GetSubLogger(memberName:name);
             foreach (var item in parameters)
             {
@@ -237,6 +242,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
         private void LogMethodCall(string name, List<object> parameters, object ret)
         {
+            if(MethodContext.Logger == null)
+            {
+                return;
+            }
+
             var log =MethodContext.Logger.Trace($"Call {name}");
             foreach (var item in parameters)
             {

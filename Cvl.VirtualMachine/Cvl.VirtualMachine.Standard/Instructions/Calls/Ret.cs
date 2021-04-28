@@ -27,7 +27,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 // mamy wynik metody, pobieram ze stosu
                 wynik = PopObject();
 
-                MethodContext.Logger.AddParameter(wynik, "return");
+                if (MethodContext.Logger != null)
+                {
+                    MethodContext.Logger.AddParameter(wynik, "return");
+                }
                 //loguje wykonanie ret
                 EventRet(wynik);
             }
