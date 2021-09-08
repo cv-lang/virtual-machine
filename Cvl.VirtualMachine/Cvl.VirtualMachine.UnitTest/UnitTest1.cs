@@ -13,6 +13,7 @@ namespace Cvl.VirtualMachine.UnitTest
         public void Test1()
         {
             Assert.Pass();
+
         }
     }
 }
