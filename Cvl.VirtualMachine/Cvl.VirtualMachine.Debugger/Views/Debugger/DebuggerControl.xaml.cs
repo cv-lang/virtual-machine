@@ -80,5 +80,11 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
             ViewModel.StepToCursor();
             ViewModel.Refresh();
         }
+
+        private void btnExecuteToIter_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ExecuteToIteration();
+            ViewModel.Refresh();
+        }
     }
 }

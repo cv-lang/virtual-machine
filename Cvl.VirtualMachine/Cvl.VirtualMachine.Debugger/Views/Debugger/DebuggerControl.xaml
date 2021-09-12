@@ -19,16 +19,16 @@
                 <TextBlock Text="#" Padding="5,0,5,0"></TextBlock>
                 <TextBox Text="{Binding CurrentIteration}" Width="60"></TextBox>
             </StackPanel>
-            <telerik:RadButton Padding="2,0,2,0" Content="F5" x:Name="btnExecute" Click="btnExecute_Click"></telerik:RadButton>
+            <telerik:RadButton Margin="0,0,20,0" Padding="2,0,2,0" Content="Run" x:Name="btnExecute" Click="btnExecute_Click"></telerik:RadButton>
             <telerik:RadButton Padding="2,0,2,0" Content="Step" x:Name="btnStep" Click="btnStep_Click"></telerik:RadButton>
             <telerik:RadButton Padding="2,0,2,0" Content="Step over" x:Name="btnStepOver" Click="btnStepOver_Click"></telerik:RadButton>
             <telerik:RadButton Padding="2,0,2,0" Content="Step to selected" x:Name="btnExecuteToSelected" Click="btnExecuteToSelected_Click"></telerik:RadButton>
 
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="# Iter. break" Padding="25,0,5,0"></TextBlock>
-                <TextBox Text="{Binding CurrentIteration}" Width="60"></TextBox>
+                <TextBox Text="{Binding RunToIterationNumber}" Width="60"></TextBox>
             </StackPanel>
-            <telerik:RadButton Padding="2,0,2,0" Content="F5" x:Name="btnExecuteToIte" Click=""></telerik:RadButton>
+            <telerik:RadButton Padding="2,0,2,0" Content="RunTo" x:Name="btnExecuteToIter" Click="btnExecuteToIter_Click"></telerik:RadButton>
 
         </StackPanel>        
 

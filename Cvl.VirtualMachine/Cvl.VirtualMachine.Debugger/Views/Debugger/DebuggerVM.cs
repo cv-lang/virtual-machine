@@ -35,6 +35,21 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
             }
         }
 
+        //RunToIterationNumber
+        private long runToIterationNumber;
+        public long RunToIterationNumber
+        {
+            get => runToIterationNumber;
+            set
+            {
+                if (value != runToIterationNumber)
+                {
+                    runToIterationNumber = value;
+                    base.RaisePropertyChanged();
+                }
+            }
+        }
+
         internal void Load()
         {
             if(VirtualMachine.Thread.Status == Core.VirtualMachineState.Executed)
@@ -72,6 +87,12 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
         internal void StepOver()
         {
             VirtualMachine.StepOver();
+            CurrentIteration = VirtualMachine.Thread.NumerIteracji;
+        }
+
+        internal void ExecuteToIteration()
+        {
+            VirtualMachine.ExecuteToIteration(RunToIterationNumber);
             CurrentIteration = VirtualMachine.Thread.NumerIteracji;
         }
 
