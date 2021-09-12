@@ -27,7 +27,8 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                     if (typOperanda.IsByRef == false)
                     {
                         //musimy zrobić sztuczny boxing - 
-                        Push(new BoxWraper() { Warosc = b });
+                        //Push(new BoxWraper() { Warosc = b });
+                        Push(new BoxWraper() { Warosc = true });
                     }
                     else
                     {

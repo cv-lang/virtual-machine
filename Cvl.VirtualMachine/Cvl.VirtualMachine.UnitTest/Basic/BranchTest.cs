@@ -43,7 +43,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             Assert.AreEqual(process.Br(), vm.StartTestExecution<int>("Br", process));
 
             //Brfalse
-            Assert.AreEqual(process.Brfalse(2), vm.StartTestExecution<int>("Brfalse", process, 0));
+            Assert.AreEqual(process.Brfalse(2), vm.StartTestExecution<int>("Brfalse", process, 2));
 
             //Brinst
             Assert.AreEqual(process.Brinst(null), vm.StartTestExecution<int>("Brinst", process, null));
