@@ -180,6 +180,15 @@ namespace Cvl.VirtualMachine
             {
                 dynamic r = Thread.Result;
                 ret = Convert.ToBoolean(r);
+            } else if (typeof(T) == typeof(long))
+            {
+                dynamic r = Thread.Result;
+                ret = Convert.ToInt64(r);
+            }
+            else if (typeof(T) == typeof(short))
+            {
+                dynamic r = Thread.Result;
+                ret = Convert.ToInt16(r);
             }
             else
             {

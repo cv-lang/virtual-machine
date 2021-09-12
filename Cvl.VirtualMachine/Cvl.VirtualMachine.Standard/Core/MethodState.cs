@@ -71,6 +71,8 @@ namespace Cvl.VirtualMachine.Core
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
 
+        public bool CzyStatyczna { get; set; } = false;
+
 
         private MethodBase methodInfo;
 

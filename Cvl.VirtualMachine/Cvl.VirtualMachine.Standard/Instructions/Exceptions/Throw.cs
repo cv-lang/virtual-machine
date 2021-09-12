@@ -40,7 +40,7 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         wirtualnaMaszyna.Thread.AktualnaMetoda.NumerWykonywanejInstrukcji
                             = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(blok.HandlerOffset);
 
-                        wirtualnaMaszyna.Thread.AktualnaMetoda.EvaluationStack.PushObject(rzuconyWyjatek);
+                        wirtualnaMaszyna.Thread.PushException(rzuconyWyjatek);
                         if (blok.CatchType != null)
                         {
                             //wracam do zwykłej obsługi kodu                            

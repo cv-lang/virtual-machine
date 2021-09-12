@@ -20,6 +20,11 @@ namespace Cvl.VirtualMachine
         private InstructionBase aktualnaInstrukcja;
         public VirtualMachineState Status { get; set; }
 
+        /// <summary>
+        /// Rzucony wyjątek - przechowywany w trakcie obsługi wyjątków try..catch
+        /// </summary>
+        public object ThrowedException { get; set; }
+
         public MethodState AktualnaMetoda => CallStack.PobierzTopMethodState();
 
         internal void PushAktualnaMetode(MethodState metodaDoWykonania)
@@ -95,6 +100,12 @@ namespace Cvl.VirtualMachine
             //}
 
             return StepExecutionResultEnum.Continue;
+        }
+
+        internal void PushException(object rzuconyWyjatek)
+        {
+            AktualnaMetoda.EvaluationStack.PushObject(rzuconyWyjatek);
+            ThrowedException = rzuconyWyjatek;
         }
 
         /// <summary>

@@ -184,7 +184,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
         private void methodWitchThrowException()
         {
-            throw new Exception();
+            throw new Exception("Wyjątek z metody");
         }
 
         [Interpret]

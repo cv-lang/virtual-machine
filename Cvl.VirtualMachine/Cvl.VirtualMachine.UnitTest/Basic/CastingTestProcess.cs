@@ -32,36 +32,36 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Casting
             Assert.AreEqual(process.CastMI(45), vm.StartTestExecution<decimal>("CastMI", process, 45));
 
             //long
-            Assert.AreEqual(process.CastLB((byte)45), vm.StartTestExecution<long>("CastMB", process, (byte)45));
-            Assert.AreEqual(process.CastLF(234.4f), vm.StartTestExecution<long>("CastMF", process, 234.4f));
-            Assert.AreEqual(process.CastLD(234.4d), vm.StartTestExecution<long>("CastMD", process, 234.4d));
-            Assert.AreEqual(process.CastLI(45), vm.StartTestExecution<long>("CastMI", process, 45));
-            Assert.AreEqual(process.CastLM(234.4m), vm.StartTestExecution<long>("CastIM", process, 234.4m));
+            Assert.AreEqual(process.CastLB((byte)45), vm.StartTestExecution<long>("CastLB", process, (byte)45));
+            Assert.AreEqual(process.CastLF(234.4f), vm.StartTestExecution<long>("CastLF", process, 234.4f));
+            Assert.AreEqual(process.CastLD(234.4d), vm.StartTestExecution<long>("CastLD", process, 234.4d));
+            Assert.AreEqual(process.CastLI(45), vm.StartTestExecution<long>("CastLI", process, 45));
+            Assert.AreEqual(process.CastLM(234.4m), vm.StartTestExecution<long>("CastLM", process, 234.4m));
 
             //float
-            Assert.AreEqual(process.CastFB((byte)45), vm.StartTestExecution<float>("CastMB", process, (byte)45));
-            Assert.AreEqual(process.CastFD(234.4d), vm.StartTestExecution<float>("CastMD", process, 234.4d));
-            Assert.AreEqual(process.CastFI(45), vm.StartTestExecution<float>("CastMI", process, 45));
-            Assert.AreEqual(process.CastFM(234.4m), vm.StartTestExecution<float>("CastIM", process, 234.4m));
+            Assert.AreEqual(process.CastFB((byte)45), vm.StartTestExecution<float>("CastFB", process, (byte)45));
+            Assert.AreEqual(process.CastFD(234.4d), vm.StartTestExecution<float>("CastFD", process, 234.4d));
+            Assert.AreEqual(process.CastFI(45), vm.StartTestExecution<float>("CastFI", process, 45));
+            Assert.AreEqual(process.CastFM(234.4m), vm.StartTestExecution<float>("CastFM", process, 234.4m));
 
             //dobule
-            Assert.AreEqual(process.CastDB((byte)45), vm.StartTestExecution<double>("CastMB", process, (byte)45));
-            Assert.AreEqual(process.CastDF(234.4f), vm.StartTestExecution<double>("CastMD", process, 234.4f));
-            Assert.AreEqual(process.CastDI(45), vm.StartTestExecution<double>("CastMI", process, 45));
-            Assert.AreEqual(process.CastDM(234.4m), vm.StartTestExecution<double>("CastIM", process, 234.4m));
+            Assert.AreEqual(process.CastDB((byte)45), vm.StartTestExecution<double>("CastDB", process, (byte)45));
+            Assert.AreEqual(process.CastDF(234.4f), vm.StartTestExecution<double>("CastDF", process, 234.4f));
+            Assert.AreEqual(process.CastDI(45), vm.StartTestExecution<double>("CastDI", process, 45));
+            Assert.AreEqual(process.CastDM(234.4m), vm.StartTestExecution<double>("CastDM", process, 234.4m));
 
             //short
-            Assert.AreEqual(process.CastSB((byte)45), vm.StartTestExecution<short>("CastMB", process, (byte)45));
-            Assert.AreEqual(process.CastSF(234.4f), vm.StartTestExecution<short>("CastMD", process, 234.4f));
-            Assert.AreEqual(process.CastSI(45), vm.StartTestExecution<short>("CastMI", process, 45));
-            Assert.AreEqual(process.CastSM(234.4m), vm.StartTestExecution<short>("CastIM", process, 234.4m));
-            Assert.AreEqual(process.CastSD(234.4d), vm.StartTestExecution<short>("CastIM", process, 234.4d));
+            Assert.AreEqual(process.CastSB((byte)45), vm.StartTestExecution<short>("CastSB", process, (byte)45));
+            Assert.AreEqual(process.CastSF(234.4f), vm.StartTestExecution<short>("CastSF", process, 234.4f));
+            Assert.AreEqual(process.CastSI(45), vm.StartTestExecution<short>("CastSI", process, 45));
+            Assert.AreEqual(process.CastSM(234.4m), vm.StartTestExecution<short>("CastSM", process, 234.4m));
+            Assert.AreEqual(process.CastSD(234.4d), vm.StartTestExecution<short>("CastSD", process, 234.4d));
 
             //byte
-            Assert.AreEqual(process.CastBI(45), vm.StartTestExecution<byte>("CastMB", process, 45));
-            Assert.AreEqual(process.CastBF(234.4f), vm.StartTestExecution<byte>("CastMD", process, 234.4f));
-            Assert.AreEqual(process.CastBD(234.4d), vm.StartTestExecution<byte>("CastMI", process, 234.4d));
-            Assert.AreEqual(process.CastBM(234.4m), vm.StartTestExecution<byte>("CastIM", process, 234.4m));
+            Assert.AreEqual(process.CastBI(45), vm.StartTestExecution<byte>("CastBI", process, 45));
+            Assert.AreEqual(process.CastBF(234.4f), vm.StartTestExecution<byte>("CastBF", process, 234.4f));
+            Assert.AreEqual(process.CastBD(234.4d), vm.StartTestExecution<byte>("CastBD", process, 234.4d));
+            Assert.AreEqual(process.CastBM(234.4m), vm.StartTestExecution<byte>("CastBM", process, 234.4m));
 
             //Assert.Pass();
         }

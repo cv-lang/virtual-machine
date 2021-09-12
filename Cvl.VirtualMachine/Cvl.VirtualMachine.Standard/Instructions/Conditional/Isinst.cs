@@ -22,19 +22,22 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                 if (typOperanda.IsAssignableFrom(typ))
                 {
                     //mamy ten sam typ
-                    //wrzucamy normalnya obiekt
-                    PushObject(b);
 
-                    //if (typOperanda.IsByRef == false)
-                    //{
-                    //    //musimy zrobić sztuczny boxing - 
-                    //    Push(new BoxWraper() { Warosc = b });
-                    //}
-                    //else
-                    //{ 
-                    //    //wrzucamy normalnya obiekt
-                    //    PushObject(b);
-                    //}
+
+                    if (typOperanda.IsByRef == false)
+                    {
+                        //musimy zrobić sztuczny boxing - 
+                        Push(new BoxWraper() { Warosc = b });
+                    }
+                    else
+                    {
+                        //wrzucamy normalnya obiekt
+                        PushObject(b);
+                    }
+
+
+                    //wrzucamy normalnya obiekt
+                    //PushObject(b);
                 }
                 else
                 {
