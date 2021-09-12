@@ -51,8 +51,20 @@ namespace Cvl.VirtualMachine.Core
 
         #region Propercje
 
+        /// <summary>
+        /// Zmienne z którymi została wywołana metoda
+        /// </summary>
         public MethodData LocalArguments { get; set; }
+
+        /// <summary>
+        /// Lokalne zmienne metody
+        /// </summary>
         public MethodData LocalVariables { get; set; }
+
+        /// <summary>
+        /// Stos wykonywania metody - tu są zmienne tymczasowe metody 
+        /// (taki jej prywatny stos)
+        /// </summary>
         public EvaluationStack EvaluationStack { get; set; } = new EvaluationStack();
 
         public Type ConstrainedType { get; internal set; }
@@ -65,17 +77,28 @@ namespace Cvl.VirtualMachine.Core
         public string NazwaTypu { get; set; }
         public string NazwaMetody { get; set; }
         public string AssemblyName { get; internal set; }
-        public int OffsetWykonywanejInstrukcji { get; internal set; }
+       
         public string Xml { get; set; }
 
         public VirtualMachine WirtualnaMaszyna { get; set; }
 
 
+
+        /// <summary>
+        /// Numer wykonywanej instrukcji (0 - to pierwsza instrukcja, 1 - to druga itd.)
+        /// </summary>
         public int NumerWykonywanejInstrukcji { get; set; }
-        
+
+        /// <summary>
+        /// Offset wykonywanej instrukcji w bajtach - 
+        /// instrukcje mogą mieć rozmiar 1, 2, 4 bajtowy lub więcej
+        /// Offset zawiera pozycję instukcji w binarnym bytecode programu
+        /// </summary>
+        public int OffsetWykonywanejInstrukcji { get; internal set; }
+                
 
         private List<InstructionBase> instrukcje;
-        internal List<InstructionBase> Instrukcje
+        public List<InstructionBase> Instrukcje
         {
             get
             {                
@@ -101,7 +124,7 @@ namespace Cvl.VirtualMachine.Core
             instrukcje = PobierzInstrukcjeMetody();
         }
 
-        public List<InstructionBase> PobierzInstrukcjeMetody()
+        internal List<InstructionBase> PobierzInstrukcjeMetody()
         {
             var metoda = PobierzOpisMetody();
             //metoda

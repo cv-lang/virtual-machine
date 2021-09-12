@@ -14,6 +14,11 @@ namespace Cvl.VirtualMachine.Instructions
         public MethodState MethodContext { get; set; }
         public ThreadOfControl HardwareContext { get; internal set; }
 
+        /// <summary>
+        /// Czy instrukcja ma zatrzymać wykonywanie - używane przez debuger VW
+        /// </summary>
+        public bool Breakpoint { get; set; }
+
         public virtual void Wykonaj()
         {
         }
@@ -106,6 +111,10 @@ namespace Cvl.VirtualMachine.Instructions
             MethodContext.WirtualnaMaszyna.EventThrowException(rzuconyWyjatek);
         }
         #endregion
+
+        public int Offset => Instruction.Offset;
+        public string Code => Instruction.OpCode.ToString();
+        public string Operand => Instruction.Operand?.ToString();
 
         public override string ToString()
         {

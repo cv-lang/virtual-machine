@@ -18,7 +18,7 @@ namespace Cvl.VirtualMachine
     [Interpret]
     public class ProcesAction
     {
-        public Action Action { get;  set; }
+        public Action Action { get; set; }
 
         public void Start()
         {
@@ -43,11 +43,11 @@ namespace Cvl.VirtualMachine
 
         public ThreadOfControl Thread { get; set; }
 
-        
+
 
         //public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
-        
+
 
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
         public long BreakpointIterationNumber { get; set; } = -1;
@@ -56,40 +56,69 @@ namespace Cvl.VirtualMachine
         {
 
         }
-        private void start(string nazwaMetody,  params object[] parametety)
+
+        /// <summary>
+        /// Wykonuje pojedyńczą instrukcję/krok
+        /// </summary>
+        public void Step()
+        {
+            Thread.Step();
+        }
+
+        public void StepOver()
+        {
+            Thread.StepOver();
+        }
+
+        /// <summary>
+        /// Wykonuje kod do podanego numeru iteracji
+        /// </summary>
+        /// <param name="iterationNumber"></param>
+        public void ExecuteToIteration(long iterationNumber)
+        {
+            Thread.ExecuteToIteration(iterationNumber);
+        }
+
+        public void Execute()
+        {
+            Thread.Execute();
+        }
+
+        private void start(string nazwaMetody, params object[] parametety)
         {
             var process = parametety.First();
             var typ = process.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
-            
+
             start(startMethod, parametety);
         }
 
+        
+
         private void sprawdziInstrukcje(MethodInfo methodInfo, List<Instruction> brakujaceInstrukcje, int level)
         {
-            if(level <= 0 || methodInfo == null || methodInfo.IsAbstract )
+            if (level <= 0 || methodInfo == null || methodInfo.IsAbstract)
             { return; }
 
             var instructions = methodInfo.GetInstructions();
             foreach (var instruction in instructions)
             {
                 var i = instructionsFactory.UtworzInstrukcje(instruction, this);
-                if(i == null)
+                if (i == null)
                 {
                     brakujaceInstrukcje.Add(instruction);
                 }
 
-                if(i is Call call)
+                if (i is Call call)
                 {
-                    var mi= instruction.Operand as MethodInfo;
+                    var mi = instruction.Operand as MethodInfo;
                     sprawdziInstrukcje(mi, brakujaceInstrukcje, level - 1);
                 }
 
             }
         }
-        
 
-        private void start(MethodInfo methodInfo, params object[] parametety)
+        private void prepereToExecution(MethodInfo methodInfo, params object[] parametety)
         {
             var process = parametety.First();
             var typ = process.GetType();
@@ -100,15 +129,19 @@ namespace Cvl.VirtualMachine
             var brakujaceInstrukcje = new List<Instruction>();
             //sprawdziInstrukcje(methodInfo, brakujaceInstrukcje, 1);
 
-            if(brakujaceInstrukcje.Any())
+            if (brakujaceInstrukcje.Any())
             {
-                throw new Exception($"Brak instrukcji: {string.Join(",", brakujaceInstrukcje.Select(x=> x.ToString()))}");
+                throw new Exception($"Brak instrukcji: {string.Join(",", brakujaceInstrukcje.Select(x => x.ToString()))}");
             }
 
             m.WczytajInstrukcje();
             //HardwareContext.Stos.PushObject(process);
             m.LocalArguments.Wczytaj(parametety);
-            
+        }
+
+        private void start(MethodInfo methodInfo, params object[] parametety)
+        {
+            prepereToExecution(methodInfo, parametety);
 
             //m.Instrukcje = new List<InstructionBase>() { new CallStart(m) { HardwareContext = this.HardwareContext } };
             Thread.Execute();
@@ -127,7 +160,7 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = Thread.Status };
             }
 
-            var ret = (T) Thread.Result;
+            var ret = (T)Thread.Result;
             var result = new VirtualMachineResult<T>() { State = Thread.Status, Result = ret };
             return result;
         }
@@ -168,6 +201,14 @@ namespace Cvl.VirtualMachine
             proces.Action = p;
             start(p.Method, p.Target);
         }
+
+        public void ActionToExecute(Action p)
+        {
+            var proces = new ProcesAction();
+            proces.Action = p;
+            prepereToExecution(p.Method, p.Target);
+        }
+
 
         public void WalidujMetodyObiektu(object instancjaObiektu)
         {
@@ -244,10 +285,10 @@ namespace Cvl.VirtualMachine
                 return false; //interpertujemy
             }
 
-            if(string.IsNullOrEmpty(InterpreteFullNameTypes) == false)
+            if (string.IsNullOrEmpty(InterpreteFullNameTypes) == false)
             {
                 var namespaces = InterpreteFullNameTypes.Split(';');
-                if( namespaces.Any(x=> mr.DeclaringType.FullName.Contains(x)) )
+                if (namespaces.Any(x => mr.DeclaringType.FullName.Contains(x)))
                 {
                     return false; //interpretujrmy
                 }
@@ -266,7 +307,7 @@ namespace Cvl.VirtualMachine
         public Logger Logger { get; set; }
 
         private int callLevel = 0;
-        internal void EventRet(object ret=null)
+        internal void EventRet(object ret = null)
         {
             callLevel--;
             LogMonitor?.EventRet(ret, Thread.NumerIteracji);
@@ -289,12 +330,12 @@ namespace Cvl.VirtualMachine
             LogMonitor?.EventCall(method, parameters, callLevel, Thread.NumerIteracji);
 
 
-            
+
         }
 
         internal void EventThrowException(Exception rzuconyWyjatek)
         {
-            var text= $"Wyjątek rzucony {rzuconyWyjatek.Message}";
+            var text = $"Wyjątek rzucony {rzuconyWyjatek.Message}";
             //File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
             Console.WriteLine(text);
         }

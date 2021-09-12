@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Cvl.VirtualMachine.Debugger.Views.Stack
+namespace Cvl.VirtualMachine.Debugger.Views.Instructions
 {
     /// <summary>
-    /// Logika interakcji dla klasy StackPanel.xaml
+    /// Logika interakcji dla klasy InstructionsControl.xaml
     /// </summary>
-    public partial class StackPanel : UserControl
+    public partial class InstructionsControl : UserControl
     {
-        public StackPanel()
+        public InstructionsControl()
         {
             InitializeComponent();
         }

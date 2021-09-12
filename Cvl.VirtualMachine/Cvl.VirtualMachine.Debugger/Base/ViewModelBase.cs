@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cvl.VirtualMachine.Debugger.Views.Stack
+namespace Cvl.VirtualMachine.Debugger.Base
 {
-    public class StackPanelMV
+    public class ViewModelBase : Telerik.Windows.Controls.ViewModelBase
     {
+        
     }
 }

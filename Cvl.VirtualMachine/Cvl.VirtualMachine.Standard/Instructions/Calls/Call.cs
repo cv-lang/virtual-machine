@@ -29,9 +29,11 @@ namespace Cvl.VirtualMachine.Instructions.Calls
             object instance = null;
             object instancePop = null;
 
-            foreach (var paramDef in method.GetParameters())
+            var methodParameters = method.GetParameters();
+            foreach (var paramDef in methodParameters)
             {
-                parameters.Add(MethodContext.PopObject());
+                var parameterValue = MethodContext.PopObject();
+                parameters.Add(parameterValue);
             }
             if (method.IsStatic == false)
             {
