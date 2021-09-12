@@ -41,6 +41,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
                 case "isinst":
                     return CreateInstruction<Isinst>(instrukcja);
                 case "bne.un.s":
+                case "bne.un":
                     return CreateInstruction<Bne>(instrukcja);
                 case "bgt.s":
                 case "bgt.un.s":

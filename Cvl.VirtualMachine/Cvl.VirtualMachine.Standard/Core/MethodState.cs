@@ -38,6 +38,7 @@ namespace Cvl.VirtualMachine.Core
                 methodInfo = metoda;
             }
 
+            CzyStatyczna = methodInfo.IsStatic;
             
             var m = this;
             m.AssemblyName = methodInfo.Module.FullyQualifiedName;
@@ -71,6 +72,10 @@ namespace Cvl.VirtualMachine.Core
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
 
+
+        /// <summary>
+        /// Czy dana metoda jest statyczna czy zawiera this
+        /// </summary>
         public bool CzyStatyczna { get; set; } = false;
 
 
@@ -227,12 +232,24 @@ namespace Cvl.VirtualMachine.Core
 
         public void ZapiszLokalnyArgument(object o, int indeks)
         {
-            LocalArguments.Ustaw(indeks, o);
+            var index = indeks;
+            if(CzyStatyczna == false)
+            {
+                //index++;
+            }
+
+            LocalArguments.Ustaw(index, o);
         }
 
         public object PobierzLokalnyArgument(int indeks)
         {
-            var obiekt = LocalArguments.Pobierz(indeks);
+            var index = indeks;
+            if (CzyStatyczna == false)
+            {
+                //index++;
+            }
+
+            var obiekt = LocalArguments.Pobierz(index);
             var ow = obiekt as ObjectWraperBase;
             if (ow != null)
             {
@@ -243,8 +260,14 @@ namespace Cvl.VirtualMachine.Core
 
         public ArgumentAddress PobierzAdresArgumentu(int indeks)
         {
+            var index = indeks;
+            if (CzyStatyczna == false)
+            {
+                //index++;
+            }
+
             var adres = new ArgumentAddress();
-            adres.Indeks = indeks;
+            adres.Indeks = index;
             adres.LokalneArgumenty = LocalArguments;
 
             return adres;

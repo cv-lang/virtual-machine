@@ -16,10 +16,12 @@ namespace Cvl.VirtualMachine.Debugger.Views.EvaluationStack
         {
             Variables.Clear();
 
+            var i = 0;
             foreach (var item in aktualnaMetoda.EvaluationStack.StosSerializowany)
             {
                 var vm = new VariableVM();
                 vm.SetVariable(item);
+                vm.Index = i++;
 
                 Variables.Add(vm);
             }

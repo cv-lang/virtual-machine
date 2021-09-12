@@ -24,7 +24,8 @@ namespace Cvl.VirtualMachine.Instructions.Base
                 }
                 else if (instruction.Operand is System.Reflection.ParameterInfo parameterInfo)
                 {
-                    Index = parameterInfo.Position;
+                    Index = parameterInfo.Position + 1;
+                    
                 }
                 else if (instruction.Operand is Int32 i)
                 {
