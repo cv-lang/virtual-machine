@@ -8,13 +8,27 @@ using System.Threading.Tasks;
 
 namespace Cvl.VirtualMachine.Debugger.Views.Instructions
 {
-    public class InstructionVM
+    public class InstructionVM : ViewModelBase
     {
-        public bool IsExecuted { get; set; } = false;
-        public string Offset { get; set; }
+        public string OffsetHex { get; set; }
+        public long Offset { get; set; }
         public string Code { get; set; }
         public string Operand { get; set; }
         public Cvl.VirtualMachine.Instructions.InstructionBase Instruction { get; internal set; }
+                
+        private bool isExecuted;
+        public bool IsExecuted
+        {
+            get => isExecuted;
+            set
+            {
+                if (value != isExecuted)
+                {
+                    isExecuted = value;
+                    base.RaisePropertyChanged();
+                }
+            }
+        }
 
         internal void SetBreakpoint()
         {
@@ -41,27 +55,51 @@ namespace Cvl.VirtualMachine.Debugger.Views.Instructions
         }
 
 
+        private string actualMethodUniqueId;
         internal void Load(Core.MethodState aktualnaMetoda)
         {
-            Instructions.Clear();
-
-            var instructions = aktualnaMetoda.Instrukcje;
-
-            int i = 0;
-            foreach (var item in instructions)
+            var mthodDescription = aktualnaMetoda.PobierzOpisMetody();
+            var uniqeMethodId = mthodDescription.DeclaringType.FullName + "." + mthodDescription.Name;
+            
+            if(uniqeMethodId == actualMethodUniqueId)
             {
-                var vm = new InstructionVM();
-                vm.Offset = string.Format("IL_{0:X4}:", item.Offset);
-                vm.Code = item.Code;
-                vm.Operand = item.Operand;
-                vm.Instruction = item;
-                if(i == aktualnaMetoda.NumerWykonywanejInstrukcji)
-                {  vm.IsExecuted = true; }
-                else { vm.IsExecuted = false; }
+                //mamy tak sama metode, odswiezamy tylko wskaznik
 
-                i++;
-                Instructions.Add(vm);
-            }
+                int i = 0;
+                foreach (var vm in Instructions)
+                {
+                    vm.IsExecuted = false;
+                    if (i == aktualnaMetoda.NumerWykonywanejInstrukcji)
+                    { vm.IsExecuted = true; }
+
+                    i++;
+                }
+
+            } else
+            {
+                //mamy inna metode 
+                actualMethodUniqueId = uniqeMethodId;
+                Instructions.Clear();
+
+                var instructions = aktualnaMetoda.Instrukcje;
+
+                int i = 0;
+                foreach (var item in instructions)
+                {
+                    var vm = new InstructionVM();
+                    vm.Offset = item.Offset;
+                    vm.OffsetHex = string.Format("IL_{0:X4}:", item.Offset);
+                    vm.Code = item.Code;
+                    vm.Operand = item.Operand;
+                    vm.Instruction = item;
+                    if (i == aktualnaMetoda.NumerWykonywanejInstrukcji)
+                    { vm.IsExecuted = true; }
+                    else { vm.IsExecuted = false; }
+
+                    i++;
+                    Instructions.Add(vm);
+                }
+            }            
         }
     }
 }

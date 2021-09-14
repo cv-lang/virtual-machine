@@ -67,7 +67,7 @@ namespace Cvl.VirtualMachine.Core
         /// (taki jej prywatny stos)
         /// </summary>
         public EvaluationStack EvaluationStack { get; set; } = new EvaluationStack();
-
+                
         public Type ConstrainedType { get; internal set; }
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
@@ -330,7 +330,10 @@ namespace Cvl.VirtualMachine.Core
             }
         }
 
-       
+       /// <summary>
+       /// Zwraca wszystkie bloki w których jest obecny punkt wykonywania 
+       /// </summary>
+       /// <returns></returns>
         public List<ExceptionHandlingClause> PobierzBlokiObslugiWyjatkow()
         {
             var lista = new List<ExceptionHandlingClause>();
@@ -348,6 +351,26 @@ namespace Cvl.VirtualMachine.Core
             return lista;
         }
 
+        /// <summary>
+        /// Zwraca rozpoczynające bloki
+        /// </summary>
+        /// <returns></returns>
+        public List<ExceptionHandlingClause> GetBeginTryBlocks()
+        {
+            var lista = new List<ExceptionHandlingClause>();
+            var exceptionClauses = PobierzOpisMetody().GetMethodBody().ExceptionHandlingClauses;
+            int offset = OffsetWykonywanejInstrukcji;
+
+            foreach (var item in exceptionClauses)
+            {
+                if (item.TryOffset == offset)
+                {
+                    lista.Add(item);
+                }
+            }
+
+            return lista;
+        }
 
 
         public bool CzyObslugujeWyjatki()

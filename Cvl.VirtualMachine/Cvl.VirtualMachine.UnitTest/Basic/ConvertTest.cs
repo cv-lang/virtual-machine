@@ -21,10 +21,10 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             Assert.AreEqual(process.Convert_i(10.5), vm.StartTestExecution<int>("Convert_i", process, 10.5));
 
             Assert.AreEqual(process.Convert_i1(10.5), vm.StartTestExecution<SByte>("Convert_i1", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<SByte>("Convert_i1", process, 200));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<SByte>("Convert_i1", process, 200));
 
             Assert.AreEqual(process.Convert_i2(10.5), vm.StartTestExecution<short>("Convert_i2", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<short>("Convert_i2", process, 40000));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<short>("Convert_i2", process, 40000));
 
             Assert.AreEqual(process.Convert_i4(10.5), vm.StartTestExecution<int>("Convert_i4", process, 10.5));
 
@@ -37,21 +37,21 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             Assert.AreEqual(process.Convert_r8(10.5), vm.StartTestExecution<double>("Convert_r8", process, 10.5));
 
             Assert.AreEqual(process.Convert_u(10.5), vm.StartTestExecution<uint>("Convert_u", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<SByte>("Convert_u", process, -10.5));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<SByte>("Convert_u", process, -10.5));
 
             Assert.AreEqual(process.Convert_u1(10.5), vm.StartTestExecution<byte>("Convert_u1", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<byte>("Convert_u1", process, -10));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<byte>("Convert_u1", process, 500));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<byte>("Convert_u1", process, -10));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<byte>("Convert_u1", process, 500));
 
             Assert.AreEqual(process.Convert_u2(10.5), vm.StartTestExecution<ushort>("Convert_u2", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<ushort>("Convert_u2", process, 70000));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<ushort>("Convert_u2", process, -10.5));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<ushort>("Convert_u2", process, 70000));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<ushort>("Convert_u2", process, -10.5));
 
             Assert.AreEqual(process.Convert_u4(10.5), vm.StartTestExecution<UInt32>("Convert_u4", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<UInt32>("Convert_u4", process, -10.5));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<UInt32>("Convert_u4", process, -10.5));
 
             Assert.AreEqual(process.Convert_u8(10.5), vm.StartTestExecution<UInt64>("Convert_u8", process, 10.5));
-            Assert.Throws<IndexOutOfRangeException>(() => vm.StartTestExecution<UInt64>("Convert_u8", process, -10.5));
+            Assert.Throws<OverflowException>(() => vm.StartTestExecution<UInt64>("Convert_u8", process, -10.5));
 
 
         }

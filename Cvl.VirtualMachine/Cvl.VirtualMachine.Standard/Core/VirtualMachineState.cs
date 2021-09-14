@@ -10,6 +10,7 @@ namespace Cvl.VirtualMachine.Core
         Executing,
         Exception,
         Executed,
-        Hibernated
+        Hibernated,
+        ExceptionFromVWCore
     }
 }

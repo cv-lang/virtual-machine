@@ -4,6 +4,7 @@ using Cvl.VirtualMachine.Debugger.Views.Instructions;
 using Cvl.VirtualMachine.Debugger.Views.LocalArguments;
 using Cvl.VirtualMachine.Debugger.Views.LocalVariables;
 using Cvl.VirtualMachine.Debugger.Views.Stack;
+using Cvl.VirtualMachine.Debugger.Views.TryCatchBlocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
         public LocalArgumentsVM LocalArguments { get; set; } = new LocalArgumentsVM();
         public LocalVariablesVM LocalVariables { get; set; } = new LocalVariablesVM();
         public EvaluationStackVM EvaluationStack { get; set; } = new EvaluationStackVM();
+        public TryCatchBlocksVM TryCatchBlocks { get; set; } = new TryCatchBlocksVM();
 
         private long currentIteration;
         public long CurrentIteration
@@ -62,6 +64,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
             LocalArguments.Load(VirtualMachine.Thread.AktualnaMetoda);
             LocalVariables.Load(VirtualMachine.Thread.AktualnaMetoda);
             EvaluationStack.Load(VirtualMachine.Thread.AktualnaMetoda);
+            TryCatchBlocks.Load(VirtualMachine.Thread);
         }
 
         
@@ -82,12 +85,14 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
         {
             VirtualMachine.Step();
             CurrentIteration = VirtualMachine.Thread.NumerIteracji;
+            Refresh();
         }
 
         internal void StepOver()
         {
             VirtualMachine.StepOver();
             CurrentIteration = VirtualMachine.Thread.NumerIteracji;
+            Refresh();
         }
 
         internal void ExecuteToIteration()

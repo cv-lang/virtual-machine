@@ -364,6 +364,10 @@
     <Compile Include="Views\Instructions\StyleSelectors\ExecutedInstructionStyleSelector.cs" />
     <Compile Include="Views\LocalArguments\LocalArgumentsVM.cs" />
     <Compile Include="Views\LocalVariables\LocalVariablesVM.cs" />
+    <Compile Include="Views\TryCatchBlocks\TryCatchBlocksControl.xaml.cs">
+      <DependentUpon>TryCatchBlocksControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TryCatchBlocks\TryCatchBlocksVM.cs" />
     <Compile Include="Views\Variables\VariablesControl.xaml.cs">
       <DependentUpon>VariablesControl.xaml</DependentUpon>
     </Compile>
@@ -390,6 +394,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Instructions\InstructionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TryCatchBlocks\TryCatchBlocksControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

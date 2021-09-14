@@ -13,11 +13,27 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
-            //TODO: tu trzeba dodać jeszcze obsługę finall w bloku try..catch, bo ona może wyskoczyć ponad to
+            var block = HardwareContext.TryCatchStack.PopTryBlock();
 
-            var i = Instruction.Operand as Instruction;
-            var nextOffset = i.Offset;
-            WykonajSkok(nextOffset);
+            if(block.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Clause)
+            {
+                //jestem w catchu, na jego końcu
+
+                HardwareContext.ThrowedException = null;
+
+                //przechodze do instrukcji poza blokiem try
+                var i = Instruction.Operand as Instruction;
+                var nextOffset = i.Offset;
+                WykonajSkok(nextOffset);
+            } else if (block.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
+            {
+                //jestem na końcu try
+                //przechodzę do finally                
+                var nextOffset = block.ExceptionHandlingClause.HandlerOffset;
+                WykonajSkok(nextOffset);
+            }    
+
+
         }
     }
 }

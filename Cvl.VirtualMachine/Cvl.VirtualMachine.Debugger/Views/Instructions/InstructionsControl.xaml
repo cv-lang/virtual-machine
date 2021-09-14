@@ -38,6 +38,8 @@
 											DataMemberBinding="{Binding IsExecuted}" />
                 <telerik:GridViewDataColumn Header="Offset"
 											DataMemberBinding="{Binding Offset}" />
+                <telerik:GridViewDataColumn Header="IL"
+											DataMemberBinding="{Binding OffsetHex}" />
                 <telerik:GridViewDataColumn Header="Code"
 											DataMemberBinding="{Binding Code}" />
                 <telerik:GridViewDataColumn Header="Operand" Width="*"

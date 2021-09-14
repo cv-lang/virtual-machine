@@ -1,6 +1,7 @@
 ﻿using Cvl.ApplicationServer.Logs.Factory;
 using Cvl.VirtualMachine.Core.Tools;
 using Cvl.VirtualMachine.Test;
+using Cvl.VirtualMachine.UnitTest.Basic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,14 @@ namespace Cvl.VirtualMachine.TestAppFramework
             
             
 
-            var factoryLogger= new LoggerFactory(new ApplicationServer.Logs.Storage.FileLogStorage(), "test-vm");
+            var factoryLogger= new ApplicationServer.Logs.Factory.LoggerFactory(new ApplicationServer.Logs.Storage.FileLogStorage(), "test-vm");
 
-            var p = new ProcesTest();
+            var p = new ExceptionsTestProces();
 
             var vm = new Cvl.VirtualMachine.VirtualMachine();
             vm.ActionToExecute(() =>
             {
-                p.Start();
+                p.Start9();
             });
 
             using (vm.Logger = factoryLogger.GetLogger())

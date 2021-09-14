@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cvl.VirtualMachine.Debugger.Views.Debugger"
-             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" xmlns:instructions="clr-namespace:Cvl.VirtualMachine.Debugger.Views.Instructions" xmlns:callstack="clr-namespace:Cvl.VirtualMachine.Debugger.Views.CallStack" xmlns:localvariables="clr-namespace:Cvl.VirtualMachine.Debugger.Views.LocalVariables" xmlns:localarguments="clr-namespace:Cvl.VirtualMachine.Debugger.Views.LocalArguments" xmlns:evaluationstack="clr-namespace:Cvl.VirtualMachine.Debugger.Views.EvaluationStack" xmlns:variables="clr-namespace:Cvl.VirtualMachine.Debugger.Views.Variables"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" xmlns:instructions="clr-namespace:Cvl.VirtualMachine.Debugger.Views.Instructions" xmlns:callstack="clr-namespace:Cvl.VirtualMachine.Debugger.Views.CallStack" xmlns:localvariables="clr-namespace:Cvl.VirtualMachine.Debugger.Views.LocalVariables" xmlns:localarguments="clr-namespace:Cvl.VirtualMachine.Debugger.Views.LocalArguments" xmlns:evaluationstack="clr-namespace:Cvl.VirtualMachine.Debugger.Views.EvaluationStack" xmlns:variables="clr-namespace:Cvl.VirtualMachine.Debugger.Views.Variables" xmlns:trycatchblocks="clr-namespace:Cvl.VirtualMachine.Debugger.Views.TryCatchBlocks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded"
              KeyDown="UserControl_KeyDown">
@@ -76,6 +76,15 @@
                     <!--LocalArguments-->
                     <telerik:RadPane x:Name="Pane2" Header="LocalArguments">
                         <variables:VariablesControl DataContext="{Binding LocalArguments}"></variables:VariablesControl>
+                    </telerik:RadPane>
+
+                </telerik:RadPaneGroup>
+
+                <telerik:RadPaneGroup x:Name="Group5">
+
+                    <!--Try..catch blocks-->
+                    <telerik:RadPane Header="TryCatchBlocks">
+                        <trycatchblocks:TryCatchBlocksControl DataContext="{Binding TryCatchBlocks}"></trycatchblocks:TryCatchBlocksControl>
                     </telerik:RadPane>
 
                 </telerik:RadPaneGroup>

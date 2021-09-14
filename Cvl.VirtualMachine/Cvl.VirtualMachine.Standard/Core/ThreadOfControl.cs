@@ -3,6 +3,7 @@ using Cvl.VirtualMachine.Core.Enums;
 using Cvl.VirtualMachine.Core.Variables;
 using Cvl.VirtualMachine.Core.Variables.Addresses;
 using Cvl.VirtualMachine.Instructions;
+using Cvl.VirtualMachine.Instructions.Calls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,13 +14,36 @@ namespace Cvl.VirtualMachine
 {
     public class ThreadOfControl
     {
+        /// <summary>
+        /// Referencja do wirutalnej maszyny, w której jest wątek
+        /// </summary>
         public VirtualMachine WirtualnaMaszyna { get; internal set; }
 
+        /// <summary>
+        /// Stos wywołań - tu znajdują się wykonywane metody
+        /// </summary>
         public CallStack CallStack { get; set; } = new CallStack();
+
+        /// <summary>
+        /// Globalny numer iteracji - licznyk wykonanych instrukcji
+        /// </summary>
         public long NumerIteracji { get; set; }
-        private InstructionBase aktualnaInstrukcja;
+
+        /// <summary>
+        /// Stos bloków try i cachy
+        /// </summary>
+        public TryCatchStack TryCatchStack { get; set; } = new TryCatchStack();
+
+        /// <summary>
+        /// Status wirtualnej maszyny
+        /// </summary>
         public VirtualMachineState Status { get; set; }
 
+        /// <summary>
+        /// Aktualnie wykonywana instrukcja
+        /// </summary>
+        private InstructionBase aktualnaInstrukcja;
+        
         /// <summary>
         /// Rzucony wyjątek - przechowywany w trakcie obsługi wyjątków try..catch
         /// </summary>
@@ -63,21 +87,31 @@ namespace Cvl.VirtualMachine
                 //    System.Diagnostics.Debugger.Break();
                 //}
                 aktualnaInstrukcja = PobierzAktualnaInstrukcje();
+
+                //wrzucam na stron rozpoczete bloki try..catch..finally
+                var tryBlocks = AktualnaMetoda.GetBeginTryBlocks();
+                TryCatchStack.PushTryBolcks(tryBlocks);
+
+                
+                //sprawdzam czy instrukcja ma breakpointa
                 if(aktualnaInstrukcja.Breakpoint == true)
                 {
                     aktualnaInstrukcja.Breakpoint = false;
                     return StepExecutionResultEnum.Breakpoint;
                 }
 
+
                 try
                 {
-
+                    //wykonuje instrukcję
                     aktualnaInstrukcja.Wykonaj();
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Błąd w instrukcji {aktualnaInstrukcja} w metodzie {AktualnaMetoda}", ex);
+                    throw new Exception($"Błąd w instrukcji {aktualnaInstrukcja} w metodzie {AktualnaMetoda}, iteracja: {NumerIteracji}", ex);
                 }
+
+
                 NumerIteracji++;
 
                 if (CallStack.IsEmpty())
@@ -105,7 +139,6 @@ namespace Cvl.VirtualMachine
         internal void PushException(object rzuconyWyjatek)
         {
             AktualnaMetoda.EvaluationStack.PushObject(rzuconyWyjatek);
-            ThrowedException = rzuconyWyjatek;
         }
 
         /// <summary>
@@ -114,20 +147,32 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public void StepOver()
         {
-            var instructions = AktualnaMetoda.Instrukcje;
+            aktualnaInstrukcja = PobierzAktualnaInstrukcje();
 
-            //sprawdzam czy nie koniec instrukcji
-            if(AktualnaMetoda.NumerWykonywanejInstrukcji +1 < instructions.Count)
+            if(aktualnaInstrukcja is Call call)
             {
-                //ustawiam breakpointa na nastpno instukcje 
-                instructions[AktualnaMetoda.NumerWykonywanejInstrukcji + 1].Breakpoint = true;
-                //i wykonywanie - z oczekiwanien na breakpointa
-                Execute();
+                //jeśli call - to przeskakuje go
+
+                var instructions = AktualnaMetoda.Instrukcje;
+
+                //sprawdzam czy nie koniec instrukcji
+                if (AktualnaMetoda.NumerWykonywanejInstrukcji + 1 < instructions.Count)
+                {
+                    //ustawiam breakpointa na nastpno instukcje 
+                    instructions[AktualnaMetoda.NumerWykonywanejInstrukcji + 1].Breakpoint = true;
+                    //i wykonywanie - z oczekiwanien na breakpointa
+                    Execute();
+                }
+                else
+                {
+                    //jeśli koniec instrukcji to robię stepa (bo będzie tak ret lub koniec)
+                    Step();
+                }
             } else
             {
-                //jeśli koniec instrukcji to robię stepa (bo będzie tak ret lub koniec)
+                //jeśli inna instrukcja to robię step
                 Step();
-            }
+            }            
         }
 
         /// <summary>
@@ -141,14 +186,21 @@ namespace Cvl.VirtualMachine
             while (CallStack.IsEmpty()==false && Status != VirtualMachineState.Executed && AktualnaMetoda.CzyWykonywacInstrukcje)
             {
                 var result = Step();
-                
-                if(result == StepExecutionResultEnum.EndExecution)
+
+                if (Status == VirtualMachineState.ExceptionFromVWCore)
+                {
+                    //kończymy wykonanie kodu i rzucamy wyjątek, który został wyrzucon w kodzie 
+                    //w wewnątrze VM
+
+                    throw (Exception)ThrowedException;
+                }
+                 else if (result == StepExecutionResultEnum.EndExecution)
                 {
                     break;
                 } else if(result == StepExecutionResultEnum.Breakpoint)
                 {
                     break;
-                }
+                } 
             }
         }       
 

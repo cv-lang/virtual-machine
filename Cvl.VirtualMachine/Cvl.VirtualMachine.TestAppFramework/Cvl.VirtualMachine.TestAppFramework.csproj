@@ -365,6 +365,10 @@
       <Project>{bdf86fa5-d707-45f8-b9c0-07d8255be489}</Project>
       <Name>Cvl.VirtualMachine.Standard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cvl.VirtualMachine.UnitTest.NetFramework\Cvl.VirtualMachine.UnitTest.NetFramework.csproj">
+      <Project>{d78ef2c6-41e5-47cc-9f53-8a0dad176621}</Project>
+      <Name>Cvl.VirtualMachine.UnitTest.NetFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

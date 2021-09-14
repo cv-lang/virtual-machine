@@ -14,6 +14,8 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
+            var block = HardwareContext.TryCatchStack.PopTryBlock();
+
             HardwareContext.Status = VirtualMachineState.Exception;
             var rzuconyWyjatek = MethodContext.WirtualnaMaszyna.Thread.ThrowedException;
             MethodContext.WirtualnaMaszyna.EventThrowException(rzuconyWyjatek as Exception);

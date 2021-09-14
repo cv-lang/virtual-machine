@@ -44,12 +44,10 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
             } else if (e.SystemKey == Key.F10)
             {
                 ViewModel.StepOver();
-                ViewModel.Refresh();
                 e.Handled = true;
             } else if (e.Key == Key.F11)
             {
                 ViewModel.Step();
-                ViewModel.Refresh();
                 e.Handled = true;
             } 
 
@@ -60,13 +58,11 @@ namespace Cvl.VirtualMachine.Debugger.Views.Debugger
         private void btnStep_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Step();
-            ViewModel.Refresh();
         }
 
         private void btnStepOver_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.StepOver();
-            ViewModel.Refresh();
         }
 
         private void btnExecute_Click(object sender, RoutedEventArgs e)
