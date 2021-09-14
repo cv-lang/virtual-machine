@@ -90,7 +90,7 @@ namespace Cvl.VirtualMachine
 
                 //wrzucam na stron rozpoczete bloki try..catch..finally
                 var tryBlocks = AktualnaMetoda.GetBeginTryBlocks();
-                TryCatchStack.PushTryBolcks(tryBlocks);
+                TryCatchStack.PushTryBolcks(tryBlocks, AktualnaMetoda);
 
                 
                 //sprawdzam czy instrukcja ma breakpointa

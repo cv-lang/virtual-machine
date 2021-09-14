@@ -26,7 +26,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.Stack
             foreach (var item in thread.CallStack.StosSerializowany)
             {
                 var vm = new CallStackItemMV();
-                vm.MemberName = item.NazwaMetody;
+                vm.MemberName = $"{item.NazwaTypu}.{item.NazwaMetody}";
                 //item.LocalArguments
 
                 Methods.Add(vm);

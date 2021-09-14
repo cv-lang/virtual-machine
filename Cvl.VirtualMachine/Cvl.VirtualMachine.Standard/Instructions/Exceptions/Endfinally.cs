@@ -24,6 +24,14 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                 }
                 else
                 {
+                    //jesteśmy w miejscu bez wyjątku, 
+
+                    if(HardwareContext.TryCatchStack.PeekTryBlock().ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
+                    {
+                        //jestemy bez wyjątku i w finally
+                        HardwareContext.TryCatchStack.PopTryBlock();
+                    }
+                    
                     WykonajNastepnaInstrukcje();
                 }
             }

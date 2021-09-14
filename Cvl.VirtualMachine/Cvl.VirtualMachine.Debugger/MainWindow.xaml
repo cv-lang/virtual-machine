@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cvl.VirtualMachine.Debugger" xmlns:debugger="clr-namespace:Cvl.VirtualMachine.Debugger.Views.Debugger"
         mc:Ignorable="d"
-        Title="MainWindow" WindowState="Maximized" Height="450" Width="800">
+        Title="Cvl Debugger" WindowState="Maximized" Height="450" Width="800">
     <Grid>
         <debugger:DebuggerControl></debugger:DebuggerControl>
     </Grid>

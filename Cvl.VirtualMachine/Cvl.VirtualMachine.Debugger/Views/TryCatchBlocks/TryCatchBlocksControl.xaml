@@ -28,6 +28,8 @@
 											DataMemberBinding="{Binding HandlerLength}" />
                 <telerik:GridViewDataColumn Header="Flags"
 											DataMemberBinding="{Binding Flags}" />
+                <telerik:GridViewDataColumn Header="MethodFullName"
+											DataMemberBinding="{Binding MethodFullName}" />
 
             </telerik:RadGridView.Columns>
         </telerik:RadGridView>

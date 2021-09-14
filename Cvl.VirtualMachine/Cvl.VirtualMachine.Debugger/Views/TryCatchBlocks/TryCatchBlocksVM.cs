@@ -17,6 +17,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.TryCatchBlocks
         public int HandlerOffset { get; set; }
         public int HandlerLength { get; set; }
         public ExceptionHandlingClauseOptions Flags { get; set; }
+        public string MethodFullName { get; set; }
     }
 
     public class TryCatchBlocksVM : ViewModelBase
@@ -35,6 +36,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.TryCatchBlocks
                 vm.HandlerOffset = item.ExceptionHandlingClause.HandlerOffset;
                 vm.HandlerLength = item.ExceptionHandlingClause.HandlerLength;
                 vm.Flags = item.ExceptionHandlingClause.Flags;
+                vm.MethodFullName = item.MethodFullName;
 
                 TryCatchBlocks.Add(vm);
             }

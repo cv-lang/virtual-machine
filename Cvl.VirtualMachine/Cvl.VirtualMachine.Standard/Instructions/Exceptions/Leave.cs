@@ -13,10 +13,11 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
-            var block = HardwareContext.TryCatchStack.PopTryBlock();
+            var block = HardwareContext.TryCatchStack.PeekTryBlock();
 
             if(block.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Clause)
             {
+                HardwareContext.TryCatchStack.PopTryBlock(); //w catchu zdejmuje blok ze stosu
                 //jestem w catchu, na jego końcu
 
                 HardwareContext.ThrowedException = null;
@@ -27,8 +28,9 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                 WykonajSkok(nextOffset);
             } else if (block.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
             {
+
                 //jestem na końcu try
-                //przechodzę do finally                
+                //przechodzę do finally, bolk zostanie zdjety ze stosu w endfinally                
                 var nextOffset = block.ExceptionHandlingClause.HandlerOffset;
                 WykonajSkok(nextOffset);
             }    

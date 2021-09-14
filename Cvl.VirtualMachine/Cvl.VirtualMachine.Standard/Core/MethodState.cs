@@ -381,7 +381,8 @@ namespace Cvl.VirtualMachine.Core
 
         public override string ToString()
         {
-            return $"{NazwaMetody} {Instrukcje[this.NumerWykonywanejInstrukcji]}";
+            
+            return $"{NazwaTypu}.{NazwaMetody} {Instrukcje[this.NumerWykonywanejInstrukcji]}";
         }
     }
 }
