@@ -26,7 +26,7 @@ namespace Cvl.VirtualMachine.TestAppFramework
             var vm = new Cvl.VirtualMachine.VirtualMachine();
             vm.ActionToExecute(() =>
             {
-                p.Start9();
+                p.Start11();
             });
 
             using (vm.Logger = factoryLogger.GetLogger())

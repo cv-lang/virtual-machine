@@ -123,6 +123,32 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             Assert.AreEqual(ret2, ret);
         }
+
+        [Test]
+        public void Test10()
+        {
+            var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            var process = new ExceptionsTestProces();
+
+            var ret2 = process.Start10();
+            var ret = vm.StartTestExecution<int>("Start10", process);
+
+            Assert.AreEqual(ret2, ret);
+        }
+
+        [Test]
+        public void Test11()
+        {
+            var vm = new VirtualMachine();
+            Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            var process = new ExceptionsTestProces();
+
+            var ret2 = process.Start11();
+            var ret = vm.StartTestExecution<ReferencjaInt>("Start11", process);
+
+            Assert.AreEqual(ret2.Value, ret.Value);
+        }
     }
 
     public class ExceptionsTestProces
@@ -342,13 +368,57 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
                 }
                 catch (TestException ex2)
                 {
-                    throw;
                 }
-                
+
                 i += 8;
                 return i;
 
             }
+        }
+
+        [Interpret]
+        public int Start10()
+        {
+            int i = 0;
+            try
+            {
+                i += 2;
+                interpretetMethod3();
+                i += 3;
+            }
+            finally
+            {
+                i += 4;
+            }
+            i += 5;
+
+            return i;
+        }
+
+        [Interpret]
+        public ReferencjaInt Start11()
+        {
+            ReferencjaInt i = new ReferencjaInt(); ;
+            try
+            {
+                i.Value += 1;
+                methodWitchThrowException();
+                i.Value += 2;
+            }
+            catch (Exception ex)
+            {
+                i.Value++;
+                return i;
+            }
+            finally
+            {
+                i.Value += 4;
+            }
+            i.Value += 5;
+
+
+
+            return i;
         }
 
         private void methodWitchThrowException()
@@ -383,19 +453,41 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
         [Interpret]
         private int interpretetMethod3()
         {
+            int i = 0;
             try
             {
-                interpretetMethod2();
+                try
+                {
+                    i++;
+                    interpretetMethod2();
+                }
+                catch (Exception ex)
+                {
+                    i++;
+                }
+
+                try
+                {
+                    interpretetMethod2();
+                }
+                catch (Exception ex)
+                {
+                    return i;
+                }
             }
-            catch (Exception ex)
+            finally
             {
-
+                i++;
             }
 
-            return 1;
+            return i;
         }
     }
 
+    public class ReferencjaInt
+    {
+        public int Value { get; set; }
+    }
 
     public class TestException : Exception
     {
