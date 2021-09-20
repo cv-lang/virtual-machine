@@ -24,15 +24,13 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public CallStack CallStack { get; set; } = new CallStack();
 
+        public ExceptionHandlingStateMachine ExceptionHandling { get; set; }
         /// <summary>
         /// Globalny numer iteracji - licznyk wykonanych instrukcji
         /// </summary>
         public long NumerIteracji { get; set; }
 
-        /// <summary>
-        /// Stos bloków try i cachy
-        /// </summary>
-        public TryCatchStack TryCatchStack { get; set; } = new TryCatchStack();
+        
 
         /// <summary>
         /// Status wirtualnej maszyny
@@ -65,6 +63,13 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public object Result { get; internal set; }
                
+        public ThreadOfControl(VirtualMachine virtualMachine)
+        {
+            WirtualnaMaszyna = virtualMachine;
+            WirtualnaMaszyna.Thread = this;
+            ExceptionHandling = new ExceptionHandlingStateMachine(virtualMachine);            
+        }
+
 
         /// <summary>
         /// Wykonuje jeden krok/jedną instrukcję
@@ -90,7 +95,7 @@ namespace Cvl.VirtualMachine
 
                 //wrzucam na stron rozpoczete bloki try..catch..finally
                 var tryBlocks = AktualnaMetoda.GetBeginTryBlocks();
-                TryCatchStack.PushTryBolcks(tryBlocks, AktualnaMetoda);
+                AktualnaMetoda.TryCatchStack.PushTryBolcks(tryBlocks, AktualnaMetoda);
 
                 
                 //sprawdzam czy instrukcja ma breakpointa
@@ -106,6 +111,10 @@ namespace Cvl.VirtualMachine
                     //wykonuje instrukcję
                     aktualnaInstrukcja.Wykonaj();
                 }
+                catch(ExceptionRzuconyWyjatekNieObsluzonyWWirtualnejMaszynie ex)
+                {
+                    throw (Exception)ex.InnerException;
+                }
                 catch (Exception ex)
                 {
                     throw new Exception($"Błąd w instrukcji {aktualnaInstrukcja} w metodzie {AktualnaMetoda}, iteracja: {NumerIteracji}", ex);
@@ -115,7 +124,8 @@ namespace Cvl.VirtualMachine
                 NumerIteracji++;
 
                 if (CallStack.IsEmpty())
-                {
+                {                   
+                    
                     //kończymy wykonanie
                     return StepExecutionResultEnum.EndExecution;
                 }
@@ -156,10 +166,10 @@ namespace Cvl.VirtualMachine
                 var instructions = AktualnaMetoda.Instrukcje;
 
                 //sprawdzam czy nie koniec instrukcji
-                if (AktualnaMetoda.NumerWykonywanejInstrukcji + 1 < instructions.Count)
+                if (AktualnaMetoda.NumerWykonywanejInstrukcji.CurrentInstructionIndex + 1 < instructions.Count)
                 {
                     //ustawiam breakpointa na nastpno instukcje 
-                    instructions[AktualnaMetoda.NumerWykonywanejInstrukcji + 1].Breakpoint = true;
+                    instructions[AktualnaMetoda.NumerWykonywanejInstrukcji.CurrentInstructionIndex + 1].Breakpoint = true;
                     //i wykonywanie - z oczekiwanien na breakpointa
                     Execute();
                 }
@@ -187,14 +197,7 @@ namespace Cvl.VirtualMachine
             {
                 var result = Step();
 
-                if (Status == VirtualMachineState.ExceptionFromVWCore)
-                {
-                    //kończymy wykonanie kodu i rzucamy wyjątek, który został wyrzucon w kodzie 
-                    //w wewnątrze VM
-
-                    throw (Exception)ThrowedException;
-                }
-                 else if (result == StepExecutionResultEnum.EndExecution)
+                if (result == StepExecutionResultEnum.EndExecution)
                 {
                     break;
                 } else if(result == StepExecutionResultEnum.Breakpoint)
@@ -219,7 +222,7 @@ namespace Cvl.VirtualMachine
 
         public InstructionBase PobierzAktualnaInstrukcje()
         {
-            var ai = AktualnaMetoda.Instrukcje[AktualnaMetoda.NumerWykonywanejInstrukcji];
+            var ai = AktualnaMetoda.Instrukcje[AktualnaMetoda.NumerWykonywanejInstrukcji.CurrentInstructionIndex];
             ai.MethodContext = AktualnaMetoda;
             ai.HardwareContext =  this.WirtualnaMaszyna.Thread;
             return ai;

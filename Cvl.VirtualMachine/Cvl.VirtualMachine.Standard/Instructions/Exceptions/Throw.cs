@@ -23,6 +23,7 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
 
             var thread = wirtualnaMaszyna.Thread;
             var aktywnaMetod = wirtualnaMaszyna.Thread.AktualnaMetoda;
+            var punktyWykonaniaObslugiWyjatku = new Stack<int>();
 
             while (true)
             {
@@ -31,15 +32,13 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
 
                 if (blocks.Any())
                 {
-                    var block = thread.TryCatchStack.PeekTryBlock();
+                    var block = thread.AktualnaMetoda.TryCatchStack.PeekTryBlock();
 
                     wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody} ... blok obsługi");
 
                     //obsługujemy pierwszys blok
                     //wirtualnaMaszyna.HardwareContext.PushAktualnaMetode(aktywnaMetod);
-                    wirtualnaMaszyna.Thread.AktualnaMetoda.NumerWykonywanejInstrukcji
-                        = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(block.ExceptionHandlingClause.HandlerOffset);
-
+                    
 
                     if (block.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
                     {
@@ -47,6 +46,11 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         //wracam do zwykłej obsługi kodu                            
                         wirtualnaMaszyna.Thread.Status = VirtualMachineState.Executing;
                         wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
+
+                        var finallyHandlerIndex = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(block.ExceptionHandlingClause.HandlerOffset);
+                        punktyWykonaniaObslugiWyjatku.Push(finallyHandlerIndex);
+                        thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
+                        //wirtualnaMaszyna.Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(finallyHandlerIndex);
 
                     }
                     else if (block.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Clause)
@@ -56,7 +60,10 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         //wracam do zwykłej obsługi kodu                            
                         wirtualnaMaszyna.Thread.Status = VirtualMachineState.Executing;
                         wirtualnaMaszyna.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
-                        
+                        var catchHandlerIndex = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(block.ExceptionHandlingClause.HandlerOffset);
+                        punktyWykonaniaObslugiWyjatku.Push(catchHandlerIndex);
+
+                        break;
                     }
                     else
                     {
@@ -65,7 +72,7 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         throw new Exception("Brak obsługi blogu Catch w instrukcji Throw");
                     }
 
-                    return;
+                    //return;
                 }
                 else
                 {
@@ -78,10 +85,12 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                         if(thread.CallStack.StosSerializowany.Count <=1)
                         {
                             //nie mamy już metody do obsługi tego wyjątku, wyrzucam go poza VW
-                            //throw new Exception("Exception from code in VirtualMachine", (Exception)thread.ThrowedException);
-                            thread.Status = VirtualMachineState.ExceptionFromVWCore;
+                            
                             //czyszcze stos metod
                             thread.CallStack.Pop();
+
+                            throw new ExceptionRzuconyWyjatekNieObsluzonyWWirtualnejMaszynie(thread.ExceptionHandling.ThrowedException);
+
                             return;
                         }
                     }
@@ -97,6 +106,16 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
                 }
 
             }
+
+            //przepisuje wykonywane finally handelry
+            punktyWykonaniaObslugiWyjatku= new Stack<int>( punktyWykonaniaObslugiWyjatku.Reverse());
+            thread.AktualnaMetoda.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(punktyWykonaniaObslugiWyjatku.Pop());
+
+            while(punktyWykonaniaObslugiWyjatku.Any())
+            {
+                thread.AktualnaMetoda.NumerWykonywanejInstrukcji.PushExecutionPoint(punktyWykonaniaObslugiWyjatku.Pop());
+            }
+
 
             //while (true)
             //{

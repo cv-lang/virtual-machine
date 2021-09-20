@@ -176,8 +176,10 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                     {
                         //wyjątek z zewnętrznej funkcji
                         HardwareContext.Status = VirtualMachineState.Exception;
-                        HardwareContext.ThrowedException = exception.InnerException;
-                        Throw.ObslugaRzuconegoWyjatku(MethodContext.WirtualnaMaszyna, exception);
+                        var throwedException = exception.InnerException;
+                        HardwareContext.ExceptionHandling.ExceptionHandlinFromCall(throwedException);
+                        //HardwareContext.ThrowedException = exception.InnerException;
+                        //Throw.ObslugaRzuconegoWyjatku(MethodContext.WirtualnaMaszyna, exception.InnerException);
                         return;
                     }
 

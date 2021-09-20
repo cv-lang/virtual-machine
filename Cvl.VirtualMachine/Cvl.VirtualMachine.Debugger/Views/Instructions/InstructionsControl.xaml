@@ -36,6 +36,8 @@
             <telerik:RadGridView.Columns>
                 <telerik:GridViewDataColumn Header=""
 											DataMemberBinding="{Binding IsExecuted}" />
+                <telerik:GridViewDataColumn Header="#"
+											DataMemberBinding="{Binding No}" />
                 <telerik:GridViewDataColumn Header="Offset"
 											DataMemberBinding="{Binding Offset}" />
                 <telerik:GridViewDataColumn Header="IL"

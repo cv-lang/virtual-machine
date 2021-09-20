@@ -44,7 +44,8 @@ namespace Cvl.VirtualMachine.Core
             m.AssemblyName = methodInfo.Module.FullyQualifiedName;
             m.NazwaTypu = methodInfo.DeclaringType.FullName;
             m.NazwaMetody = methodInfo.Name;
-            m.NumerWykonywanejInstrukcji = 0;
+            m.MethodFullName = $"{methodInfo.DeclaringType.FullName}.{methodInfo.Name}";
+            //m.NumerWykonywanejInstrukcji = 0;
             Xml = Serializer.SerializeObject(methodInfo.DeclaringType);
             WirtualnaMaszyna = wirtualnaMaszyna;
             
@@ -67,7 +68,12 @@ namespace Cvl.VirtualMachine.Core
         /// (taki jej prywatny stos)
         /// </summary>
         public EvaluationStack EvaluationStack { get; set; } = new EvaluationStack();
-                
+
+        /// <summary>
+        /// Stos bloków try i cachy
+        /// </summary>
+        public TryCatchStack TryCatchStack { get; set; } = new TryCatchStack();
+
         public Type ConstrainedType { get; internal set; }
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
@@ -83,6 +89,7 @@ namespace Cvl.VirtualMachine.Core
 
         public string NazwaTypu { get; set; }
         public string NazwaMetody { get; set; }
+        public string MethodFullName { get; set; }
         public string AssemblyName { get; internal set; }
        
         public string Xml { get; set; }
@@ -94,7 +101,7 @@ namespace Cvl.VirtualMachine.Core
         /// <summary>
         /// Numer wykonywanej instrukcji (0 - to pierwsza instrukcja, 1 - to druga itd.)
         /// </summary>
-        public int NumerWykonywanejInstrukcji { get; set; }
+        public ExecutionPoints NumerWykonywanejInstrukcji { get; set; } = new ExecutionPoints();
 
         /// <summary>
         /// Offset wykonywanej instrukcji w bajtach - 
@@ -165,14 +172,14 @@ namespace Cvl.VirtualMachine.Core
             var am = this;
             am.NumerWykonywanejInstrukcji++;
             am.OffsetWykonywanejInstrukcji
-                = am.Instrukcje[am.NumerWykonywanejInstrukcji].Instruction.Offset;
+                = am.Instrukcje[am.NumerWykonywanejInstrukcji.CurrentInstructionIndex].Instruction.Offset;
         }
 
         public void WykonajSkok(int nowyOffset)
         {
             var am = this;
-            var ins = am.Instrukcje.FirstOrDefault(i => i.Instruction.Offset == nowyOffset);
-            am.NumerWykonywanejInstrukcji = am.Instrukcje.IndexOf(ins);
+            var instructionIndex = PobierzNumerInstrukcjiZOffsetem(nowyOffset);
+            am.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(instructionIndex);
         }
 
         #endregion
@@ -382,7 +389,10 @@ namespace Cvl.VirtualMachine.Core
         public override string ToString()
         {
             
-            return $"{NazwaTypu}.{NazwaMetody} {Instrukcje[this.NumerWykonywanejInstrukcji]}";
+            return $"{NazwaTypu}.{NazwaMetody} {Instrukcje[this.NumerWykonywanejInstrukcji.CurrentInstructionIndex]}";
         }
     }
+
+
+    
 }

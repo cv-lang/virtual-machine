@@ -21,12 +21,12 @@ namespace Cvl.VirtualMachine.TestAppFramework
 
             var factoryLogger= new ApplicationServer.Logs.Factory.LoggerFactory(new ApplicationServer.Logs.Storage.FileLogStorage(), "test-vm");
 
-            var p = new ExceptionsTestProces();
+            var p = new ConvertTestProcess();
 
             var vm = new Cvl.VirtualMachine.VirtualMachine();
             vm.ActionToExecute(() =>
             {
-                p.Start11();
+                p.Convert_i1(200);
             });
 
             using (vm.Logger = factoryLogger.GetLogger())

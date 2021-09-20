@@ -28,7 +28,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.TryCatchBlocks
         {
             TryCatchBlocks.Clear();
 
-            foreach (var item in thread.TryCatchStack.TryCatchBlocks)
+            foreach (var item in thread.AktualnaMetoda.TryCatchStack.TryCatchBlocks)
             {
                 var vm = new TryCatchBlockVM();
                 vm.TryOffset = item.ExceptionHandlingClause.TryOffset;

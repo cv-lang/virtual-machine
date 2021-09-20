@@ -9,36 +9,50 @@ namespace Cvl.VirtualMachine.Instructions.Exceptions
     {
         public override void Wykonaj()
         {
-            var isEmpty = HardwareContext.TryCatchStack.IsEmptyTryBlock();
+            HardwareContext.ExceptionHandling.FromEndFinally();
 
-            if(isEmpty == false)
-            {               
-                if (HardwareContext.ThrowedException != null)
-                {
-                    //jestem w trakcie wyjątku, przechodzę przez stos do obsługi wyjątku
+            //if (HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji.ExecutionPointsStack.Count > 1)
+            //{
+            //    HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();
+            //} else
+            //{
+            //    WykonajNastepnaInstrukcje();
+            //}
 
-                    //sciagam ze stosu jeden blok trycatch, bo nie został wywołene zakończenie try -> leave
-                    HardwareContext.TryCatchStack.PopTryBlock();
+            //var isEmpty = HardwareContext.TryCatchStack.IsEmptyTryBlock();
 
-                    Throw.ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, HardwareContext.ThrowedException);
-                }
-                else
-                {
-                    //jesteśmy w miejscu bez wyjątku, 
+            //if(isEmpty == false)
+            //{
+            //    ////sciagam ze stosu jeden blok trycatch
+            //    //HardwareContext.TryCatchStack.PopTryBlock();
+            //    HardwareContext.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();
 
-                    if(HardwareContext.TryCatchStack.PeekTryBlock().ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
-                    {
-                        //jestemy bez wyjątku i w finally
-                        HardwareContext.TryCatchStack.PopTryBlock();
-                    }
-                    
-                    WykonajNastepnaInstrukcje();
-                }
-            }
-            else
-            {
-                WykonajNastepnaInstrukcje();
-            }
+            //    if (HardwareContext.ThrowedException != null)
+            //    {
+            //        //jestem w trakcie wyjątku, przechodzę przez stos do obsługi wyjątku
+
+            //        //sciagam ze stosu jeden blok trycatch, bo nie został wywołene zakończenie try -> leave
+            //        HardwareContext.TryCatchStack.PopTryBlock();
+
+            //        Throw.ObslugaRzuconegoWyjatku(HardwareContext.WirtualnaMaszyna, HardwareContext.ThrowedException);
+            //    }
+            //    else
+            //    {
+            //        //jesteśmy w miejscu bez wyjątku, 
+
+            //        if(HardwareContext.TryCatchStack.PeekTryBlock().ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
+            //        {
+            //            //jestemy bez wyjątku i w finally
+            //            HardwareContext.TryCatchStack.PopTryBlock();
+            //        }
+
+            //        WykonajNastepnaInstrukcje();
+            //    }
+            //}
+            //else
+            //{
+            //    WykonajNastepnaInstrukcje();
+            //}
 
 
 

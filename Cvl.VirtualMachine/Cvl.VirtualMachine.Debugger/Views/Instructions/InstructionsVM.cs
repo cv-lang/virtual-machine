@@ -10,6 +10,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.Instructions
 {
     public class InstructionVM : ViewModelBase
     {
+        public int No { get; set; }
         public string OffsetHex { get; set; }
         public long Offset { get; set; }
         public string Code { get; set; }
@@ -69,7 +70,7 @@ namespace Cvl.VirtualMachine.Debugger.Views.Instructions
                 foreach (var vm in Instructions)
                 {
                     vm.IsExecuted = false;
-                    if (i == aktualnaMetoda.NumerWykonywanejInstrukcji)
+                    if (i == aktualnaMetoda.NumerWykonywanejInstrukcji.CurrentInstructionIndex)
                     { vm.IsExecuted = true; }
 
                     i++;
@@ -92,7 +93,8 @@ namespace Cvl.VirtualMachine.Debugger.Views.Instructions
                     vm.Code = item.Code;
                     vm.Operand = item.Operand;
                     vm.Instruction = item;
-                    if (i == aktualnaMetoda.NumerWykonywanejInstrukcji)
+                    vm.No = i;
+                    if (i == aktualnaMetoda.NumerWykonywanejInstrukcji.CurrentInstructionIndex)
                     { vm.IsExecuted = true; }
                     else { vm.IsExecuted = false; }
 

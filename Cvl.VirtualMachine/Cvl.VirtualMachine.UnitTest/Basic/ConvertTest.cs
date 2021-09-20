@@ -20,10 +20,16 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
 
             Assert.AreEqual(process.Convert_i(10.5), vm.StartTestExecution<int>("Convert_i", process, 10.5));
 
+            vm = new VirtualMachine();
             Assert.AreEqual(process.Convert_i1(10.5), vm.StartTestExecution<SByte>("Convert_i1", process, 10.5));
+
+            vm = new VirtualMachine();
             Assert.Throws<OverflowException>(() => vm.StartTestExecution<SByte>("Convert_i1", process, 200));
 
+            vm = new VirtualMachine();
             Assert.AreEqual(process.Convert_i2(10.5), vm.StartTestExecution<short>("Convert_i2", process, 10.5));
+
+            vm = new VirtualMachine();
             Assert.Throws<OverflowException>(() => vm.StartTestExecution<short>("Convert_i2", process, 40000));
 
             Assert.AreEqual(process.Convert_i4(10.5), vm.StartTestExecution<int>("Convert_i4", process, 10.5));

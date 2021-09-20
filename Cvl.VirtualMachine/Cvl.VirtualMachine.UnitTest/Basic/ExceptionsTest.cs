@@ -257,6 +257,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return i;
         }
 
+        [Interpret]
         public int Start6()
         {
             int i = 0;
@@ -315,6 +316,7 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             return i;
         }
 
+        [Interpret]
         public void Start8()
         {
             int i = 0;
@@ -402,7 +404,8 @@ namespace Cvl.VirtualMachine.UnitTest.Basic
             try
             {
                 i.Value += 1;
-                methodWitchThrowException();
+                throw new TestException() { SomeValue = 3 };
+                //methodWitchThrowException();
                 i.Value += 2;
             }
             catch (Exception ex)
