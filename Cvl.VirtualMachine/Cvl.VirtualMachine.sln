@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29728.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cvl.VirtualMachine.Standard", "Cvl.VirtualMachine.Standard\Cvl.VirtualMachine.Standard.csproj", "{BDF86FA5-D707-45F8-B9C0-07D8255BE489}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cvl.VirtualMachine", "Cvl.VirtualMachine\Cvl.VirtualMachine.csproj", "{91A26610-1363-45F0-BF98-79870ECA8A50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BDF86FA5-D707-45F8-B9C0-07D8255BE489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91A26610-1363-45F0-BF98-79870ECA8A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91A26610-1363-45F0-BF98-79870ECA8A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91A26610-1363-45F0-BF98-79870ECA8A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91A26610-1363-45F0-BF98-79870ECA8A50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36C0C39E-688D-4206-8A77-60FC31D26FEA}
+		SolutionGuid = {57D91F88-28DF-41DA-81A1-EBE8EF7758DD}
 	EndGlobalSection
 EndGlobal
