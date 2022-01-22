@@ -1,0 +1,206 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <AssemblyVersion>6.0.0</AssemblyVersion>
+    <FileVersion>6.0.0</FileVersion>
+    <Version>6.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cvl.VirtualMachine\Cvl.VirtualMachine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Telerik.Documents.SpreadsheetStreaming">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Documents.SpreadsheetStreaming.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Pivot.Core">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Pivot.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Pivot.DataProviders.Adomd">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Pivot.DataProviders.Adomd.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Pivot.DataProviders.Queryable">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Pivot.DataProviders.Queryable.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Pivot.DataProviders.Xmla">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Pivot.DataProviders.Xmla.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Cloud">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Cloud.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Cloud.Controls">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Cloud.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Chart">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Chart.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Chart.Direct2D">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Chart.Direct2D.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Charting">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.ConversationalUI">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.ConversationalUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Data">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.DataServices">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.DataServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.DataVisualization">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Diagrams">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Diagrams.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Diagrams.Extensions">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Diagrams.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Diagrams.Ribbon">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Diagrams.Ribbon.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Docking">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.EntityFrameworkCore">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Expressions">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Expressions.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.FileDialogs">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.FileDialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.FixedDocumentViewers">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.FixedDocumentViewers.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.FixedDocumentViewersUI">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.FixedDocumentViewersUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GanttView">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.GanttView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.GridView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView.Export">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.GridView.Export.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView.SpreadsheetStreamingExport">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.GridView.SpreadsheetStreamingExport.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.ImageEditor">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.ImageEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Input">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Media">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Media.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Navigation">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Pivot">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Pivot.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.PivotFieldList">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.PivotFieldList.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.RibbonView">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.RibbonView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.RichTextBox">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.RichTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.ScheduleView">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.ScheduleView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Spreadsheet">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.Spreadsheet.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.SpreadsheetUI">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.SpreadsheetUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.SyntaxEditor">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.SyntaxEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.VirtualGrid">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Controls.VirtualGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Data">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Diagrams.Core">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Diagrams.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.CMapUtils">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.CMapUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Core">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Fixed">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Fixed.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Flow">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Flow.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Flow.FormatProviders.Doc">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Flow.FormatProviders.Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Flow.FormatProviders.Pdf">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Flow.FormatProviders.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Proofing">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Proofing.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Proofing.DataGrid">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Proofing.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Proofing.RadGridView">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Proofing.RadGridView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Spreadsheet">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Spreadsheet.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Spreadsheet.FormatProviders.OpenXml">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Spreadsheet.FormatProviders.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Spreadsheet.FormatProviders.Pdf">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Spreadsheet.FormatProviders.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Documents.Spreadsheet.FormatProviders.Xls">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Documents.Spreadsheet.FormatProviders.Xls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.MediaFoundation">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.MediaFoundation.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.PersistenceFramework">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.PersistenceFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Scheduling.Core">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Scheduling.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.SyntaxEditor.Core">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.SyntaxEditor.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Zip">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Zip.Extensions">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2021\Binaries\WPF60\Telerik.Windows.Zip.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
