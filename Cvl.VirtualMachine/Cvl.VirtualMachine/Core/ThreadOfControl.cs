@@ -31,7 +31,7 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public long NumerIteracji { get; set; }
 
-        
+
 
         /// <summary>
         /// Status wirtualnej maszyny
@@ -42,13 +42,12 @@ namespace Cvl.VirtualMachine
         /// Aktualnie wykonywana instrukcja
         /// </summary>
         private InstructionBase aktualnaInstrukcja;
-        
+
         /// <summary>
         /// Rzucony wyjątek - przechowywany w trakcie obsługi wyjątków try..catch
         /// </summary>
         public object ThrowedException { get; set; }
 
-        
         public MethodState AktualnaMetoda => CallStack.PobierzTopMethodState();
 
         internal void PushAktualnaMetode(MethodState metodaDoWykonania)
@@ -58,11 +57,14 @@ namespace Cvl.VirtualMachine
 
         //public bool CzyWykonywacInstrukcje { get; set; } = true;
         public Type ConstrainedType { get; internal set; }
-        public object[] HibernateParams { get; internal set; }
+
+       
+        public List<object>? HibernateParams { get; set; }
 
         /// <summary>
         /// Wynik działania wyritalnej maszyny - wątku
         /// </summary>
+        
         public object Result { get; internal set; }
                
         public ThreadOfControl(VirtualMachine virtualMachine)

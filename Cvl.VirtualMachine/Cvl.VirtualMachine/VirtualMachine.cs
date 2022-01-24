@@ -52,6 +52,8 @@ namespace Cvl.VirtualMachine
 
         public object Instance { get; set; }
 
+        [XmlIgnore]
+
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
         public long BreakpointIterationNumber { get; set; } = -1;
 
@@ -247,7 +249,7 @@ namespace Cvl.VirtualMachine
         {
             Thread.AktualnaMetoda.CzyWykonywacInstrukcje = false;
             Thread.Status = VirtualMachineState.Hibernated;
-            Thread.HibernateParams = parameters;
+            Thread.HibernateParams = parameters?.ToList();
         }
 
         /// <summary>
@@ -314,6 +316,7 @@ namespace Cvl.VirtualMachine
 
         #region Eventy logów
 
+        [XmlIgnore]
         public ILogMonitor LogMonitor { get; set; }
         private int callLevel = 0;
         internal void EventRet(object ret = null)
@@ -358,7 +361,7 @@ namespace Cvl.VirtualMachine
 
         public object[] GetHibernateParams()
         {
-            return Thread.HibernateParams;
+            return Thread.HibernateParams?.ToArray();
         }
 
         #endregion

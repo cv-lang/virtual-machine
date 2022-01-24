@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Cvl.VirtualMachine.Core
 {
@@ -111,6 +112,8 @@ namespace Cvl.VirtualMachine.Core
                 
 
         private List<InstructionBase> instrukcje;
+
+        [XmlIgnore]
         public List<InstructionBase> Instrukcje
         {
             get
