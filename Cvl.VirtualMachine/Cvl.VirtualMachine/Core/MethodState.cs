@@ -45,7 +45,7 @@ namespace Cvl.VirtualMachine.Core
             m.NazwaMetody = methodInfo.Name;
             m.MethodFullName = $"{methodInfo.DeclaringType.FullName}.{methodInfo.Name}";
             //m.NumerWykonywanejInstrukcji = 0;
-            Xml = Serializer.SerializeObject(methodInfo.DeclaringType);
+            Xml = wirtualnaMaszyna.Serializer.Serialize(methodInfo.DeclaringType);
             WirtualnaMaszyna = wirtualnaMaszyna;
             
         }
@@ -324,7 +324,7 @@ namespace Cvl.VirtualMachine.Core
             }
             else
             {
-                var obiektTyp = Serializer.DeserializeObject(Xml);
+                var obiektTyp =  WirtualnaMaszyna.Serializer.Deserialize<object>(Xml);
                 var typ = (Type)obiektTyp;
                 return typ.GetMethod(NazwaMetody);
                 //var module = Assembly.LoadFile(this.AssemblyName);

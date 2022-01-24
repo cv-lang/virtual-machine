@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Cvl.VirtualMachine
 {
@@ -47,6 +48,7 @@ namespace Cvl.VirtualMachine
         /// </summary>
         public object ThrowedException { get; set; }
 
+        
         public MethodState AktualnaMetoda => CallStack.PobierzTopMethodState();
 
         internal void PushAktualnaMetode(MethodState metodaDoWykonania)

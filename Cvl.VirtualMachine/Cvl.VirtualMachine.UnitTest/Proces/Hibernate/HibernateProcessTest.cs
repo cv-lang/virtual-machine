@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 using Cvl.VirtualMachine.Core;
 using NUnit.Framework;
 
@@ -11,14 +12,25 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
         [Test]
         public void DwaParametryProcesTest()
         {
+            var serializer = new Cvl.VirtualMachine.Core.Serializers.XmlSerializer();
+
             var proces = new HibernateTestProcess();
             var vm = new VirtualMachine();
             Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
+            vm.Instance = proces;
+
+            var xml = serializer.Serialize(vm);
+
             var vmWynik = vm.Start<object>("Start", proces);
             Assert.True(vmWynik.State == VirtualMachineState.Hibernated);
             Assert.True(proces.State == 1);
 
-            vmWynik=vm.Resume<object>();
+            //vm.Thread.AktualnaMetoda = null;
+
+            xml = serializer.Serialize(vm);
+
+
+            vmWynik =vm.Resume<object>();
             Assert.True(vmWynik.State == VirtualMachineState.Hibernated);
             Assert.True(proces.State == 2);
 

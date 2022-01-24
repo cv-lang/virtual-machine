@@ -9,8 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Serialization;
+using Cvl.VirtualMachine.Core.Serializers;
 using Cvl.VirtualMachine.Core.Tools;
 using Mono.Reflection;
+using XmlSerializer = Cvl.VirtualMachine.Core.Serializers.XmlSerializer;
 
 namespace Cvl.VirtualMachine
 {
@@ -42,11 +45,12 @@ namespace Cvl.VirtualMachine
 
         public ThreadOfControl Thread { get; set; }
 
-
+        [XmlIgnore]
+        public ISerializer Serializer { get; set; } = new XmlSerializer();
 
         //public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
-
+        public object Instance { get; set; }
 
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
         public long BreakpointIterationNumber { get; set; } = -1;
@@ -85,8 +89,8 @@ namespace Cvl.VirtualMachine
 
         private void start(string nazwaMetody, params object[] parametety)
         {
-            var process = parametety.First();
-            var typ = process.GetType();
+            Instance = parametety.First();
+            var typ = Instance.GetType();
             var startMethod = typ.GetMethod(nazwaMetody);//typDef.Methods.FirstOrDefault(mm => mm.Name == nazwaMetodyStartu);
 
             start(startMethod, parametety);
@@ -119,9 +123,9 @@ namespace Cvl.VirtualMachine
 
         private void prepereToExecution(MethodInfo methodInfo, params object[] parametety)
         {
-            var process = parametety.First();
-            var typ = process.GetType();
-            var m = new MethodState(methodInfo, this, process);
+            Instance = parametety.First();
+            var typ = Instance.GetType();
+            var m = new MethodState(methodInfo, this, Instance);
             Thread.PushAktualnaMetode(m);
 
             var brakujaceInstrukcje = new List<Instruction>();
