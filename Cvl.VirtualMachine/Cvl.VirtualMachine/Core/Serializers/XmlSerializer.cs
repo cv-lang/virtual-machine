@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Polenter.Serialization;
+using Polenter.Serialization.Core;
 
 namespace Cvl.VirtualMachine.Core.Serializers
 {
@@ -26,6 +28,7 @@ namespace Cvl.VirtualMachine.Core.Serializers
 
 
             var serializer = new SharpSerializer();
+            serializer.InstanceCreator = new SimpleInstanceCreator();
             serializer.PropertyProvider.AttributesToIgnore.Clear();
             // remove default ExcludeFromSerializationAttribute for performance gain
             serializer.PropertyProvider.AttributesToIgnore.Add(typeof(XmlIgnoreAttribute));

@@ -15,10 +15,22 @@ namespace Cvl.VirtualMachine
 {
     public class ThreadOfControl
     {
+        public ThreadOfControl(VirtualMachine virtualMachine)
+        {
+            WirtualnaMaszyna = virtualMachine;
+            WirtualnaMaszyna.Thread = this;
+            ExceptionHandling = new ExceptionHandlingStateMachine(virtualMachine);
+        }
+
+        public ThreadOfControl()
+        {
+
+        }
+
         /// <summary>
         /// Referencja do wirutalnej maszyny, w której jest wątek
         /// </summary>
-        public VirtualMachine WirtualnaMaszyna { get; internal set; }
+        public VirtualMachine WirtualnaMaszyna { get;  set; }
 
         /// <summary>
         /// Stos wywołań - tu znajdują się wykonywane metody
@@ -56,7 +68,7 @@ namespace Cvl.VirtualMachine
         }
 
         //public bool CzyWykonywacInstrukcje { get; set; } = true;
-        public Type ConstrainedType { get; internal set; }
+        public Type ConstrainedType { get; set; }
 
        
         public List<object>? HibernateParams { get; set; }
@@ -65,15 +77,8 @@ namespace Cvl.VirtualMachine
         /// Wynik działania wyritalnej maszyny - wątku
         /// </summary>
         
-        public object Result { get; internal set; }
-               
-        public ThreadOfControl(VirtualMachine virtualMachine)
-        {
-            WirtualnaMaszyna = virtualMachine;
-            WirtualnaMaszyna.Thread = this;
-            ExceptionHandling = new ExceptionHandlingStateMachine(virtualMachine);            
-        }
-
+        public object Result { get; set; }
+        
 
         /// <summary>
         /// Wykonuje jeden krok/jedną instrukcję

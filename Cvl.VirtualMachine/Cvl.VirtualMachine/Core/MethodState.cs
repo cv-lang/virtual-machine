@@ -90,7 +90,7 @@ namespace Cvl.VirtualMachine.Core
         public string NazwaTypu { get; set; }
         public string NazwaMetody { get; set; }
         public string MethodFullName { get; set; }
-        public string AssemblyName { get; internal set; }
+        public string AssemblyName { get; set; }
        
         public string Xml { get; set; }
 
@@ -108,7 +108,7 @@ namespace Cvl.VirtualMachine.Core
         /// instrukcje mogą mieć rozmiar 1, 2, 4 bajtowy lub więcej
         /// Offset zawiera pozycję instukcji w binarnym bytecode programu
         /// </summary>
-        public int OffsetWykonywanejInstrukcji { get; internal set; }
+        public int OffsetWykonywanejInstrukcji { get; set; }
                 
 
         private List<InstructionBase> instrukcje;
@@ -117,7 +117,11 @@ namespace Cvl.VirtualMachine.Core
         public List<InstructionBase> Instrukcje
         {
             get
-            {                
+            {
+                if (instrukcje == null)
+                {
+                    WczytajInstrukcje();
+                }
                 return instrukcje;
             }
             set { instrukcje = value; }

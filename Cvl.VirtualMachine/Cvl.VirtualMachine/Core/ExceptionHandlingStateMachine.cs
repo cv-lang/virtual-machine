@@ -12,17 +12,18 @@ namespace Cvl.VirtualMachine.Core
     {
         public ExceptionHandlingStateMachine(VirtualMachine virtualMachine)
         {
-            this.virtualMachine = virtualMachine;
-            thread = virtualMachine.Thread;
+            this.VirtualMachine = virtualMachine;
+            Thread = virtualMachine.Thread;
         }
 
+        public ExceptionHandlingStateMachine()
+        {
 
+        }
 
-        private VirtualMachine virtualMachine;
+        public VirtualMachine VirtualMachine { get; set; }
 
-
-
-        private ThreadOfControl thread;
+        public ThreadOfControl Thread { get; set; }
 
         private StanObslugiWyjatkow stan;
 
@@ -30,8 +31,6 @@ namespace Cvl.VirtualMachine.Core
         /// jeśli rózny od null to jestem w obsłudze wyjątków
         /// </summary>
         public Exception ThrowedException { get; set; }
-
-
 
         private bool IsInExceptionHandling;
         public void SetHandledException(Exception exception)
@@ -62,18 +61,18 @@ namespace Cvl.VirtualMachine.Core
                     stan = StanObslugiWyjatkow.NormalneWykonanie;
                     //sprawdzam czy nie mam jakiś finally bloków
                     
-                    thread.AktualnaMetoda.TryCatchStack.PopTryBlock(); //w catchu zdejmuje blok ze stosu
+                    Thread.AktualnaMetoda.TryCatchStack.PopTryBlock(); //w catchu zdejmuje blok ze stosu
                                                                        //jestem w catchu, na jego końcu
                     
                     //miejsce docelowe, do którego skaczemy
-                    var instructionIndex = thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(nextOffset);
-                    thread.AktualnaMetoda.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(instructionIndex);
+                    var instructionIndex = Thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(nextOffset);
+                    Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(instructionIndex);
 
                     //przechodzę po blokach try..catch..finally
-                    while (thread.AktualnaMetoda.TryCatchStack.IsEmptyTryBlock() == false)
+                    while (Thread.AktualnaMetoda.TryCatchStack.IsEmptyTryBlock() == false)
                     {
-                        var blok = thread.AktualnaMetoda.TryCatchStack.PeekTryBlock();
-                        if (blok.MethodFullName != thread.AktualnaMetoda.MethodFullName)
+                        var blok = Thread.AktualnaMetoda.TryCatchStack.PeekTryBlock();
+                        if (blok.MethodFullName != Thread.AktualnaMetoda.MethodFullName)
                         {
                             break;
                         }
@@ -81,8 +80,8 @@ namespace Cvl.VirtualMachine.Core
                         if (blok.ExceptionHandlingClause.TryOffset + blok.ExceptionHandlingClause.TryLength < nextOffset)
                         {
                             //przeskakujem ten blok, wrzucam na stos
-                            var handlerIndex = thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(blok.ExceptionHandlingClause.HandlerOffset);
-                            thread.AktualnaMetoda.NumerWykonywanejInstrukcji.PushExecutionPoint(handlerIndex);
+                            var handlerIndex = Thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(blok.ExceptionHandlingClause.HandlerOffset);
+                            Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.PushExecutionPoint(handlerIndex);
                         }
                         else
                         {
@@ -91,7 +90,7 @@ namespace Cvl.VirtualMachine.Core
                             break;
                         }
 
-                        thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
+                        Thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
                     }
                     break;
 
@@ -101,21 +100,21 @@ namespace Cvl.VirtualMachine.Core
                     //przechodzę po blokach try..catch..finally
 
                     //ustawiam docelowy skok do wykonywanej instrukcji
-                    var nextInstIndex = thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(nextOffset);
-                    thread.AktualnaMetoda.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(nextInstIndex);
+                    var nextInstIndex = Thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(nextOffset);
+                    Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.SetCurrentInstructionIndex(nextInstIndex);
                     
                     //sprawdzam czy podrodze tego skoku nie ma mjakiś finally
-                    while (thread.AktualnaMetoda.TryCatchStack.IsEmptyTryBlock() == false)
+                    while (Thread.AktualnaMetoda.TryCatchStack.IsEmptyTryBlock() == false)
                     {
-                        var blok = thread.AktualnaMetoda.TryCatchStack.PeekTryBlock();
+                        var blok = Thread.AktualnaMetoda.TryCatchStack.PeekTryBlock();
 
                         if (blok.ExceptionHandlingClause.Flags == System.Reflection.ExceptionHandlingClauseOptions.Finally)
                         {
                             if (blok.ExceptionHandlingClause.TryOffset + blok.ExceptionHandlingClause.TryLength < nextOffset)
                             {
                                 //przeskakujem ten blok, wrzucam na stos
-                                var handlerIndex = thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(blok.ExceptionHandlingClause.HandlerOffset);
-                                thread.AktualnaMetoda.NumerWykonywanejInstrukcji.PushExecutionPoint(handlerIndex);
+                                var handlerIndex = Thread.AktualnaMetoda.PobierzNumerInstrukcjiZOffsetem(blok.ExceptionHandlingClause.HandlerOffset);
+                                Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.PushExecutionPoint(handlerIndex);
                             }
                             else
                             {
@@ -125,7 +124,7 @@ namespace Cvl.VirtualMachine.Core
                             }
                         }
 
-                        thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
+                        Thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
                     }
                     break;
             }
@@ -137,23 +136,23 @@ namespace Cvl.VirtualMachine.Core
             switch (stan)
             {
                 case StanObslugiWyjatkow.NormalneWykonanie:
-                    thread.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();
+                    Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();
                     break;
                 case StanObslugiWyjatkow.RzuconoWyjatekIGoObslugujeWTejMetodzie:
                     //jestem w trakcie obsługi wyjątku, zakończyłem blok finally, przechodzę do następnego bloku
-                    thread.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();                    
+                    Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();                    
                     break;
                 case StanObslugiWyjatkow.RzuconoWyjatekAleNiemaObslugiWTejMetodzie:
                     //sprawdzam czy mam jeszcze jakiś bloki do przejscia
-                    if(thread.AktualnaMetoda.NumerWykonywanejInstrukcji.ExecutionPointsStack.Count > 1)
+                    if(Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.ExecutionPointsStack.Count > 1)
                     {
                         //mam jeszcze bloki do przejscia
-                        thread.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();
-                        thread.AktualnaMetoda.WykonajNastepnaInstrukcje();
+                        Thread.AktualnaMetoda.NumerWykonywanejInstrukcji.Pop();
+                        Thread.AktualnaMetoda.WykonajNastepnaInstrukcje();
                     } else
                     {
                         //to jest ostatni blok, wychodzę poza metodę
-                        thread.CallStack.PobierzNastepnaMetodeZeStosu();
+                        Thread.CallStack.PobierzNastepnaMetodeZeStosu();
                         ObslugaRzuconegoWyjatku(ThrowedException);
                     }
                     break;
@@ -165,7 +164,7 @@ namespace Cvl.VirtualMachine.Core
         {
             //jestem w bloku catch (tylko tam może być rethrow),
             //zdejmuje ze stronu obecny blok - bo już go obsłużyłem - rethrow to ostatnia instrukcja
-            thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
+            Thread.AktualnaMetoda.TryCatchStack.PopTryBlock();
 
             //włączam ponowną obsługe wyjątku
             ObslugaRzuconegoWyjatku(ThrowedException);
@@ -173,10 +172,10 @@ namespace Cvl.VirtualMachine.Core
 
         public void ObslugaRzuconegoWyjatku(object rzuconyWyjatek)
         {
-            virtualMachine.EventHandleException("Przechodzenie przez stos po metodach obsługi wyjątu");
+            VirtualMachine.EventHandleException("Przechodzenie przez stos po metodach obsługi wyjątu");
 
-            var thread = virtualMachine.Thread;
-            var aktywnaMetod = virtualMachine.Thread.AktualnaMetoda;
+            var thread = VirtualMachine.Thread;
+            var aktywnaMetod = VirtualMachine.Thread.AktualnaMetoda;
             var punktyWykonaniaObslugiWyjatku = new Stack<int>();
 
 
@@ -194,7 +193,7 @@ namespace Cvl.VirtualMachine.Core
                         //pobieram blok
                         var block = thread.AktualnaMetoda.TryCatchStack.PeekTryBlock();
 
-                        virtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody} ... blok obsługi");
+                        VirtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody} ... blok obsługi");
 
                         //obsługujemy pierwszys blok
                         //wirtualnaMaszyna.HardwareContext.PushAktualnaMetode(aktywnaMetod);
@@ -204,7 +203,7 @@ namespace Cvl.VirtualMachine.Core
                             //obsługa finally
                             //wracam do zwykłej obsługi kodu                            
                             thread.Status = VirtualMachineState.Executing;
-                            virtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
+                            VirtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
 
                             var finallyHandlerIndex = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(block.ExceptionHandlingClause.HandlerOffset);
                             punktyWykonaniaObslugiWyjatku.Push(finallyHandlerIndex);
@@ -218,7 +217,7 @@ namespace Cvl.VirtualMachine.Core
                             thread.PushException(rzuconyWyjatek);
                             //wracam do zwykłej obsługi kodu                            
                             thread.Status = VirtualMachineState.Executing;
-                            virtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
+                            VirtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... wracam do zwykłej obsługi kodu");
                             var catchHandlerIndex = aktywnaMetod.PobierzNumerInstrukcjiZOffsetem(block.ExceptionHandlingClause.HandlerOffset);
                             punktyWykonaniaObslugiWyjatku.Push(catchHandlerIndex);
 
@@ -228,7 +227,7 @@ namespace Cvl.VirtualMachine.Core
                         }
                         else
                         {
-                            virtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... Brak obsługi blogu Catch w instrukcji Throw");
+                            VirtualMachine.EventHandleException($"Metoda {aktywnaMetod.NazwaMetody}, ... Brak obsługi blogu Catch w instrukcji Throw");
 
                             throw new Exception("Brak obsługi blogu Catch w instrukcji Throw");
                         }
