@@ -29,6 +29,7 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
 
             xml = serializer.Serialize(vm);
             var vm2 = serializer.Deserialize<VirtualMachine>(xml);
+            vm = vm2;
 
             vmWynik = vm.Resume<object>();
             Assert.True(vmWynik.State == VirtualMachineState.Hibernated);

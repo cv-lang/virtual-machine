@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cvl.VirtualMachine.Core.Serializers;
 
 namespace Cvl.VirtualMachine.Core
 {
     /// <summary>
     /// maszyna stanów obsługi wyjątków
     /// </summary>
-    public class ExceptionHandlingStateMachine
+    public class ExceptionHandlingStateMachine : IDeserializedObject
     {
         public ExceptionHandlingStateMachine(VirtualMachine virtualMachine)
         {
@@ -17,6 +18,11 @@ namespace Cvl.VirtualMachine.Core
         }
 
         public ExceptionHandlingStateMachine()
+        {
+
+        }
+
+        public void AfterDeserialization()
         {
 
         }

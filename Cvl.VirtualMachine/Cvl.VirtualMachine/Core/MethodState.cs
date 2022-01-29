@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
+using Cvl.VirtualMachine.Core.Serializers;
 
 namespace Cvl.VirtualMachine.Core
 {
@@ -16,14 +17,9 @@ namespace Cvl.VirtualMachine.Core
     /// Metoda która będzie wykonywana
     /// https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf p.108
     /// </summary>
-    public class MethodState : ElementBase
+    public class MethodState : ElementBase , IDeserializedObject
     {
-        public MethodState()
-        {
-            LocalArguments = new MethodData();
-            LocalVariables = new MethodData();
-            instrukcje = null;
-        }
+        
 
         public MethodState(MethodBase metoda, VirtualMachine wirtualnaMaszyna, object instance) : this()
         {          
@@ -51,6 +47,18 @@ namespace Cvl.VirtualMachine.Core
             
         }
 
+        public MethodState()
+        {
+            LocalArguments = new MethodData();
+            LocalVariables = new MethodData();
+            instrukcje = null;
+        }
+
+        public void AfterDeserialization()
+        {
+            WczytajInstrukcje();
+        }
+
         #region Propercje
 
         /// <summary>
@@ -74,7 +82,7 @@ namespace Cvl.VirtualMachine.Core
         /// </summary>
         public TryCatchStack TryCatchStack { get; set; } = new TryCatchStack();
 
-        public Type ConstrainedType { get; internal set; }
+        public Type ConstrainedType { get; set; }
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
 
@@ -118,10 +126,6 @@ namespace Cvl.VirtualMachine.Core
         {
             get
             {
-                if (instrukcje == null)
-                {
-                    WczytajInstrukcje();
-                }
                 return instrukcje;
             }
             set { instrukcje = value; }
@@ -395,6 +399,8 @@ namespace Cvl.VirtualMachine.Core
             
             return $"{NazwaTypu}.{NazwaMetody} {Instrukcje[this.NumerWykonywanejInstrukcji.CurrentInstructionIndex]}";
         }
+
+       
     }
 
 

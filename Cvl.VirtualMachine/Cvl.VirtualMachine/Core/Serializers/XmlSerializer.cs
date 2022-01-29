@@ -28,7 +28,8 @@ namespace Cvl.VirtualMachine.Core.Serializers
 
 
             var serializer = new SharpSerializer();
-            serializer.InstanceCreator = new SimpleInstanceCreator();
+            var instanceCreator = new SimpleInstanceCreator();
+            serializer.InstanceCreator = instanceCreator;
             serializer.PropertyProvider.AttributesToIgnore.Clear();
             // remove default ExcludeFromSerializationAttribute for performance gain
             serializer.PropertyProvider.AttributesToIgnore.Add(typeof(XmlIgnoreAttribute));
@@ -37,6 +38,7 @@ namespace Cvl.VirtualMachine.Core.Serializers
             {
                 object obiekt = serializer.Deserialize(ms);
 
+                instanceCreator.RunDeserializationInicaializer();
                 return (T)obiekt;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Cvl.VirtualMachine.Core
 {
@@ -14,8 +15,26 @@ namespace Cvl.VirtualMachine.Core
 
     public class ExecutionPoints
     {
+        [XmlIgnore]
         public Stack<ExecutionPoint> ExecutionPointsStack { get; set; } = new Stack<ExecutionPoint>();
         public int CurrentInstructionIndex => ExecutionPointsStack.Peek().ExecutionInstructionIndex;
+
+        public List<ExecutionPoint> ExecutionPointsStackSerializowany
+        {
+            get
+            {
+                return ExecutionPointsStack.ToList();
+            }
+            set
+            {
+                var l = value.ToList();
+                l.Reverse();
+                foreach (var item in l)
+                {
+                    ExecutionPointsStack.Push(item);
+                }
+            }
+        }
 
         public ExecutionPoints()
         {

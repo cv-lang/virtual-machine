@@ -9,9 +9,27 @@ namespace Cvl.VirtualMachine.Core.Serializers
 {
     public class SimpleInstanceCreator : IInstanceCreator
     {
+        private List<IDeserializedObject> deserializedObjects = new List<IDeserializedObject>();
+
         public object CreateInstance(Type type)
         {
-            return Activator.CreateInstance(type);
+            var obj =  Activator.CreateInstance(type);
+
+            if (obj is IDeserializedObject deserializedObject)
+            {
+                deserializedObjects.Add(deserializedObject);
+            }
+
+            return obj;
+        }
+
+        public void RunDeserializationInicaializer()
+        {
+            deserializedObjects.Reverse();
+            foreach (var deserializedObject in deserializedObjects)
+            {
+                deserializedObject.AfterDeserialization();
+            }
         }
     }
 }
