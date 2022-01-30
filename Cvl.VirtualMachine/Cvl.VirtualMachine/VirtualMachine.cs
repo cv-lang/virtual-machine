@@ -40,7 +40,9 @@ namespace Cvl.VirtualMachine
     {
         public VirtualMachine()
         {
-            Thread = new ThreadOfControl(this);
+            Thread = new ThreadOfControl();
+            Thread.WirtualnaMaszyna = this;
+            Thread.AfterDeserialization();
         }
 
         public ThreadOfControl Thread { get; set; }
@@ -171,7 +173,10 @@ namespace Cvl.VirtualMachine
 
         public VirtualMachineResult<T> Start<T>(string nazwaMetody, params object[] parametet)
         {
-            Thread = new ThreadOfControl(this);
+            Thread = new ThreadOfControl();
+            Thread.WirtualnaMaszyna = this;
+            Thread.AfterDeserialization();
+
             start(nazwaMetody, parametet);
             if (Thread.Status == VirtualMachineState.Hibernated)
             {

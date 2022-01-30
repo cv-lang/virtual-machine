@@ -33,11 +33,11 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
 
             vmWynik = vm.Resume<object>();
             Assert.True(vmWynik.State == VirtualMachineState.Hibernated);
-            Assert.True(proces.State == 2);
+            Assert.True(((HibernateTestProcess)vm.Instance).State == 2);
 
             vmWynik = vm.Resume<object>();
             Assert.True(vmWynik.State == VirtualMachineState.Executed);
-            Assert.True(proces.State == 3);
+            Assert.True(((HibernateTestProcess)vm.Instance).State == 3);
 
             proces = new HibernateTestProcess();
             var wynik = proces.Start();

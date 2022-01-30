@@ -10,21 +10,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Cvl.VirtualMachine.Core.Serializers;
 
 namespace Cvl.VirtualMachine
 {
-    public class ThreadOfControl
+    public class ThreadOfControl : IDeserializedObject
     {
-        public ThreadOfControl(VirtualMachine virtualMachine)
-        {
-            WirtualnaMaszyna = virtualMachine;
-            WirtualnaMaszyna.Thread = this;
-            ExceptionHandling = new ExceptionHandlingStateMachine(virtualMachine);
-        }
-
         public ThreadOfControl()
         {
 
+        }
+
+        public void AfterDeserialization()
+        {
+            WirtualnaMaszyna.Thread = this;
+            ExceptionHandling = new ExceptionHandlingStateMachine(){VirtualMachine = WirtualnaMaszyna};
+            ExceptionHandling.AfterDeserialization();
         }
 
         /// <summary>

@@ -11,20 +11,14 @@ namespace Cvl.VirtualMachine.Core
     /// </summary>
     public class ExceptionHandlingStateMachine : IDeserializedObject
     {
-        public ExceptionHandlingStateMachine(VirtualMachine virtualMachine)
-        {
-            this.VirtualMachine = virtualMachine;
-            Thread = virtualMachine.Thread;
-        }
-
+        
         public ExceptionHandlingStateMachine()
         {
-
         }
 
         public void AfterDeserialization()
         {
-
+            Thread = VirtualMachine.Thread;
         }
 
         public VirtualMachine VirtualMachine { get; set; }
