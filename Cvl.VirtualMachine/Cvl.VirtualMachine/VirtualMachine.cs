@@ -250,7 +250,7 @@ namespace Cvl.VirtualMachine
         /// Metoda służy do hibernowania wirtualnej maszyny
         /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
         /// </summary>
-        public void HibernateVirtualMachine(object[] parameters)
+        internal void HibernateVirtualMachine(object[] parameters)
         {
             Thread.AktualnaMetoda.CzyWykonywacInstrukcje = false;
             Thread.Status = VirtualMachineState.Hibernated;
@@ -261,7 +261,7 @@ namespace Cvl.VirtualMachine
         /// Metoda służy do kończenia wykonywania wirtualnej maszyny
         /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
         /// </summary>
-        public void EndProcessVirtualMachine()
+        internal void EndProcessVirtualMachine()
         {
             Thread.AktualnaMetoda.CzyWykonywacInstrukcje = false;
             Thread.Status = VirtualMachineState.Executed;
