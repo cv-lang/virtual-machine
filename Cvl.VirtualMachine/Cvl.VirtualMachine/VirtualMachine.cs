@@ -369,7 +369,26 @@ namespace Cvl.VirtualMachine
             return Thread.HibernateParams?.ToArray();
         }
 
-        
+
+
+        #endregion
+
+
+        #region Seriwalization/deserialization
+
+        public static string SerializeVirtualMachine(VirtualMachine virtualMachine)
+        {
+            var serializer = new Cvl.VirtualMachine.Core.Serializers.XmlSerializer();
+            var xml = serializer.Serialize(virtualMachine);
+            return xml;
+        }
+
+        public static VirtualMachine DeserializeVirtualMachine(string xml)
+        {
+            var serializer = new Cvl.VirtualMachine.Core.Serializers.XmlSerializer();
+            var vm = serializer.Deserialize<VirtualMachine>(xml);
+            return vm;
+        }
 
         #endregion
     }

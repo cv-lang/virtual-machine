@@ -12,6 +12,13 @@ namespace Cvl.VirtualMachine.Core.Serializers
 {
     public class XmlSerializer : ISerializer
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public XmlSerializer(IServiceProvider serviceProvider = null)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
         public T? Deserialize<T>(string xmlOfAnObject)
         {
             if (xmlOfAnObject.StartsWith("?"))
@@ -28,7 +35,7 @@ namespace Cvl.VirtualMachine.Core.Serializers
 
 
             var serializer = new SharpSerializer();
-            var instanceCreator = new SimpleInstanceCreator();
+            var instanceCreator = new SimpleInstanceCreator(_serviceProvider);
             serializer.InstanceCreator = instanceCreator;
             serializer.PropertyProvider.AttributesToIgnore.Clear();
             // remove default ExcludeFromSerializationAttribute for performance gain

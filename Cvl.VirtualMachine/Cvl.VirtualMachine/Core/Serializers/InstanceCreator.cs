@@ -9,18 +9,33 @@ namespace Cvl.VirtualMachine.Core.Serializers
 {
     public class SimpleInstanceCreator : IInstanceCreator
     {
+        private readonly IServiceProvider _serviceProvider;
         private List<IDeserializedObject> deserializedObjects = new List<IDeserializedObject>();
+
+        public SimpleInstanceCreator(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         public object CreateInstance(Type type)
         {
-            var obj =  Activator.CreateInstance(type);
+            object instance = null;
 
-            if (obj is IDeserializedObject deserializedObject)
+            if (_serviceProvider != null)
+            {
+                instance = _serviceProvider.GetService(type);
+            }
+            if (instance == null)
+            {
+                instance = Activator.CreateInstance(type);
+            }
+
+            if (instance is IDeserializedObject deserializedObject)
             {
                 deserializedObjects.Add(deserializedObject);
             }
 
-            return obj;
+            return instance;
         }
 
         public void RunDeserializationInicaializer()

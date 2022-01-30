@@ -12,14 +12,12 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
         [Test]
         public void DwaParametryProcesTest()
         {
-            var serializer = new Cvl.VirtualMachine.Core.Serializers.XmlSerializer();
-
             var proces = new HibernateTestProcess();
             var vm = new VirtualMachine();
             Cvl.VirtualMachine.Test.VirtualMachineDebug.VirtualMachine = vm;
             vm.Instance = proces;
 
-            var xml = serializer.Serialize(vm);
+            var xml = VirtualMachine.SerializeVirtualMachine(vm);
 
             var vmWynik = vm.Start<object>("Start", proces);
             Assert.True(vmWynik.State == VirtualMachineState.Hibernated);
@@ -27,8 +25,8 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
 
             //vm.Thread.AktualnaMetoda = null;
 
-            xml = serializer.Serialize(vm);
-            var vm2 = serializer.Deserialize<VirtualMachine>(xml);
+            xml = VirtualMachine.SerializeVirtualMachine(vm);
+            var vm2 = VirtualMachine.DeserializeVirtualMachine(xml);
             vm = vm2;
 
             vmWynik = vm.Resume<object>();
