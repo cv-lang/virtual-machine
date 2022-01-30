@@ -51,12 +51,12 @@ launching code
 var proces = new HibernateWorkflowSimple() { InputParametr = 10 };
 var vm = new VirtualMachine.VirtualMachine();
 vm.Start(proces);
-var serializedVMXml = vm.Serialize();
+var serializedVMXml = VirtualMachine.SerializeVirtualMachine(vm);
 object retFromSerializedVM = "";
 
 while (vm.Status == VirtualMachineState.Hibernated)
 {
-    vm = VirtualMachine.VirtualMachine.Deserialize(serializedVMXml);
+    vm = VirtualMachine.DeserializeVirtualMachine(serializedVMXml);
     retFromSerializedVM = vm.Resume();
     serializedVMXml = vm.Serialize();
 }
