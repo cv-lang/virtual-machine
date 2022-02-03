@@ -159,6 +159,7 @@ namespace Cvl.VirtualMachine
             Thread.AktualnaMetoda.NumerWykonywanejInstrukcji++;
             Thread.Status = VirtualMachineState.Executing;
             Thread.AktualnaMetoda.CzyWykonywacInstrukcje = true;
+            Thread.AfterDeserialization();
 
             Thread.Execute();
             if (Thread.Status == VirtualMachineState.Hibernated)
