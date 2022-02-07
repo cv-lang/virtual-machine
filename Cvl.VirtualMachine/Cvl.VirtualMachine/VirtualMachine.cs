@@ -272,9 +272,9 @@ namespace Cvl.VirtualMachine
         /// Metoda służy do hibernowania wirtualnej maszyny
         /// Wywoływana z procesu który interpretowany jest przez wirtualną maszynę
         /// </summary>
-        public static object Hibernate(params object[] parameters)
+        public static object? Hibernate(params object[] parameters)
         {
-            return null;
+            return parameters.FirstOrDefault(); ;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using Mono.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
@@ -44,7 +45,39 @@ namespace Cvl.VirtualMachine.Core
             //m.NumerWykonywanejInstrukcji = 0;
             Xml = wirtualnaMaszyna.Serializer.Serialize(methodInfo.DeclaringType);
             WirtualnaMaszyna = wirtualnaMaszyna;
-            
+
+
+            if (methodInfo.GetMethodBody() != null && methodInfo.GetMethodBody().InitLocals == true)
+            {
+                int i = 0;
+                foreach (var localVariableInfo in methodInfo.GetMethodBody().LocalVariables)
+                {
+                    var inst = InstanceCreator(localVariableInfo.LocalType, (MethodInfo)methodInfo);
+                    LocalVariables.Ustaw(i, inst);
+                    i++;
+                }
+            }
+
+        }
+
+        delegate System.Runtime.CompilerServices.DefaultInterpolatedStringHandler myConstruct();
+
+        private object InstanceCreator(Type type, MethodInfo method)
+        {
+            if (type == typeof(string))
+            {
+                return "";
+            }
+
+            if (type.IsByRefLike)
+            {
+                throw new NotSupportedException("ref struct are not supported (IsByRefLike type)");
+            }
+            else
+            {
+                var inst = Activator.CreateInstance(type);
+                return inst;
+            }
         }
 
         public MethodState()

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cvl.VirtualMachine.Debugger\Cvl.VirtualMachine.Debugger.csproj" />
+    <ProjectReference Include="..\Cvl.VirtualMachine.UnitTest\Cvl.VirtualMachine.UnitTest.csproj" />
     <ProjectReference Include="..\Cvl.VirtualMachine\Cvl.VirtualMachine.csproj" />
   </ItemGroup>
 

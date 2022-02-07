@@ -3,6 +3,7 @@ using Mono.Reflection;
 using System;
 using System.Windows;
 using Cvl.VirtualMachine.Core.Tools;
+using Cvl.VirtualMachine.UnitTest.Proces.FromLife;
 
 namespace Cvl.VirtualMachine.TestApp
 {
@@ -17,7 +18,7 @@ namespace Cvl.VirtualMachine.TestApp
 
             //var factoryLogger = new ApplicationServer.Logs.Factory.LoggerFactory(new ApplicationServer.Logs.Storage.FileLogStorage(), "test-vm");
 
-            var p = new ProcesTest();
+            var p = new StringConstrudtionTestProcess();
 
             var vm = new Cvl.VirtualMachine.VirtualMachine();
             vm.ActionToExecute(() =>
