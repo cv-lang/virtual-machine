@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cvl.ApplicationServer" Version="6.0.1" />
-    <PackageReference Include="Cvl.VirtualMachine" Version="6.0.1" />
+    <PackageReference Include="Cvl.ApplicationServer" Version="6.0.0" />
+    <PackageReference Include="Cvl.VirtualMachine" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

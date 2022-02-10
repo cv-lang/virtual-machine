@@ -65,6 +65,18 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Casting
 
             //Assert.Pass();
         }
+
+
+        [Test]
+        public void Test2()
+        {
+            var vm = new VirtualMachine();
+            var process = new CastingTestProcess();
+
+            //int
+            var t= process.TestCast();
+            var t2=vm.StartTestExecution<object>("TestCast", process);
+        }
     }
     public class CastingTestProcess
     {
@@ -99,5 +111,25 @@ namespace Cvl.VirtualMachine.UnitTest.Basic.Casting
         public short CastBF(float x) => (byte)x;
         public short CastBD(double x) => (byte)x;
         public short CastBM(decimal x) => (byte)x;
+
+
+        public BaseTestClass TestCast()
+        {
+            BaseTestClass baseObject = null;
+            var t = new TestClass2();
+            object tt = (BaseTestClass)t;
+
+            return (BaseTestClass)tt;
+        }
+    }
+
+    public class BaseTestClass
+    {
+        public int SomeValue { get; set; }
+    }
+
+    public class TestClass2 : BaseTestClass
+    {
+
     }
 }

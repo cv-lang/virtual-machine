@@ -14,7 +14,8 @@ dd = new DefaultInterpolatedStringHandler();
 
 List<object> list = new List<object>();
 
-list.Add(dd);
 
 
 Console.WriteLine("");
+
+
