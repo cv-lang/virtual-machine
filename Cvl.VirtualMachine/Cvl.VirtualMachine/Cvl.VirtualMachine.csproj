@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
     <FileVersion>6.0.1</FileVersion>
     <AssemblyVersion>6.0.1</AssemblyVersion>
-    <Version>6.0.3</Version>
-    <PackageIcon>logo-virtualmachine-m.png</PackageIcon>
+    <Version>6.0.4</Version>
+    <PackageIcon>cvlogo.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="logo-virtualmachine-m.png">
+    <None Update="cvlogo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
