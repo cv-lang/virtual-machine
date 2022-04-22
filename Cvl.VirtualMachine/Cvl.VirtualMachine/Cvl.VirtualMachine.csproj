@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <FileVersion>6.0.1</FileVersion>
     <AssemblyVersion>6.0.1</AssemblyVersion>
-    <Version>6.0.2</Version>
+    <Version>6.0.3</Version>
     <PackageIcon>logo-virtualmachine-m.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
