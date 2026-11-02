@@ -24,8 +24,9 @@ namespace Cvl.VirtualMachine.Instructions.Base
                 }
                 else if (instruction.Operand is System.Reflection.ParameterInfo parameterInfo)
                 {
-                    Index = parameterInfo.Position + 1;
-                    
+                    //Position nie liczy this - w metodzie instancji (i konstruktorze) argument 0 to this
+                    var metoda = (System.Reflection.MethodBase)parameterInfo.Member;
+                    Index = parameterInfo.Position + (metoda.CallingConvention.HasFlag(System.Reflection.CallingConventions.HasThis) ? 1 : 0);
                 }
                 else if (instruction.Operand is Int32 i)
                 {
@@ -40,18 +41,8 @@ namespace Cvl.VirtualMachine.Instructions.Base
 
         protected int GetIndex()
         {
-            var index = Index;
-
-            if(Instruction.Operand is System.Reflection.ParameterInfo parametrInfo)
-            {
-                var methodInfo = (System.Reflection.MethodInfo)parametrInfo.Member;
-                if(methodInfo.CallingConvention.HasFlag(System.Reflection.CallingConventions.HasThis))
-                {
-                    index++;
-                }
-            }            
-
-            return index;
+            //this jest już w Index (Inicialize) - drugi raz przesuwał ldarga.s o jeden argument dalej
+            return Index;
         }
 
         public override string ToString()
