@@ -2,6 +2,9 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Cvl.VirtualMachine.Core.Serializers
 {
@@ -80,12 +83,14 @@ namespace Cvl.VirtualMachine.Core.Serializers
                 ? method.GetGenericArguments().Select(TypeNames.Get)
                 : Enumerable.Empty<string>();
             var parameters = method.GetParameters().Select(p => TypeNames.Get(p.ParameterType));
-            return $"{TypeNames.Get(method.DeclaringType!)}|{method.Name}|{string.Join(";", genericArgs)}|{string.Join(";", parameters)}";
+            var owner = method.DeclaringType != null ? TypeNames.Get(method.DeclaringType) : method.Module.Name;
+            return $"{owner}|{method.Name}|{string.Join(";", genericArgs)}|{string.Join(";", parameters)}";
         }
 
         public static string Get(FieldInfo field)
         {
-            return $"{TypeNames.Get(field.DeclaringType!)}|{field.Name}";
+            var owner = field.DeclaringType != null ? TypeNames.Get(field.DeclaringType) : field.Module.Name;
+            return $"{owner}|{field.Name}";
         }
 
         public static MethodBase ResolveMethod(string identity)
@@ -275,6 +280,12 @@ namespace Cvl.VirtualMachine.Core.Serializers
     /// </summary>
     internal static class SimpleValues
     {
+        private static readonly JsonSerializerOptions jsonOptions = new()
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            MaxDepth = FieldGraphSerializer.MaxDepth,
+        };
+
         private static readonly (string Name, StringComparer Comparer)[] stringComparers =
         {
             ("Ordinal", StringComparer.Ordinal),
@@ -312,6 +323,8 @@ namespace Cvl.VirtualMachine.Core.Serializers
                 RuntimeTypeHandle v => ("typeh", TypeNames.Get(Type.GetTypeFromHandle(v)!)),
                 RuntimeFieldHandle v => ("fieldh", MemberIdentity.Get(FieldInfo.GetFieldFromHandle(v))),
                 CultureInfo v => ("culture", v.Name),
+                //kopia po wartości: węzeł po odczycie nie zna rodzica i nie jest współdzielony
+                JsonNode v => ("json", v.ToJsonString(jsonOptions)),
                 _ => (null!, null!),
             };
 
@@ -365,6 +378,7 @@ namespace Cvl.VirtualMachine.Core.Serializers
                 "typeh" => TypeNames.Resolve(text).TypeHandle,
                 "fieldh" => MemberIdentity.ResolveField(text).FieldHandle,
                 "culture" => CultureInfo.GetCultureInfo(text),
+                "json" => JsonNode.Parse(text, null, new JsonDocumentOptions { MaxDepth = FieldGraphSerializer.MaxDepth })!,
                 "strcmp" => stringComparers.First(k => k.Name == text).Comparer,
                 _ => throw new StateSerializationException($"Nieznany rodzaj wartości w stanie: {code}"),
             };

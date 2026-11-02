@@ -24,6 +24,14 @@ namespace Cvl.VirtualMachine.Core.Serializers
 
         internal const int MaxDepth = 512;
 
+        private readonly IServiceProvider? services;
+
+        /// <param name="services">Dla obiektów stanu z IUsesServices</param>
+        public FieldGraphSerializer(IServiceProvider? services = null)
+        {
+            this.services = services;
+        }
+
         public string Serialize(object? obj)
         {
             return new GraphWriter().Write(obj);
@@ -31,7 +39,7 @@ namespace Cvl.VirtualMachine.Core.Serializers
 
         public T? Deserialize<T>(string serializedForm)
         {
-            return (T?)new GraphReader().Read(serializedForm);
+            return (T?)new GraphReader(services).Read(serializedForm);
         }
     }
 
@@ -286,10 +294,16 @@ namespace Cvl.VirtualMachine.Core.Serializers
 
     internal class GraphReader
     {
+        private readonly IServiceProvider? services;
         private readonly Dictionary<int, JsonObject> elements = new();
         private readonly Dictionary<int, object> objects = new();
         private readonly HashSet<int> filled = new();
         private readonly List<int> hashCollections = new();
+
+        public GraphReader(IServiceProvider? services)
+        {
+            this.services = services;
+        }
 
         public object? Read(string serialized)
         {
@@ -320,6 +334,19 @@ namespace Cvl.VirtualMachine.Core.Serializers
             foreach (var id in hashCollections)
             {
                 FillHashCollection(id);
+            }
+
+            foreach (var id in orderedIds)
+            {
+                if (objects[id] is IUsesServices usesServices)
+                {
+                    if (services == null)
+                    {
+                        throw new StateSerializationException(
+                            $"Obiekt {objects[id].GetType().FullName} potrzebuje usług - przekaż IServiceProvider przy odczycie stanu");
+                    }
+                    usesServices.AttachServices(services);
+                }
             }
 
             foreach (var id in orderedIds)
@@ -424,7 +451,17 @@ namespace Cvl.VirtualMachine.Core.Serializers
                     throw new StateSerializationException(
                         $"Stan zawiera pole {type.FullName}.{name}, którego nie ma w załadowanym kodzie");
                 }
-                field.SetValue(target, ReadValue(slot));
+
+                var value = ReadValue(slot);
+                try
+                {
+                    field.SetValue(target, value);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new StateSerializationException(
+                        $"Pole {type.FullName}.{name} ma w kodzie typ {field.FieldType}, a w stanie wartość typu {value?.GetType()}", ex);
+                }
             }
         }
 

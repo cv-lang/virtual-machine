@@ -250,14 +250,111 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
             Assert.AreEqual(1, w["KLUCZ"]);
         }
 
-        //wymaga kroku wersjonowania: dziś zmiana kodu przed wznowieniem daje cichy zły wynik
-        [Test, Ignore("Następny krok: wykrywanie zmiany kodu procesu przed wznowieniem")]
+        [Test]
         public void Zmiana_kodu_przed_wznowieniem_jest_wykrywana()
         {
             var vm = new VirtualMachine();
             vm.Start<object>("Start", new PWersjaA());
             var stan = VirtualMachine.SerializeVirtualMachine(vm).Replace("PWersjaA", "PWersjaB");
-            Assert.Throws<StateSerializationException>(() => VirtualMachine.DeserializeVirtualMachine(stan));
+            var blad = Assert.Throws<ProcessCodeChangedException>(() => VirtualMachine.DeserializeVirtualMachine(stan));
+            StringAssert.Contains("PWersjaB.Start", blad!.Message);
+            Assert.AreNotEqual(blad.SavedFingerprint, blad.CurrentFingerprint);
+        }
+
+        [Test]
+        public void Inny_odcisk_ramki_stosu_blokuje_odczyt()
+        {
+            var vm = new VirtualMachine();
+            vm.Start<object>("Start", new PPrywatna());
+            var stan = VirtualMachine.SerializeVirtualMachine(vm);
+            var zmieniony = System.Text.RegularExpressions.Regex.Replace(stan, "\"OdciskKodu\":\"[0-9A-F]+\"", "\"OdciskKodu\":\"00\"");
+            Assert.AreNotEqual(stan, zmieniony);
+            Assert.Throws<ProcessCodeChangedException>(() => VirtualMachine.DeserializeVirtualMachine(zmieniony));
+        }
+
+        [Test]
+        public void Metoda_spoza_stosu_nie_wchodzi_do_stanu()
+        {
+            //pomocnik zakończył się przed hibernacją, więc można go zmieniać bez blokowania procesu
+            var vm = new VirtualMachine();
+            vm.Start<object>("Start", new PPomocnikPrzedHibernacja());
+            StringAssert.DoesNotContain("Pomocnik", VirtualMachine.SerializeVirtualMachine(vm).Replace("PPomocnikPrzedHibernacja", ""));
+        }
+
+        [Test]
+        public void Zmieniony_typ_pola_daje_czytelny_blad()
+        {
+            var vm = new VirtualMachine();
+            vm.Start<object>("Start", new PPole());
+            var stan = VirtualMachine.SerializeVirtualMachine(vm).Replace("\"_licznik\":5", "\"_licznik\":\"piec\"");
+            var blad = Assert.Throws<StateSerializationException>(() => VirtualMachine.DeserializeVirtualMachine(stan));
+            StringAssert.Contains("_licznik", blad!.Message);
+        }
+
+        [Test] public void Catch_innego_typu_nie_lapie() => Assert.AreEqual("zewnetrzny", Uruchom(new PCatchInnegoTypu()));
+        [Test] public void Drugi_catch_lapie_swoj_typ() => Assert.AreEqual("drugi", Uruchom(new PDwaCatche()));
+        [Test] public void Wyjatek_z_metody_zewnetrznej_i_catch_innego_typu() => Assert.AreEqual("zewnetrzny", Uruchom(new PCatchZMetodyZewnetrznej()));
+        [Test] public void Catch_typu_bazowego_lapie() => Assert.AreEqual("baza", Uruchom(new PCatchBazowy()));
+        [Test] public void Po_wewnetrznym_try_zewnetrzny_catch_nadal_dziala() => Assert.AreEqual("zewnetrzny", Uruchom(new PZagniezdzonyTry()));
+        [Test] public void Wyjatek_rzucony_w_catch_idzie_do_zewnetrznego() => Assert.AreEqual("wew:nowy", Uruchom(new PThrowWCatch()));
+        [Test] public void Rethrow_po_obsludze_innego_wyjatku() => Assert.AreEqual("pierwszy", Uruchom(new PRethrow()));
+        [Test] public void Kolejnosc_finally_przy_wyjsciu_normalnym() => Assert.AreEqual("wew,zew,po", Uruchom(new PDwaFinally()));
+        [Test] public void Finally_przy_odwijaniu_do_metody_wywolujacej() => Assert.AreEqual("f1,f2,catch:x", Uruchom(new PFinallyOdwijanie()));
+        [Test] public void Hibernacja_w_finally_przy_odwijaniu() => Assert.AreEqual("finally,catch:x", Uruchom(new PHibernacjaWFinally()));
+        [Test] public void Try_w_petli() => Assert.AreEqual("0b1b2b", Uruchom(new PTryWPetli()));
+        [Test] public void Catch_czysci_stos_ewaluacji() => Assert.AreEqual(5, Uruchom(new PWyjatekWWyrazeniu()));
+        [Test] public void Catch_przez_metode_z_pierwsza_instrukcja_w_try() => Assert.AreEqual("zlapany", Uruchom(new PTryOdPierwszejInstrukcji()));
+        [Test] public void Stale_jednobajtowe_to_int() => Assert.AreEqual("x|-3|100", Uruchom(new PStaleJednobajtowe()));
+        [Test] public void Json_przez_hibernacje() => Assert.AreEqual("ok|1|a,b|7", Uruchom(new PJson()));
+
+        [Test]
+        public void Finally_wykonuje_sie_gdy_wyjatek_wychodzi_poza_maszyne()
+        {
+            var proces = new PWyjatekNaZewnatrz();
+            var blad = Assert.Throws<ArgumentException>(() => new VirtualMachine().Start<object>("Start", proces));
+            Assert.AreEqual("koniec", blad!.Message);
+            Assert.AreEqual("f1,f2", proces.Slad);
+        }
+
+        [Test]
+        public void Catch_when_daje_czytelny_blad()
+        {
+            var blad = Assert.Throws<NotSupportedException>(() => new VirtualMachine().Start<object>("Start", new PCatchWhen()));
+            StringAssert.Contains("when", blad!.Message);
+        }
+
+        [Test]
+        public void Odpowiedz_json_z_Resume_przezywa_kolejna_hibernacje()
+        {
+            var vm = new VirtualMachine();
+            vm.Start<object>("Start", new PJsonZResume());
+            vm = VirtualMachine.DeserializeVirtualMachine(VirtualMachine.SerializeVirtualMachine(vm));
+            var wynik = vm.Resume<object>(new JsonObject { ["_przycisk"] = "zapisz", ["ilosc"] = 3 });
+            Assert.AreEqual(VirtualMachineState.Hibernated, wynik.State);
+            vm = VirtualMachine.DeserializeVirtualMachine(VirtualMachine.SerializeVirtualMachine(vm));
+            Assert.AreEqual("zapisz/3", vm.Resume<object>().Result);
+        }
+
+        [Test]
+        public void Uslugi_trafiaja_do_procesu_po_odczycie_przed_hookiem()
+        {
+            var vm = new VirtualMachine();
+            vm.Start<object>("Start", new PZUsluga { Usluga = new UslugaTestowa("przed") });
+            var stan = VirtualMachine.SerializeVirtualMachine(vm);
+            StringAssert.DoesNotContain("UslugaTestowa", stan.Replace("PZUsluga", ""));
+
+            vm = VirtualMachine.DeserializeVirtualMachine(stan, new DostawcaUslug(new UslugaTestowa("po")));
+            Assert.AreEqual("po:hook", vm.Resume<object>().Result);
+        }
+
+        [Test]
+        public void Brak_uslug_przy_odczycie_daje_czytelny_blad()
+        {
+            var vm = new VirtualMachine();
+            vm.Start<object>("Start", new PZUsluga { Usluga = new UslugaTestowa("przed") });
+            var stan = VirtualMachine.SerializeVirtualMachine(vm);
+            var blad = Assert.Throws<StateSerializationException>(() => VirtualMachine.DeserializeVirtualMachine(stan));
+            StringAssert.Contains("IServiceProvider", blad!.Message);
         }
     }
 
@@ -407,6 +504,465 @@ namespace Cvl.VirtualMachine.UnitTest.Proces.Hibernate
             string a = "a", b = "b", c = "c", d = "d", e = "e";
             VirtualMachine.Hibernate("x");
             return a + b + c + d + e;
+        }
+    }
+
+    public class PPomocnikPrzedHibernacja
+    {
+        public object Start()
+        {
+            var x = Pomocnik();
+            VirtualMachine.Hibernate("a");
+            return x;
+        }
+
+        [Interpret]
+        public int Pomocnik()
+        {
+            return 1;
+        }
+    }
+
+    public class PCatchInnegoTypu
+    {
+        public object Start()
+        {
+            try
+            {
+                try
+                {
+                    throw new ArgumentException("x");
+                }
+                catch (InvalidOperationException)
+                {
+                    return "wewnetrzny";
+                }
+            }
+            catch (ArgumentException)
+            {
+                return "zewnetrzny";
+            }
+        }
+    }
+
+    public class PDwaCatche
+    {
+        public object Start()
+        {
+            try
+            {
+                throw new ArgumentException("x");
+            }
+            catch (InvalidOperationException)
+            {
+                return "pierwszy";
+            }
+            catch (ArgumentException)
+            {
+                return "drugi";
+            }
+        }
+    }
+
+    public class PCatchZMetodyZewnetrznej
+    {
+        public object Start()
+        {
+            try
+            {
+                try
+                {
+                    int.Parse("x");
+                }
+                catch (InvalidOperationException)
+                {
+                    return "wewnetrzny";
+                }
+            }
+            catch (FormatException)
+            {
+                return "zewnetrzny";
+            }
+            return "nic";
+        }
+    }
+
+    public class UslugaTestowa
+    {
+        public string Nazwa { get; }
+        public UslugaTestowa(string nazwa) { Nazwa = nazwa; }
+    }
+
+    public class DostawcaUslug : IServiceProvider
+    {
+        private readonly object usluga;
+        public DostawcaUslug(object usluga) { this.usluga = usluga; }
+        public object? GetService(Type serviceType) => serviceType.IsInstanceOfType(usluga) ? usluga : null;
+    }
+
+    public class PZUsluga : IUsesServices, IDeserializedObject
+    {
+        [NonSerialized] private UslugaTestowa? _usluga;
+        [NonSerialized] private string _hook = "";
+
+        public UslugaTestowa? Usluga { set { _usluga = value; } }
+
+        public void AttachServices(IServiceProvider services)
+        {
+            _usluga = (UslugaTestowa)services.GetService(typeof(UslugaTestowa))!;
+        }
+
+        public void AfterDeserialization()
+        {
+            //usługa musi już być
+            _hook = _usluga!.Nazwa + ":hook";
+        }
+
+        public object Start()
+        {
+            VirtualMachine.Hibernate("a");
+            return _hook;
+        }
+    }
+
+    public class PJson
+    {
+        public JsonObject Pole { get; set; } = new JsonObject { ["stan"] = "ok" };
+
+        public object Start()
+        {
+            var obiekt = new JsonObject { ["ilosc"] = 1 };
+            var tablica = new JsonArray { "a", "b" };
+            JsonNode wartosc = JsonValue.Create(7);
+            VirtualMachine.Hibernate("x");
+            return (string)Pole["stan"]! + "|" + (int)obiekt["ilosc"]! + "|" + (string)tablica[0]! + "," + (string)tablica[1]! + "|" + (int)wartosc;
+        }
+    }
+
+    public class PStaleJednobajtowe
+    {
+        public object Start()
+        {
+            var tablica = new string[20];
+            tablica[15] = "x";
+            int ujemna = -3;
+            object pudelko = 100;
+            VirtualMachine.Hibernate("a");
+            return tablica[15] + "|" + ujemna + "|" + (int)pudelko;
+        }
+    }
+
+    public class PJsonZResume
+    {
+        public object Start()
+        {
+            var odp = (JsonObject)VirtualMachine.Hibernate("pytanie")!;
+            VirtualMachine.Hibernate("drugie");
+            return (string)odp["_przycisk"]! + "/" + (int)odp["ilosc"]!;
+        }
+    }
+
+    public class PCatchBazowy
+    {
+        public object Start()
+        {
+            try
+            {
+                throw new ArgumentNullException("x");
+            }
+            catch (InvalidOperationException)
+            {
+                return "zly";
+            }
+            catch (Exception)
+            {
+                return "baza";
+            }
+        }
+    }
+
+    public class PZagniezdzonyTry
+    {
+        public object Start()
+        {
+            try
+            {
+                try
+                {
+                    int.Parse("1");
+                }
+                catch (FormatException)
+                {
+                    return "wewnetrzny";
+                }
+                VirtualMachine.Hibernate("a");
+                throw new InvalidOperationException("po wewnetrznym");
+            }
+            catch (InvalidOperationException)
+            {
+                return "zewnetrzny";
+            }
+        }
+    }
+
+    public class PThrowWCatch
+    {
+        public object Start()
+        {
+            string wynik;
+            try
+            {
+                try
+                {
+                    throw new ArgumentException("x");
+                }
+                catch (ArgumentException)
+                {
+                    VirtualMachine.Hibernate("w catch");
+                    throw new InvalidOperationException("nowy");
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                wynik = "wew:" + e.Message;
+            }
+            return wynik;
+        }
+    }
+
+    public class PRethrow
+    {
+        public object Start()
+        {
+            string wynik;
+            try
+            {
+                try
+                {
+                    throw new ArgumentException("pierwszy");
+                }
+                catch (ArgumentException)
+                {
+                    try
+                    {
+                        throw new FormatException("drugi");
+                    }
+                    catch (FormatException)
+                    {
+                    }
+                    VirtualMachine.Hibernate("przed rethrow");
+                    throw;
+                }
+            }
+            catch (ArgumentException e)
+            {
+                wynik = e.Message;
+            }
+            return wynik;
+        }
+    }
+
+    public class PDwaFinally
+    {
+        public string Slad { get; set; } = "";
+
+        public object Start()
+        {
+            try
+            {
+                try
+                {
+                    VirtualMachine.Hibernate("a");
+                }
+                finally
+                {
+                    Slad += "wew,";
+                }
+            }
+            finally
+            {
+                Slad += "zew,";
+            }
+            return Slad + "po";
+        }
+    }
+
+    public class PFinallyOdwijanie
+    {
+        public string Slad { get; set; } = "";
+
+        public object Start()
+        {
+            try
+            {
+                Rzuc();
+            }
+            catch (InvalidOperationException e)
+            {
+                Slad += "catch:" + e.Message;
+            }
+            return Slad;
+        }
+
+        [Interpret]
+        public void Rzuc()
+        {
+            try
+            {
+                try
+                {
+                    throw new InvalidOperationException("x");
+                }
+                finally
+                {
+                    Slad += "f1,";
+                }
+            }
+            catch (ArgumentException)
+            {
+                Slad += "zly,";
+            }
+            finally
+            {
+                Slad += "f2,";
+            }
+        }
+    }
+
+    public class PHibernacjaWFinally
+    {
+        public string Slad { get; set; } = "";
+
+        public object Start()
+        {
+            try
+            {
+                Rzuc();
+            }
+            catch (InvalidOperationException e)
+            {
+                Slad += "catch:" + e.Message;
+            }
+            return Slad;
+        }
+
+        [Interpret]
+        public void Rzuc()
+        {
+            try
+            {
+                throw new InvalidOperationException("x");
+            }
+            finally
+            {
+                VirtualMachine.Hibernate("w finally");
+                Slad += "finally,";
+            }
+        }
+    }
+
+    public class PTryWPetli
+    {
+        public object Start()
+        {
+            var wynik = "";
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    wynik += i;
+                    throw new InvalidOperationException("x");
+                }
+                catch (InvalidOperationException)
+                {
+                    VirtualMachine.Hibernate("a");
+                    wynik += "b";
+                }
+            }
+            return wynik;
+        }
+    }
+
+    public class PWyjatekWWyrazeniu
+    {
+        public object Start()
+        {
+            int wynik;
+            try
+            {
+                wynik = Math.Max(1, Rzuc());
+            }
+            catch (InvalidOperationException)
+            {
+                wynik = 5;
+            }
+            return wynik;
+        }
+
+        [Interpret]
+        public int Rzuc()
+        {
+            throw new InvalidOperationException("x");
+        }
+    }
+
+    public class PTryOdPierwszejInstrukcji
+    {
+        public object Start()
+        {
+            try
+            {
+                Rzuc();
+                return "bez wyjatku";
+            }
+            catch (InvalidOperationException)
+            {
+                return "zlapany";
+            }
+        }
+
+        public static void Rzuc()
+        {
+            throw new InvalidOperationException("x");
+        }
+    }
+
+    public class PWyjatekNaZewnatrz
+    {
+        public string Slad { get; set; } = "";
+
+        public object Start()
+        {
+            try
+            {
+                try
+                {
+                    throw new ArgumentException("koniec");
+                }
+                finally
+                {
+                    Slad += "f1";
+                }
+            }
+            finally
+            {
+                Slad += ",f2";
+            }
+        }
+    }
+
+    public class PCatchWhen
+    {
+        public object Start()
+        {
+            try
+            {
+                throw new InvalidOperationException("x");
+            }
+            catch (InvalidOperationException e) when (e.Message == "x")
+            {
+                return "zlapany";
+            }
         }
     }
 

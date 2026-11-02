@@ -390,13 +390,6 @@ namespace Cvl.VirtualMachine
             Console.WriteLine(text);
         }
 
-        internal void EventHandleException(string v)
-        {
-            var text = $"ExceptionHandler {v}";
-            //File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
-            Console.WriteLine(text);
-        }
-
         public object[] GetHibernateParams()
         {
             return Thread.HibernateParams?.ToArray();
@@ -414,9 +407,10 @@ namespace Cvl.VirtualMachine
             return new FieldGraphSerializer().Serialize(virtualMachine);
         }
 
-        public static VirtualMachine DeserializeVirtualMachine(string stan)
+        /// <param name="services">Dla obiektów stanu z IUsesServices - usługi nie wchodzą do stanu</param>
+        public static VirtualMachine DeserializeVirtualMachine(string stan, IServiceProvider services = null)
         {
-            return new FieldGraphSerializer().Deserialize<VirtualMachine>(stan);
+            return new FieldGraphSerializer(services).Deserialize<VirtualMachine>(stan);
         }
 
         #endregion

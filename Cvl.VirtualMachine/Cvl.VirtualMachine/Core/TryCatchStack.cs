@@ -14,6 +14,11 @@ namespace Cvl.VirtualMachine.Core
         public int NumerKlauzuli { get; internal set; }
         public ExceptionHandlingClause ExceptionHandlingClause => Metoda.Klauzule[NumerKlauzuli];
         public string MethodFullName { get; internal set; }
+
+        /// <summary>
+        /// Wyjątek obsługiwany w catch tego bloku - potrzebny dla rethrow
+        /// </summary>
+        public Exception Zlapany { get; internal set; }
     }
 
     public class TryCatchStack

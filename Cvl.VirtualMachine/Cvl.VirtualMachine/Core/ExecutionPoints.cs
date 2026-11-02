@@ -57,6 +57,18 @@ namespace Cvl.VirtualMachine.Core
             ExecutionPointsStack.Peek().ExecutionInstructionIndex = v;
         }
 
+        /// <summary>
+        /// Wyjątek porzuca zaplanowane punkty (np. cel skoku z leave, gdy poleciał w finally)
+        /// </summary>
+        internal void Reset(int v)
+        {
+            while (ExecutionPointsStack.Count > 1)
+            {
+                ExecutionPointsStack.Pop();
+            }
+            SetCurrentInstructionIndex(v);
+        }
+
         internal void PushExecutionPoint(int handlerIndex)
         {
             ExecutionPointsStack.Push(new ExecutionPoint() { ExecutionInstructionIndex = handlerIndex });

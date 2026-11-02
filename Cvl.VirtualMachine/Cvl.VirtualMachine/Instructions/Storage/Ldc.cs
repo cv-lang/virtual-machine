@@ -57,6 +57,8 @@ namespace Cvl.VirtualMachine.Instructions.Storage
                 case "ldc.i4.8":
                     return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = 8);
                 case "ldc.i4.s":
+                    //na stosie IL to zawsze int32, nawet gdy w kodzie stała ma jeden bajt
+                    return CreateInstruction<Ldc>(instrukcja, i => i.ConstValue = Convert.ToInt32(instrukcja.Operand));
                 case "ldc.r8":
                 case "ldc.i8":
                 case "ldc.r4":

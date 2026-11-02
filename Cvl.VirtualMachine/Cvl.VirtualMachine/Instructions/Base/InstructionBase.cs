@@ -113,6 +113,49 @@ namespace Cvl.VirtualMachine.Instructions
         #endregion
 
         /// <summary>
+        /// Równość na stosie IL (beq, bne.un, ceq). Stos nie odróżnia int od enuma, bool ani char, a każda liczba leży tu
+        /// w osobnym pudełku: wartości proste porównuje się po wartości, referencje po referencji. Release kompiluje
+        /// `if (x == 1)` do bne.un, Debug do ceq, więc oba muszą liczyć to samo.
+        /// </summary>
+        protected static bool CzyRowne(object a, object b)
+        {
+            if (a == null || b == null)
+            {
+                return a == null && b == null;
+            }
+            if (Liczba(a) is { } la && Liczba(b) is { } lb)
+            {
+                return la == lb;
+            }
+            if (a is float or double || b is float or double)
+            {
+                return (Liczba(a) is { } x ? (double)x : Convert.ToDouble(a)) == (Liczba(b) is { } y ? (double)y : Convert.ToDouble(b));
+            }
+            return a.GetType().IsValueType ? a.Equals(b) : ReferenceEquals(a, b);
+        }
+
+        /// <summary>Wartość liczbowa typu całkowitego, bool, char albo enuma; inny typ - null.</summary>
+        private static decimal? Liczba(object wartosc)
+        {
+            switch (Type.GetTypeCode(wartosc.GetType()))
+            {
+                case TypeCode.Boolean: return (bool)wartosc ? 1 : 0;
+                case TypeCode.Char: return (char)wartosc;
+                case TypeCode.SByte:
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                case TypeCode.UInt16:
+                case TypeCode.Int32:
+                case TypeCode.UInt32:
+                case TypeCode.Int64:
+                case TypeCode.UInt64:
+                    return Convert.ToDecimal(wartosc);
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Warunek brtrue/brfalse: null i zero (także bool, char i enum) to fałsz, cała reszta to prawda
         /// </summary>
         protected static bool CzyPrawda(object wartosc)

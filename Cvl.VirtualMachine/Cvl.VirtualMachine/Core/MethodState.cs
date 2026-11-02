@@ -42,6 +42,13 @@ namespace Cvl.VirtualMachine.Core
                     + "jej stanu nie da się zapisać. Usuń [Interpret] i poczekaj na wynik przed hibernacją.");
             }
 
+            if (methodInfo.GetMethodBody()?.ExceptionHandlingClauses.Any(k => k.Flags == ExceptionHandlingClauseOptions.Filter) == true)
+            {
+                throw new NotSupportedException(
+                    $"Metoda {methodInfo.DeclaringType.FullName}.{methodInfo.Name} używa catch ... when, którego maszyna nie obsługuje. "
+                    + "Złap wyjątek i sprawdź warunek w środku, w razie potrzeby rzucając go dalej przez throw;");
+            }
+
             CzyStatyczna = methodInfo.IsStatic;
             
             var m = this;
@@ -50,6 +57,7 @@ namespace Cvl.VirtualMachine.Core
             m.MethodFullName = $"{methodInfo.DeclaringType.FullName}.{methodInfo.Name}";
             //m.NumerWykonywanejInstrukcji = 0;
             MethodIdentity = Serializers.MemberIdentity.Get(methodInfo);
+            OdciskKodu = Serializers.CodeFingerprint.Get(methodInfo);
             WirtualnaMaszyna = wirtualnaMaszyna;
 
 
@@ -125,6 +133,12 @@ namespace Cvl.VirtualMachine.Core
 
         public void AfterDeserialization()
         {
+            var aktualnyOdcisk = Serializers.CodeFingerprint.Get(PobierzOpisMetody());
+            if (aktualnyOdcisk != OdciskKodu)
+            {
+                throw new Serializers.ProcessCodeChangedException(MethodFullName, OdciskKodu, aktualnyOdcisk);
+            }
+
             WczytajInstrukcje();
         }
 
@@ -151,6 +165,16 @@ namespace Cvl.VirtualMachine.Core
         /// </summary>
         public TryCatchStack TryCatchStack { get; set; } = new TryCatchStack();
 
+        /// <summary>
+        /// Wyjątek bez catch w tej ramce - po ostatnim finally idzie do metody wywołującej
+        /// </summary>
+        public Exception WyjatekWTrakcie { get; set; }
+
+        /// <summary>
+        /// Wyjątek złapany w tej ramce, który czeka, aż wykonają się finally z bloków wewnętrznych
+        /// </summary>
+        public Exception WyjatekDoCatch { get; set; }
+
         public Type ConstrainedType { get; set; }
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
@@ -176,6 +200,11 @@ namespace Cvl.VirtualMachine.Core
         /// Pełna sygnatura metody - po odczycie stanu odtwarza ją jednoznacznie (także prywatną i przeciążoną)
         /// </summary>
         public string MethodIdentity { get; set; }
+
+        /// <summary>
+        /// Odcisk kodu z chwili wejścia do metody - numer instrukcji ma sens tylko dla tego samego kodu
+        /// </summary>
+        public string OdciskKodu { get; set; }
 
         public VirtualMachine WirtualnaMaszyna { get; set; }
 
@@ -408,28 +437,7 @@ namespace Cvl.VirtualMachine.Core
 
         internal IList<ExceptionHandlingClause> Klauzule => klauzule ??= PobierzOpisMetody().GetMethodBody().ExceptionHandlingClauses;
 
-       /// <summary>
-       /// Zwraca wszystkie bloki w których jest obecny punkt wykonywania 
-       /// </summary>
-       /// <returns></returns>
-        public List<ExceptionHandlingClause> PobierzBlokiObslugiWyjatkow()
-        {
-            var lista = new List<ExceptionHandlingClause>();
-            var exceptionClauses = Klauzule;
-            int offset = OffsetWykonywanejInstrukcji;
-
-            foreach (var item in exceptionClauses)
-            {
-                if (item.TryOffset <= offset && (item.TryOffset + item.TryLength) > offset)
-                {
-                    lista.Add(item);
-                }
-            }
-
-            return lista;
-        }
-
-        /// <summary>
+/// <summary>
         /// Zwraca rozpoczynające bloki
         /// </summary>
         /// <returns></returns>
@@ -450,12 +458,6 @@ namespace Cvl.VirtualMachine.Core
             return lista;
         }
 
-
-        public bool CzyObslugujeWyjatki()
-        {
-            var metoda = PobierzOpisMetody();
-            return metoda.GetMethodBody().ExceptionHandlingClauses.Count > 0;
-        }
 
         public override string ToString()
         {
