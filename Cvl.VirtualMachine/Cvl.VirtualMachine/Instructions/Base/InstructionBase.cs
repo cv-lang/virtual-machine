@@ -112,6 +112,82 @@ namespace Cvl.VirtualMachine.Instructions
         }
         #endregion
 
+        /// <summary>
+        /// Warunek brtrue/brfalse: null i zero (także bool, char i enum) to fałsz, cała reszta to prawda
+        /// </summary>
+        protected static bool CzyPrawda(object wartosc)
+        {
+            if (wartosc == null)
+            {
+                return false;
+            }
+
+            switch (Type.GetTypeCode(wartosc.GetType()))
+            {
+                case TypeCode.Boolean: return (bool)wartosc;
+                case TypeCode.Char: return (char)wartosc != 0;
+                case TypeCode.SByte:
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                case TypeCode.UInt16:
+                case TypeCode.Int32:
+                case TypeCode.UInt32:
+                case TypeCode.Int64:
+                case TypeCode.UInt64:
+                    return Convert.ToDecimal(wartosc) != 0;
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// Na stosie IL małe typy (byte, bool, char, enum...) leżą jako int,
+        /// a wywołanie przez refleksję wymaga dokładnie typu parametru
+        /// </summary>
+        public static object DopasujTyp(object wartosc, Type typ)
+        {
+            if (wartosc == null || wartosc.GetType() == typ)
+            {
+                return wartosc;
+            }
+
+            long liczba;
+            switch (wartosc)
+            {
+                case int v: liczba = v; break;
+                case long v: liczba = v; break;
+                case uint v: liczba = v; break;
+                case ulong v: liczba = unchecked((long)v); break;
+                case short v: liczba = v; break;
+                case ushort v: liczba = v; break;
+                case sbyte v: liczba = v; break;
+                case byte v: liczba = v; break;
+                case char v: liczba = v; break;
+                case bool v: liczba = v ? 1 : 0; break;
+                default: return wartosc;
+            }
+
+            if (typ.IsEnum)
+            {
+                return Enum.ToObject(typ, liczba);
+            }
+
+            switch (Type.GetTypeCode(typ))
+            {
+                case TypeCode.Boolean: return liczba != 0;
+                case TypeCode.Byte: return unchecked((byte)liczba);
+                case TypeCode.SByte: return unchecked((sbyte)liczba);
+                case TypeCode.Int16: return unchecked((short)liczba);
+                case TypeCode.UInt16: return unchecked((ushort)liczba);
+                case TypeCode.Char: return unchecked((char)liczba);
+                case TypeCode.Int32: return unchecked((int)liczba);
+                case TypeCode.UInt32: return unchecked((uint)liczba);
+                case TypeCode.Int64: return liczba;
+                case TypeCode.UInt64: return unchecked((ulong)liczba);
+                default: return wartosc;
+            }
+        }
+
         public int Offset => Instruction.Offset;
         public string Code => Instruction.OpCode.ToString();
         public string Operand => Instruction.Operand?.ToString();

@@ -66,14 +66,38 @@ var retInProcProces = inProcProces.Start();
 Assert.AreEqual(retInProcProces, retFromSerializedVM);
 ```
 
+## Saved state
+
+`VirtualMachine.SerializeVirtualMachine` writes the whole object graph field by field, including private fields, and keeps shared references. The result is JSON with a format version, read back with `VirtualMachine.DeserializeVirtualMachine`. It can be stored in a PostgreSQL `jsonb` column: it never contains `\u0000` and does not depend on the order of keys.
+
+- Fields marked `[NonSerialized]` are skipped. Restore them in `IDeserializedObject.AfterDeserialization`, which runs after the whole graph is loaded. Constructors are not called during restore.
+- A type that holds resources (`Task`, `Stream`, `HttpClient`...) stops the save with `StateSerializationException` naming the path to the field, so state is never lost silently.
+- Saved state is trusted data. Do not load it from an untrusted source.
+- Static fields are not part of the state.
+
+Not supported inside interpreted methods:
+
+- `async` methods with `[Interpret]`. Call them from code without the attribute and wait for the result before hibernating.
+- `Span` and `params ReadOnlySpan`, for example `string.Join("|", a, b, c, d, e)`. Pass an array instead.
+
+Known limitations:
+
+- `VirtualMachine.Hibernate` called from a method that is not interpreted does nothing and execution continues. Mark every method on the path to it with `[Interpret]`.
+- Changing the code of a process before resuming is not detected yet.
+- In Release builds, `if (o != null)` on an `object` holding a boxed `0` or `false` is treated as null.
+
+## Tests
+
+Run `dotnet test` in `Cvl.VirtualMachine.UnitTest`, in both Debug and Release, because the compiler emits different IL for each.
+
+Setting `CVL_VM_ZAPIS_CO_KROK=1` makes `StartTestExecution` save and restore the whole machine after every instruction, so each instruction becomes a possible hibernation point.
+
 ## NuGet 'Cvl.VirtualMachine'
-PM> Install-Package Cvl.VirtualMachine -Version 0.9.1
+PM> Install-Package Cvl.VirtualMachine
 
 [NuGet package Cvl.VirtualMachine](https://www.nuget.org/packages/Cvl.VirtualMachine/)
 
 ## Dependencies
 
 [Mono.Reflection](https://github.com/jbevain/mono.reflection)
-
-[SharpSerializer](http://sharpserializer.com/en/index.html)
 
