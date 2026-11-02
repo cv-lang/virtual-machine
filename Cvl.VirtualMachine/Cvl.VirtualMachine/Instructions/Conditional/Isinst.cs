@@ -14,35 +14,19 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {        
         public override void Wykonaj()
         {
-            dynamic b = PopObject();
-            if (b != null)
+            var b = PopObject();
+            if (b != null && ((Type)Instruction.Operand).IsAssignableFrom(b.GetType()))
             {
-                var typ = b.GetType();
-                var typOperanda = (Type)Instruction.Operand;
-                if (typOperanda.IsAssignableFrom(typ))
+                if (CzyPrawda(b))
                 {
-                    //mamy ten sam typ
-
-
-                    if (typOperanda.IsByRef == false)
-                    {
-                        //musimy zrobić sztuczny boxing - 
-                        //Push(new BoxWraper() { Warosc = b });
-                        Push(new BoxWraper() { Warosc = true });
-                    }
-                    else
-                    {
-                        //wrzucamy normalnya obiekt
-                        PushObject(b);
-                    }
-
-
-                    //wrzucamy normalnya obiekt
-                    //PushObject(b);
+                    //wynik isinst to sam obiekt - "o as T" i "o is T t" go używają
+                    PushObject(b);
                 }
                 else
                 {
-                    PushObject(null);
+                    //zero i false: VM nie odróżnia pudełka od wartości, więc brtrue wziąłby je za "nie jest T".
+                    //Zostaje znacznik true - "o is int" działa, "o as int?" z zerem dałby true (znane ograniczenie)
+                    Push(new BoxWraper() { Warosc = true });
                 }
             }
             else
