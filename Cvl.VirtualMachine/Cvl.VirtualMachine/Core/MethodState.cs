@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml.Serialization;
 using Cvl.VirtualMachine.Core.Serializers;
@@ -27,23 +28,36 @@ namespace Cvl.VirtualMachine.Core
             if(instance != null & metoda.IsVirtual)
             {
                 //mamy wirtualną metodę, pobieramy z typu
-                methodInfo = instance.GetType().GetMethod(metoda.Name, 
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                methodInfo = PobierzImplementacje((MethodInfo)metoda, instance.GetType());
             }
             else
             {
                 methodInfo = metoda;
             }
 
+            if (methodInfo.IsDefined(typeof(AsyncStateMachineAttribute), false))
+            {
+                throw new NotSupportedException(
+                    $"Metoda async {methodInfo.DeclaringType.FullName}.{methodInfo.Name} nie może być interpretowana - "
+                    + "jej stanu nie da się zapisać. Usuń [Interpret] i poczekaj na wynik przed hibernacją.");
+            }
+
+            if (methodInfo.GetMethodBody()?.ExceptionHandlingClauses.Any(k => k.Flags == ExceptionHandlingClauseOptions.Filter) == true)
+            {
+                throw new NotSupportedException(
+                    $"Metoda {methodInfo.DeclaringType.FullName}.{methodInfo.Name} używa catch ... when, którego maszyna nie obsługuje. "
+                    + "Złap wyjątek i sprawdź warunek w środku, w razie potrzeby rzucając go dalej przez throw;");
+            }
+
             CzyStatyczna = methodInfo.IsStatic;
             
             var m = this;
-            m.AssemblyName = methodInfo.Module.FullyQualifiedName;
             m.NazwaTypu = methodInfo.DeclaringType.FullName;
             m.NazwaMetody = methodInfo.Name;
             m.MethodFullName = $"{methodInfo.DeclaringType.FullName}.{methodInfo.Name}";
             //m.NumerWykonywanejInstrukcji = 0;
-            Xml = wirtualnaMaszyna.Serializer.Serialize(methodInfo.DeclaringType);
+            MethodIdentity = Serializers.MemberIdentity.Get(methodInfo);
+            OdciskKodu = Serializers.CodeFingerprint.Get(methodInfo);
             WirtualnaMaszyna = wirtualnaMaszyna;
 
 
@@ -52,7 +66,7 @@ namespace Cvl.VirtualMachine.Core
                 int i = 0;
                 foreach (var localVariableInfo in methodInfo.GetMethodBody().LocalVariables)
                 {
-                    var inst = InstanceCreator(localVariableInfo.LocalType, (MethodInfo)methodInfo);
+                    var inst = DomyslnaWartosc(localVariableInfo.LocalType);
                     LocalVariables.Ustaw(i, inst);
                     i++;
                 }
@@ -60,24 +74,54 @@ namespace Cvl.VirtualMachine.Core
 
         }
 
-        delegate System.Runtime.CompilerServices.DefaultInterpolatedStringHandler myConstruct();
-
-        private object InstanceCreator(Type type, MethodInfo method)
+        private static MethodBase PobierzImplementacje(MethodInfo metoda, Type typ)
         {
-            if (type == typeof(string))
+            if (metoda.DeclaringType.IsInterface)
             {
-                return "";
+                var mapa = typ.GetInterfaceMap(metoda.DeclaringType);
+                var indeks = Array.IndexOf(mapa.InterfaceMethods, metoda.IsGenericMethod ? metoda.GetGenericMethodDefinition() : metoda);
+                if (indeks < 0)
+                {
+                    return metoda;
+                }
+                var implementacja = mapa.TargetMethods[indeks];
+                return metoda.IsGenericMethod ? implementacja.MakeGenericMethod(metoda.GetGenericArguments()) : implementacja;
             }
 
-            if (type.IsByRefLike)
+            var definicja = metoda.IsGenericMethod ? metoda.GetGenericMethodDefinition() : metoda;
+            var bazowa = definicja.GetBaseDefinition();
+            for (var t = typ; t != null; t = t.BaseType)
             {
-                throw new NotSupportedException("ref struct are not supported (IsByRefLike type)");
+                foreach (var m in t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                {
+                    if (m.Name == metoda.Name && m.GetBaseDefinition() == bazowa)
+                    {
+                        return metoda.IsGenericMethod ? m.MakeGenericMethod(metoda.GetGenericArguments()) : m;
+                    }
+                }
             }
-            else
+            return metoda;
+        }
+
+        /// <summary>
+        /// Wartość zmiennej lokalnej przed pierwszym przypisaniem (InitLocals) - jak w CLR
+        /// </summary>
+        private static object DomyslnaWartosc(Type type)
+        {
+            if (type == typeof(DefaultInterpolatedStringHandler))
             {
-                var inst = Activator.CreateInstance(type);
-                return inst;
+                //tworzy go dopiero konstruktor wywołany przez Call
+                return null;
             }
+
+            if (type.IsByRefLike || type.IsDefined(typeof(InlineArrayAttribute), false))
+            {
+                throw new NotSupportedException(
+                    $"ref struct are not supported (IsByRefLike type): {type}. Metoda interpretowana nie może używać Span ani params ReadOnlySpan - "
+                    + "przekaż tablicę, np. string.Join(\"|\", new[] { a, b }), albo przenieś ten kod do metody bez [Interpret].");
+            }
+
+            return type.IsValueType ? Activator.CreateInstance(type) : null;
         }
 
         public MethodState()
@@ -89,6 +133,12 @@ namespace Cvl.VirtualMachine.Core
 
         public void AfterDeserialization()
         {
+            var aktualnyOdcisk = Serializers.CodeFingerprint.Get(PobierzOpisMetody());
+            if (aktualnyOdcisk != OdciskKodu)
+            {
+                throw new Serializers.ProcessCodeChangedException(MethodFullName, OdciskKodu, aktualnyOdcisk);
+            }
+
             WczytajInstrukcje();
         }
 
@@ -115,6 +165,16 @@ namespace Cvl.VirtualMachine.Core
         /// </summary>
         public TryCatchStack TryCatchStack { get; set; } = new TryCatchStack();
 
+        /// <summary>
+        /// Wyjątek bez catch w tej ramce - po ostatnim finally idzie do metody wywołującej
+        /// </summary>
+        public Exception WyjatekWTrakcie { get; set; }
+
+        /// <summary>
+        /// Wyjątek złapany w tej ramce, który czeka, aż wykonają się finally z bloków wewnętrznych
+        /// </summary>
+        public Exception WyjatekDoCatch { get; set; }
+
         public Type ConstrainedType { get; set; }
 
         public bool CzyWykonywacInstrukcje { get; set; } = true;
@@ -126,14 +186,25 @@ namespace Cvl.VirtualMachine.Core
         public bool CzyStatyczna { get; set; } = false;
 
 
+        [NonSerialized]
         private MethodBase methodInfo;
+
+        [NonSerialized]
+        private IList<ExceptionHandlingClause> klauzule;
 
         public string NazwaTypu { get; set; }
         public string NazwaMetody { get; set; }
         public string MethodFullName { get; set; }
-        public string AssemblyName { get; set; }
-       
-        public string Xml { get; set; }
+
+        /// <summary>
+        /// Pełna sygnatura metody - po odczycie stanu odtwarza ją jednoznacznie (także prywatną i przeciążoną)
+        /// </summary>
+        public string MethodIdentity { get; set; }
+
+        /// <summary>
+        /// Odcisk kodu z chwili wejścia do metody - numer instrukcji ma sens tylko dla tego samego kodu
+        /// </summary>
+        public string OdciskKodu { get; set; }
 
         public VirtualMachine WirtualnaMaszyna { get; set; }
 
@@ -149,9 +220,10 @@ namespace Cvl.VirtualMachine.Core
         /// instrukcje mogą mieć rozmiar 1, 2, 4 bajtowy lub więcej
         /// Offset zawiera pozycję instukcji w binarnym bytecode programu
         /// </summary>
-        public int OffsetWykonywanejInstrukcji { get; set; }
+        public int OffsetWykonywanejInstrukcji => Instrukcje[NumerWykonywanejInstrukcji.CurrentInstructionIndex].Instruction.Offset;
                 
 
+        [NonSerialized]
         private List<InstructionBase> instrukcje;
 
         [XmlIgnore]
@@ -212,8 +284,6 @@ namespace Cvl.VirtualMachine.Core
         {
             var am = this;
             am.NumerWykonywanejInstrukcji++;
-            am.OffsetWykonywanejInstrukcji
-                = am.Instrukcje[am.NumerWykonywanejInstrukcji.CurrentInstructionIndex].Instruction.Offset;
         }
 
         public void WykonajSkok(int nowyOffset)
@@ -362,51 +432,19 @@ namespace Cvl.VirtualMachine.Core
 
         public MethodBase PobierzOpisMetody()
         {
-            if (methodInfo != null)
-            {
-                return methodInfo;
-            }
-            else
-            {
-                var obiektTyp =  WirtualnaMaszyna.Serializer.Deserialize<object>(Xml);
-                var typ = (Type)obiektTyp;
-                return typ.GetMethod(NazwaMetody);
-                //var module = Assembly.LoadFile(this.AssemblyName);
-                //var typDef = module.GetTypes().First(t => t.FullName == NazwaTypu);
-                //var metoda = typDef.GetMethods().FirstOrDefault(mm => mm.Name == NazwaMetody);
-                //return metoda;
-            }
+            return methodInfo ??= Serializers.MemberIdentity.ResolveMethod(MethodIdentity);
         }
 
-       /// <summary>
-       /// Zwraca wszystkie bloki w których jest obecny punkt wykonywania 
-       /// </summary>
-       /// <returns></returns>
-        public List<ExceptionHandlingClause> PobierzBlokiObslugiWyjatkow()
-        {
-            var lista = new List<ExceptionHandlingClause>();
-            var exceptionClauses = PobierzOpisMetody().GetMethodBody().ExceptionHandlingClauses;
-            int offset = OffsetWykonywanejInstrukcji;
+        internal IList<ExceptionHandlingClause> Klauzule => klauzule ??= PobierzOpisMetody().GetMethodBody().ExceptionHandlingClauses;
 
-            foreach (var item in exceptionClauses)
-            {
-                if (item.TryOffset < offset && (item.TryOffset + item.TryLength) > offset)
-                {
-                    lista.Add(item);
-                }
-            }
-
-            return lista;
-        }
-
-        /// <summary>
+/// <summary>
         /// Zwraca rozpoczynające bloki
         /// </summary>
         /// <returns></returns>
         public List<ExceptionHandlingClause> GetBeginTryBlocks()
         {
             var lista = new List<ExceptionHandlingClause>();
-            var exceptionClauses = PobierzOpisMetody().GetMethodBody().ExceptionHandlingClauses;
+            var exceptionClauses = Klauzule;
             int offset = OffsetWykonywanejInstrukcji;
 
             foreach (var item in exceptionClauses)
@@ -420,12 +458,6 @@ namespace Cvl.VirtualMachine.Core
             return lista;
         }
 
-
-        public bool CzyObslugujeWyjatki()
-        {
-            var metoda = PobierzOpisMetody();
-            return metoda.GetMethodBody().ExceptionHandlingClauses.Count > 0;
-        }
 
         public override string ToString()
         {

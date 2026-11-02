@@ -28,7 +28,7 @@ namespace Cvl.VirtualMachine.Instructions.Storage
         {
             var methodDefiniton = Instruction.Operand as System.Reflection.MethodInfo;
             
-            PushObject(methodDefiniton.MethodHandle.GetFunctionPointer());
+            PushObject(methodDefiniton);
             WykonajNastepnaInstrukcje();
         }
     }

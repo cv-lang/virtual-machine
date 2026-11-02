@@ -17,7 +17,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
             var value2 = PopObject();
             var value1 = PopObject();
 
-            if ((value1==null && value2== null) || value2.Equals(value1))
+            if (CzyRowne(value1, value2))
             {
                 var op = Instruction.Operand as Instruction;
                 var nextOffset = op.Offset;

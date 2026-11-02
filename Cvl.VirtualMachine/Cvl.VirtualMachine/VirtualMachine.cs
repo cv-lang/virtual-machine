@@ -13,7 +13,6 @@ using System.Xml.Serialization;
 using Cvl.VirtualMachine.Core.Serializers;
 using Cvl.VirtualMachine.Core.Tools;
 using Mono.Reflection;
-using XmlSerializer = Cvl.VirtualMachine.Core.Serializers.XmlSerializer;
 
 namespace Cvl.VirtualMachine
 {
@@ -36,7 +35,7 @@ namespace Cvl.VirtualMachine
 
 
     // wirutalna maszyna .net - base on https://www.ecma-international.org/wp-content/uploads/ECMA-335_6th_edition_june_2012.pdf
-    public class VirtualMachine
+    public class VirtualMachine : IDeserializedObject
     {
         public VirtualMachine()
         {
@@ -47,17 +46,18 @@ namespace Cvl.VirtualMachine
 
         public ThreadOfControl Thread { get; set; }
 
-        [XmlIgnore]
-        public ISerializer Serializer { get; set; } = new XmlSerializer();
-
         //public bool CzyWykonywacInstrukcje { get; private set; } = true;
 
         public object Instance { get; set; }
 
-        [XmlIgnore]
-
+        [NonSerialized]
         public InstructionsFactory instructionsFactory = new InstructionsFactory();
         public long BreakpointIterationNumber { get; set; } = -1;
+
+        public void AfterDeserialization()
+        {
+            instructionsFactory = new InstructionsFactory();
+        }
 
         public void WykonajMetode()
         {
@@ -184,6 +184,11 @@ namespace Cvl.VirtualMachine
                 return new VirtualMachineResult<T>() { State = Thread.Status };
             }
 
+            return new VirtualMachineResult<T>() { State = Thread.Status, Result = PobierzWynik<T>() };
+        }
+
+        private T PobierzWynik<T>()
+        {
             T ret;
 
             if (typeof(T) == typeof(bool))
@@ -204,14 +209,41 @@ namespace Cvl.VirtualMachine
             {
                 ret = (T)Thread.Result;
             }
-            var result = new VirtualMachineResult<T>() { State = Thread.Status, Result = ret };
-            return result;
+            return ret;
         }
 
         public T StartTestExecution<T>(string nazwaMetody, params object[] parametet)
         {
+            if (Environment.GetEnvironmentVariable("CVL_VM_ZAPIS_CO_KROK") == "1")
+            {
+                return WykonajZZapisemCoKrok<T>(nazwaMetody, parametet);
+            }
+
             var res = Start<T>(nazwaMetody, parametet: parametet);
             return res.Result;
+        }
+
+        /// <summary>
+        /// Tryb testowy: po każdej instrukcji zapisuje i odtwarza całą maszynę,
+        /// więc każda instrukcja staje się możliwym punktem hibernacji
+        /// </summary>
+        private T WykonajZZapisemCoKrok<T>(string nazwaMetody, object[] parametet)
+        {
+            Thread = new ThreadOfControl();
+            Thread.WirtualnaMaszyna = this;
+            Thread.AfterDeserialization();
+            prepereToExecution(parametet.First().GetType().GetMethod(nazwaMetody), parametet);
+
+            var vm = this;
+            while (vm.Thread.CallStack.IsEmpty() == false && vm.Thread.Status != VirtualMachineState.Executed)
+            {
+                vm = DeserializeVirtualMachine(SerializeVirtualMachine(vm));
+                if (vm.Thread.Step() == Core.Enums.StepExecutionResultEnum.EndExecution)
+                {
+                    break;
+                }
+            }
+            return vm.PobierzWynik<T>();
         }
 
         public void Start(Action p)
@@ -322,7 +354,7 @@ namespace Cvl.VirtualMachine
 
         #region Eventy logów
 
-        [XmlIgnore]
+        [field: NonSerialized]
         public ILogMonitor LogMonitor { get; set; }
         private int callLevel = 0;
         internal void EventRet(object ret = null)
@@ -358,13 +390,6 @@ namespace Cvl.VirtualMachine
             Console.WriteLine(text);
         }
 
-        internal void EventHandleException(string v)
-        {
-            var text = $"ExceptionHandler {v}";
-            //File.AppendAllText("wm-log.txt", Environment.NewLine + text + Environment.NewLine);
-            Console.WriteLine(text);
-        }
-
         public object[] GetHibernateParams()
         {
             return Thread.HibernateParams?.ToArray();
@@ -379,16 +404,13 @@ namespace Cvl.VirtualMachine
 
         public static string SerializeVirtualMachine(VirtualMachine virtualMachine)
         {
-            var serializer = new Cvl.VirtualMachine.Core.Serializers.XmlSerializer();
-            var xml = serializer.Serialize(virtualMachine);
-            return xml;
+            return new FieldGraphSerializer().Serialize(virtualMachine);
         }
 
-        public static VirtualMachine DeserializeVirtualMachine(string xml)
+        /// <param name="services">Dla obiektów stanu z IUsesServices - usługi nie wchodzą do stanu</param>
+        public static VirtualMachine DeserializeVirtualMachine(string stan, IServiceProvider services = null)
         {
-            var serializer = new Cvl.VirtualMachine.Core.Serializers.XmlSerializer();
-            var vm = serializer.Deserialize<VirtualMachine>(xml);
-            return vm;
+            return new FieldGraphSerializer(services).Deserialize<VirtualMachine>(stan);
         }
 
         #endregion

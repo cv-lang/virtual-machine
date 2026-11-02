@@ -10,4 +10,13 @@ namespace Cvl.VirtualMachine.Core.Serializers
     {
         void AfterDeserialization();
     }
+
+    /// <summary>
+    /// Obiekt stanu korzystający z usług z kontenera DI. Usługi trzyma w polach [NonSerialized],
+    /// a dostaje je po odczycie, przed wywołaniami AfterDeserialization.
+    /// </summary>
+    public interface IUsesServices
+    {
+        void AttachServices(IServiceProvider services);
+    }
 }

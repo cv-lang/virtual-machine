@@ -7,8 +7,18 @@ namespace Cvl.VirtualMachine.Core
 {
     public class TryCatchBlock
     {
-        public ExceptionHandlingClause ExceptionHandlingClause { get; internal set; }
+        /// <summary>
+        /// Klauzula należy do metody, więc w stanie zapisujemy tylko jej numer
+        /// </summary>
+        public MethodState Metoda { get; internal set; }
+        public int NumerKlauzuli { get; internal set; }
+        public ExceptionHandlingClause ExceptionHandlingClause => Metoda.Klauzule[NumerKlauzuli];
         public string MethodFullName { get; internal set; }
+
+        /// <summary>
+        /// Wyjątek obsługiwany w catch tego bloku - potrzebny dla rethrow
+        /// </summary>
+        public Exception Zlapany { get; internal set; }
     }
 
     public class TryCatchStack
@@ -24,7 +34,8 @@ namespace Cvl.VirtualMachine.Core
             foreach (var item in tryBlocks)
             {
                 var b = new TryCatchBlock();
-                b.ExceptionHandlingClause = item;
+                b.Metoda = aktualnaMetoda;
+                b.NumerKlauzuli = aktualnaMetoda.Klauzule.IndexOf(item);
                 b.MethodFullName = methodFullName;
 
                 TryCatchBlocks.Push(b);

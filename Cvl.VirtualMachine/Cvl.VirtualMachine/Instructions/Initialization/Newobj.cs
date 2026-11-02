@@ -50,22 +50,21 @@ namespace Cvl.VirtualMachine.Instructions.Initialization
                         for (int i = 0; i < listaParametrow.Count; i++)
                         {
                             var parameter = listaParametrow[i];
-                            var typParametru = parameter.GetType();
+                            var typParametru = parameter?.GetType();
                             var typKonstruktora = constructorParametrerTypes[i].ParameterType;
 
-                            if(parameter is MethodInfo parameterMethodInfo)
+                            if(parameter is MethodInfo parameterMethodInfo && typKonstruktora == typeof(IntPtr))
                             {
-
+                                //wskaźnik do metody z ldftn, na stosie trzymamy MethodInfo bo wskaźnika nie da się zapisać
+                                dopasowaneTypowoParametry.Add(parameterMethodInfo.MethodHandle.GetFunctionPointer());
                             }
-
-
-                            if (typKonstruktora == typeof(IntPtr) && typParametru == typeof(bool))
+                            else if (typKonstruktora == typeof(IntPtr) && typParametru == typeof(bool))
                             {
                                 dopasowaneTypowoParametry.Add(((bool)parameter ? 1:0));
                             }
                             else
                             {
-                                dopasowaneTypowoParametry.Add(parameter);
+                                dopasowaneTypowoParametry.Add(DopasujTyp(parameter, typKonstruktora));
                             }
                         }
 

@@ -10,27 +10,7 @@ namespace Cvl.VirtualMachine.Instructions.Conditional
     {      
         public override void Wykonaj()
         {
-            var wynik = false;
-            dynamic a = PopObject();
-            if (a == null)
-            {
-                wynik = false;
-            }
-            else if (a is bool)
-            {
-                wynik = (bool)a;
-            }
-            else if (a is int)
-            {
-                wynik = a == 1;
-            }
-            else
-            {
-                wynik = true;
-            }
-
-            
-            if (wynik)
+            if (CzyPrawda(PopObject()))
             {
                 var op = Instruction.Operand as Instruction;
                 var nextOffset = op.Offset;

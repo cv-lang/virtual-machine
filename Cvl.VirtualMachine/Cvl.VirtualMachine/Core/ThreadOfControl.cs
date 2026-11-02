@@ -24,7 +24,7 @@ namespace Cvl.VirtualMachine
         public void AfterDeserialization()
         {
             WirtualnaMaszyna.Thread = this;
-            ExceptionHandling = new ExceptionHandlingStateMachine(){VirtualMachine = WirtualnaMaszyna};
+            ExceptionHandling ??= new ExceptionHandlingStateMachine(){VirtualMachine = WirtualnaMaszyna};
             ExceptionHandling.AfterDeserialization();
         }
 
@@ -54,6 +54,7 @@ namespace Cvl.VirtualMachine
         /// <summary>
         /// Aktualnie wykonywana instrukcja
         /// </summary>
+        [NonSerialized]
         private InstructionBase aktualnaInstrukcja;
 
         /// <summary>

@@ -74,6 +74,12 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                 return;
             }
 
+            if (method.DeclaringType == typeof(System.Runtime.CompilerServices.DefaultInterpolatedStringHandler))
+            {
+                WykonajInterpolacje(method, instancePop, instance, parameters);
+                return;
+            }
+
             //if (method.IsSetter)
             //{
             //    setter(methodDef, instance, parameters);
@@ -100,14 +106,7 @@ namespace Cvl.VirtualMachine.Instructions.Calls
                         var methodParam = method.GetParameters()[i];
                         i++;
 
-                        if (methodParam.ParameterType == typeof(bool) && parameter is int)
-                        {
-                            dopasowaneParametry.Add(Convert.ToBoolean((int)parameter));
-                        }
-                        else
-                        {
-                            dopasowaneParametry.Add(parameter);
-                        }
+                        dopasowaneParametry.Add(DopasujTyp(parameter, methodParam.ParameterType));
                     }
 
                     object ret = null;
@@ -228,6 +227,25 @@ namespace Cvl.VirtualMachine.Instructions.Calls
 
         }
 
+
+        private void WykonajInterpolacje(MethodBase method, object instancePop, object instance, List<object> parameters)
+        {
+            if (method.IsConstructor)
+            {
+                var provider = parameters.Count > 2 ? parameters[2] as IFormatProvider : null;
+                ((ObjectWraperBase)instancePop).SetValue(new InterpolatedStringEmulator(provider));
+            }
+            else
+            {
+                var wynik = ((InterpolatedStringEmulator)instance).Wykonaj(method, parameters);
+                if (((MethodInfo)method).ReturnType != typeof(void))
+                {
+                    MethodContext.PushObject(wynik);
+                }
+            }
+
+            MethodContext.WykonajNastepnaInstrukcje();
+        }
 
         private void LogMethodCall(string name, List<object> parameters, object ret)
         {
